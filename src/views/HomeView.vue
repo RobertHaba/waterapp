@@ -1,4 +1,0 @@
-<template>
- <DynamicHeading></DynamicHeading>
-</template>
-

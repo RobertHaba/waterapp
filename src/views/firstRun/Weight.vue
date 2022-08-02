@@ -8,7 +8,7 @@
       <HelloIllustration></HelloIllustration>
     </template>
     <template v-slot:form>
-      <DynamicHeading level="2" class="text-xl"
+      <DynamicHeading :level="2" class="text-xl"
         >Wprowadź swoją wagę</DynamicHeading
       >
       <form class="flex flex-col gap-8" @submit.prevent="pushDataToStorage">

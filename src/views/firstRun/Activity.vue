@@ -8,7 +8,7 @@
       <HelloIllustration></HelloIllustration>
     </template>
     <template v-slot:form>
-      <DynamicHeading level="2" class="text-xl">Wybierz płeć</DynamicHeading>
+      <DynamicHeading :level="2" class="text-xl">Wybierz płeć</DynamicHeading>
       <form class="flex flex-col gap-8" @submit.prevent="pushDataToStorage">
         <div class="flex gap-4 items-center">
           <InputRadio

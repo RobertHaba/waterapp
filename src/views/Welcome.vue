@@ -5,7 +5,9 @@
     class="relative w-full h-screen max-h-screen overflow-hidden p-4 py-10 pb-32"
   >
     <div class="h-full max-w-sm flex flex-col justify-between mx-auto">
-      <header><DynamicHeading level="1"></DynamicHeading></header>
+      <header class="w-full">
+        <DynamicHeading :level="1" class="text-center"></DynamicHeading>
+      </header>
       <div class="flex flex-col gap-4">
         <span class="icon w-auto h-screen max-h-64 icon--hello"></span>
         <TitleWithInfo class="mx-auto text-center">

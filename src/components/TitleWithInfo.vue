@@ -10,7 +10,7 @@
 <script setup>
 const props = defineProps({
   level: {
-    type: String,
+    type: Number,
     default: 2,
   },
 });

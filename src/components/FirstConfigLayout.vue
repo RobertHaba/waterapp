@@ -10,7 +10,7 @@
           :active="props.stepNumber"
         ></SteppersProgressDot>
       </header>
-      <TitleWithInfo level="1" class="text-center">
+      <TitleWithInfo :level="1" class="text-center">
         <template v-slot:title> {{ props.headerTitle }} </template>
         <template v-slot:text> {{ props.headerText }} </template>
       </TitleWithInfo>

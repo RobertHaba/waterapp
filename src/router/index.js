@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuth } from '../stores/auth';
-import HomeView from '../views/HomeView.vue';
 import { db } from '@/firestore/index';
 import { collection, doc, getDoc } from 'firebase/firestore';
 
@@ -10,7 +9,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: () => import('../views/Home.vue'),
     },
     {
       path: '/welcome',
@@ -114,24 +113,27 @@ const checkIfDateExistsInDB = async () => {
   const docSnap = await getDoc(docRef);
   return docSnap.exists();
 };
-router.beforeEach(async (to, from, next) => {
+const userIsAuth = async () => {
   const auth = useAuth();
-  console.log(to.name);
-  if (!auth.user && to.name !== 'signin') {
+  return auth.user === null ? false : auth.user;
+};
+router.beforeEach(async (to, from, next) => {
+  console.log(await userIsAuth());
+  if ((await userIsAuth()) === false && to.name == 'home') {
     next({ name: 'signin' });
   } else if (
-    auth.user &&
+    (await userIsAuth()) &&
     (to.name == 'signin' || to.name == 'register' || to.name == 'welcome')
   ) {
     next({ name: 'home' });
   } else if (
-    auth.user &&
+    (await userIsAuth()) &&
     to.name !== 'home' &&
     (await checkIfDateExistsInDB())
   ) {
     next({ name: 'home' });
   } else if (
-    auth.user &&
+    (await userIsAuth()) &&
     to.name == 'home' &&
     (await checkIfDateExistsInDB()) === false
   ) {
