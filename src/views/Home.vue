@@ -1,5 +1,5 @@
 <template>
-  <main class="relative w-full min-h-screen p-4 py-10 pb-14">
+  <main class="relative w-full min-h-screen p-4 py-10 pb-28">
     <div class="relative h-full max-w-sm flex flex-col gap-8 mx-auto">
       <header class="flex justify-between">
         <DynamicHeading class="w-fit"></DynamicHeading>
@@ -25,8 +25,10 @@
         <div class="relative">
           <div class="relative">
             <div class="absolute top-2 w-full flex justify-between px-12">
-              <FullGlassIcon class="icon w-6 h-6"></FullGlassIcon>
-              <EmptyGlassIcon class="icon w-6 h-6"></EmptyGlassIcon>
+              <FullGlassIcon class="w-6 h-6 fill-blue-100"></FullGlassIcon>
+              <EmptyGlassIcon
+                class="icon w-6 h-6 fill-blue-100"
+              ></EmptyGlassIcon>
             </div>
             <svg class="circle-box -rotate-45">
               <circle cx="100" cy="100" r="100"></circle>
@@ -139,7 +141,106 @@
           </div>
         </div>
       </div>
+      <div class="flex flex-col gap-6">
+        <DynamicHeading :level="3" class="text-xl"
+          >Uzupełnij płyny</DynamicHeading
+        >
+        <div class="flex flex-col gap-6">
+          <div class="flex justify-between">
+            <div
+              class="shadow-inset-light bg-blue-500 w-fit flex rounded-full pr-2"
+            >
+              <DefaultButton
+                class-colors="pr-2 rounded-none"
+                @click="addDrink(500)"
+                ><EmptyGlassIcon class="w-6 h-6 fill-dark"></EmptyGlassIcon
+                ><span class="text-2xl font-normal">500ml</span></DefaultButton
+              >
+
+              <button class="p-4">
+                <EditIcon class="w-4 h-4 fill-dark"></EditIcon>
+              </button>
+            </div>
+            <DefaultButton
+              ><AddIcon class="fill-light w-6 h-6"></AddIcon
+            ></DefaultButton>
+          </div>
+          <ul class="flex justify-between">
+            <li>
+              <SlimButton @click="addDrink(250)"
+                ><EmptyGlassIcon class="w-4 h-4 fill-dark"></EmptyGlassIcon
+                ><span class="font-normal">250ml</span></SlimButton
+              >
+            </li>
+            <li>
+              <SlimButton
+                ><EmptyGlassIcon class="w-4 h-4 fill-dark"></EmptyGlassIcon
+                ><span class="font-normal">250ml</span></SlimButton
+              >
+            </li>
+            <li>
+              <SlimButton
+                ><EmptyGlassIcon class="w-4 h-4 fill-dark"></EmptyGlassIcon
+                ><span class="font-normal">250ml</span></SlimButton
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="flex flex-col gap-6">
+        <DynamicHeading :level="3" class="text-xl"
+          >Ostatnie napoje</DynamicHeading
+        >
+        <ul class="flex flex-col gap-3 h-32 overflow-y-auto">
+          <li class="flex px-4 items-center justify-between">
+            <div class="flex gap-4 items-center">
+              <FullGlassIcon class="fill-dark w-6 h-6"></FullGlassIcon>
+              <div class="flex flex gap-2 items-center">
+                <span class="font-bold text-lg leading-5">250ml</span>
+                <p class="">Woda</p>
+              </div>
+            </div>
+            <div class="flex gap-1 items-center">
+              <time datetime="12:00">12:00</time>
+              <button class="p-3">
+                <CloseIcon class="w-4 h-4 fill-dark"></CloseIcon>
+              </button>
+            </div>
+          </li>
+          <li class="flex px-4 items-center justify-between">
+            <div class="flex gap-4 items-center">
+              <FullGlassIcon class="fill-dark w-6 h-6"></FullGlassIcon>
+              <div class="flex flex gap-2 items-center">
+                <span class="font-bold text-lg leading-5">250ml</span>
+                <p class="">Woda</p>
+              </div>
+            </div>
+            <div class="flex gap-1 items-center">
+              <time datetime="12:00">12:00</time>
+              <button class="p-3">
+                <CloseIcon class="w-4 h-4 fill-dark"></CloseIcon>
+              </button>
+            </div>
+          </li>
+          <li class="flex px-4 items-center justify-between">
+            <div class="flex gap-4 items-center">
+              <FullGlassIcon class="fill-dark w-6 h-6"></FullGlassIcon>
+              <div class="flex flex gap-2 items-center">
+                <span class="font-bold text-lg leading-5">250ml</span>
+                <p class="">Woda</p>
+              </div>
+            </div>
+            <div class="flex gap-1 items-center">
+              <time datetime="12:00">12:00</time>
+              <button class="p-3">
+                <CloseIcon class="w-4 h-4 fill-dark"></CloseIcon>
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
+    <Navbar></Navbar>
   </main>
 </template>
 
@@ -150,28 +251,41 @@ import MoonIcon from '../components/icons/Moon.vue';
 import SunIcon from '../components/icons/Sun.vue';
 import FullGlassIcon from '../components/icons/FullGlass.vue';
 import EmptyGlassIcon from '../components/icons/EmptyGlass.vue';
+import EditIcon from '../components/icons/Edit.vue';
+import AddIcon from '../components/icons/Add.vue';
+import CloseIcon from '../components/icons/Close.vue';
+import SlimButton from '../components/buttons/SlimButton.vue';
+import Navbar from '../components/Navbar.vue';
+
 const avatarURL = computed(() => {
   return useAuth().user.photoURL
     ? `background-image: url(${useAuth().user.photoURL})`
     : '';
 });
-const drink = {
+const drink = ref({
   now: 1000,
   goal: 2800,
-};
+});
 const date = ref(new Date());
 const hour = ref(date.value.getHours());
 const minutes = ref(date.value.getMinutes());
-setInterval(() => {
-  date.value = new Date();
-  console.log(dayProgressPercentage.value);
-}, 60000);
+
 const drinkProgressPercentage = computed(() => {
-  return ((drink.now * 100) / drink.goal).toFixed();
+  const drinkCalcValue = ((drink.value.now * 100) / drink.value.goal).toFixed();
+  return drinkCalcValue >= 100 ? 100 : drinkCalcValue;
 });
 const dayProgressPercentage = computed(() => {
   return (((hour.value * 60 + minutes.value) * 100) / 1440).toFixed();
 });
+
+const addDrink = (value) => {
+  drink.value.now += value;
+};
+
+setInterval(() => {
+  date.value = new Date();
+}, 60000);
+
 watch(date, () => {
   minutes.value = date.value.getMinutes();
   hour.value = date.value.getHours();
@@ -197,6 +311,7 @@ watch(date, () => {
   stroke-dasharray: 626;
   stroke-dashoffset: 626;
   stroke: black;
+  transition: 350ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .circle-box--medium circle {
@@ -215,7 +330,7 @@ circle:nth-child(1) {
 
 circle:nth-child(2) {
   stroke-dashoffset: calc(
-    631 - (626 * v-bind(drinkProgressPercentage) * 0.75) / 100
+    631 - (631 * v-bind(drinkProgressPercentage) * 0.75) / 100
   );
   stroke: theme('colors.blue');
 }

@@ -15,12 +15,14 @@ module.exports = {
       },
       boxShadow: {
         'inset-light': 'inset 0px 2px 12px rgba(75, 104, 206, 0.2)',
+        'inset-blue': 'inset 0px 0px 12px rgba(42, 47, 180, 0.3)',
       },
       spacing: {
         '1/8': 'calc(100%/8)',
         '1/7': 'calc(100%/7)',
         '1/6': 'calc(100%/6)',
         30: '7.5rem',
+        34: '8.5rem',
       },
     },
   },
