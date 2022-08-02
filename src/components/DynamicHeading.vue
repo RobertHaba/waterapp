@@ -8,6 +8,9 @@
 
 <script setup>
 const props = defineProps({
-  level: String,
+  level: {
+    type: String,
+    default: '1',
+  },
 });
 </script>
