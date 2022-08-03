@@ -4,12 +4,7 @@
       <header class="flex justify-between">
         <DynamicHeading class="w-fit"></DynamicHeading>
         <div>
-          <button type="button">
-            <span
-              class="icon bg-blue-500 w-10 h-10 rounded-full icon--avatar"
-              :style="avatarURL"
-            ></span>
-          </button>
+          <Avatar></Avatar>
         </div>
       </header>
       <div>
@@ -245,7 +240,6 @@
 </template>
 
 <script setup>
-import { useAuth } from '@/stores/auth';
 import { computed, ref, watch } from 'vue';
 import MoonIcon from '../components/icons/Moon.vue';
 import SunIcon from '../components/icons/Sun.vue';
@@ -256,12 +250,8 @@ import AddIcon from '../components/icons/Add.vue';
 import CloseIcon from '../components/icons/Close.vue';
 import SlimButton from '../components/buttons/SlimButton.vue';
 import Navbar from '../components/Navbar.vue';
+import Avatar from '../components/TheAvatar.vue';
 
-const avatarURL = computed(() => {
-  return useAuth().user.photoURL
-    ? `background-image: url(${useAuth().user.photoURL})`
-    : '';
-});
 const drink = ref({
   now: 1000,
   goal: 2800,

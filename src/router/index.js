@@ -105,6 +105,16 @@ const router = createRouter({
       //   } else next({ name: 'gender' });
       // },
     },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: () => import('../views/Settings.vue'),
+      beforeEnter: async (to, from, next) => {
+        if (to.name === 'settings' && (await userIsAuth())) {
+          next();
+        } else next({ name: 'signin' });
+      },
+    },
   ],
 });
 const checkIfDateExistsInDB = async () => {
@@ -123,18 +133,20 @@ router.beforeEach(async (to, from, next) => {
     next({ name: 'signin' });
   } else if (
     (await userIsAuth()) &&
-    (to.name == 'signin' || to.name == 'register' || to.name == 'welcome')
+    to.name !== 'home' &&
+    to.name !== 'settings' &&
+    to.name !== 'stats'
   ) {
     next({ name: 'home' });
   } else if (
     (await userIsAuth()) &&
-    to.name !== 'home' &&
+    (to.name == 'home' || to.name == 'settings' || to.name == 'stats') &&
     (await checkIfDateExistsInDB())
   ) {
-    next({ name: 'home' });
+    next();
   } else if (
     (await userIsAuth()) &&
-    to.name == 'home' &&
+    (to.name == 'home' || to.name == 'settings' || to.name == 'stats') &&
     (await checkIfDateExistsInDB()) === false
   ) {
     next({ name: 'gender' });
