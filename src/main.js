@@ -8,6 +8,7 @@ import './assets/main.css';
 import './firestore/index';
 
 import { getAuth } from 'firebase/auth';
+import { useProfile } from './stores/profile';
 
 import { useAuth } from './stores/auth';
 
@@ -24,7 +25,7 @@ import ButtonReturnAsIcon from './components/buttons/ButtonReturnAsIcon.vue';
 
   const { bindUser } = useAuth();
   await bindUser(getAuth());
-
+  await useProfile().getUserData()
   app.component('DynamicHeading', DynamicHeading);
   app.component('TitleWithInfo', TitleWithInfo);
   app.component('DefaultButton', TheButton);

@@ -39,7 +39,7 @@
           to="/notifications"
           class="px-4 py-2"
           @click="
-            inputValue = null;
+            inputValue = 'Gość';
             pushDataToStorage();
           "
           >pomiń</router-link

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuth } from '../stores/auth';
+import { useProfile } from '../stores/profile';
 import { db } from '@/firestore/index';
 import { collection, doc, getDoc } from 'firebase/firestore';
 
@@ -10,26 +11,91 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: () => import('../views/Home.vue'),
+      beforeEnter: async (to, from, next) => {
+        if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
+          next();
+        } else if (
+          (await userIsAuth()) &&
+          (await checkIfDateExistsInDB()) === false
+        ) {
+          next({ name: 'gender' });
+        }
+      },
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: () => import('../views/Settings.vue'),
+      beforeEnter: async (to, from, next) => {
+        if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
+          next();
+        } else if (
+          (await userIsAuth()) &&
+          (await checkIfDateExistsInDB()) === false
+        ) {
+          next({ name: 'gender' });
+        }
+      },
     },
     {
       path: '/welcome',
       name: 'welcome',
       component: () => import('../views/Welcome.vue'),
+      beforeEnter: async (to, from, next) => {
+        if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
+          next({ name: 'home' });
+        } else if (
+          (await userIsAuth()) &&
+          (await checkIfDateExistsInDB()) === false
+        ) {
+          next({ name: 'gender' });
+        } else next();
+      },
     },
     {
       path: '/register',
       name: 'register',
       component: () => import('../views/Register.vue'),
+      beforeEnter: async (to, from, next) => {
+        if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
+          next({ name: 'home' });
+        } else if (
+          (await userIsAuth()) &&
+          (await checkIfDateExistsInDB()) === false
+        ) {
+          next({ name: 'gender' });
+        } else next();
+      },
     },
     {
       path: '/signin',
       name: 'signin',
       component: () => import('../views/SignIn.vue'),
+      beforeEnter: async (to, from, next) => {
+        if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
+          next({ name: 'home' });
+        } else if (
+          (await userIsAuth()) &&
+          (await checkIfDateExistsInDB()) === false
+        ) {
+          next({ name: 'gender' });
+        } else next();
+      },
     },
     {
       path: '/gender',
       name: 'gender',
       component: () => import('../views/firstRun/Gender.vue'),
+      beforeEnter: async (to, from, next) => {
+        if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
+          next({ name: 'home' });
+        } else if (
+          (await userIsAuth()) &&
+          (await checkIfDateExistsInDB()) === false
+        ) {
+          next();
+        } else next({ name: 'signin' });
+      },
     },
     {
       path: '/weight',
@@ -106,51 +172,18 @@ const router = createRouter({
       // },
     },
     {
-      path: '/settings',
-      name: 'settings',
-      component: () => import('../views/Settings.vue'),
-      beforeEnter: async (to, from, next) => {
-        if (to.name === 'settings' && (await userIsAuth())) {
-          next();
-        } else next({ name: 'signin' });
-      },
+      path: '/:pathMatch(.*)',
+      name: 'notFound',
+      component: () => import('../views/NotFound.vue'),
     },
   ],
 });
 const checkIfDateExistsInDB = async () => {
-  const auth = useAuth();
-  const docRef = doc(db, auth.user.uid, 'profile');
-  const docSnap = await getDoc(docRef);
-  return docSnap.exists();
+  return (await useProfile().user) === null ? false : true;
 };
 const userIsAuth = async () => {
   const auth = useAuth();
   return auth.user === null ? false : auth.user;
 };
-router.beforeEach(async (to, from, next) => {
-  console.log(await userIsAuth());
-  if ((await userIsAuth()) === false && to.name == 'home') {
-    next({ name: 'signin' });
-  } else if (
-    (await userIsAuth()) &&
-    to.name !== 'home' &&
-    to.name !== 'settings' &&
-    to.name !== 'stats'
-  ) {
-    next({ name: 'home' });
-  } else if (
-    (await userIsAuth()) &&
-    (to.name == 'home' || to.name == 'settings' || to.name == 'stats') &&
-    (await checkIfDateExistsInDB())
-  ) {
-    next();
-  } else if (
-    (await userIsAuth()) &&
-    (to.name == 'home' || to.name == 'settings' || to.name == 'stats') &&
-    (await checkIfDateExistsInDB()) === false
-  ) {
-    next({ name: 'gender' });
-  } else next();
-});
 
 export default router;

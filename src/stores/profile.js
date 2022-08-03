@@ -4,18 +4,7 @@ import { useAuth } from './auth';
 import { db } from '../firestore/index';
 export const useProfile = defineStore('profile', {
   state: () => ({
-    user: {
-      gender: null,
-      weight: null,
-      activity: null,
-      year: null,
-      name: null,
-      notifications: {
-        active: false,
-        wakeUp: null,
-        bedtime: null,
-      },
-    },
+    user: null,
   }),
   actions: {
     async getUserData() {
@@ -27,4 +16,3 @@ export const useProfile = defineStore('profile', {
     },
   },
 });
-useProfile().getUserData();
