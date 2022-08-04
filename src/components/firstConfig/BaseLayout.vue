@@ -27,8 +27,8 @@
 </template>
 <script setup>
 import { onMounted, ref, computed } from 'vue';
-import SteppersProgressDot from '../components/SteppersProgressDot.vue';
-import { useWavePosition } from '../stores/wavePosition';
+import SteppersProgressDot from '@/components/firstConfig/SteppersProgressDot.vue';
+import { useWavePosition } from '@/stores/wavePosition';
 const props = defineProps({
   stepNumber: Number,
   headerTitle: String,
@@ -39,8 +39,8 @@ const stepNumber = ref(props.stepNumber - 1);
 const wave = useWavePosition();
 
 const translateValue = computed(() => {
-  console.log((100 / steps.value - 3) * (stepNumber.value));
-  return (100 / steps.value - 3) * (stepNumber.value);
+  console.log((100 / steps.value - 3) * stepNumber.value);
+  return (100 / steps.value - 3) * stepNumber.value;
 });
 const translateY = computed(() => {
   return `transform: translateY(-${translateValue.value}%)`;

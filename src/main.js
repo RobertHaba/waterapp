@@ -13,8 +13,8 @@ import { useSettings } from './stores/settings';
 
 import { useAuth } from './stores/auth';
 
-import DynamicHeading from './components/DynamicHeading.vue';
-import TitleWithInfo from './components/TitleWithInfo.vue';
+import DynamicHeading from './components/texts/DynamicHeading.vue';
+import TitleWithInfo from './components/texts/TitleWithInfo.vue';
 import TheButton from './components/buttons/TheButton.vue';
 import ButtonAsLink from './components/buttons/ButtonAsLink.vue';
 import MobileWave from './components/icons/MobileWave.vue';

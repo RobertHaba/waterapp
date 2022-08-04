@@ -47,7 +47,7 @@
             <SlimButton
               :class="{ active: drinkSettings.autoCalc === true }"
               @click="calcDailyDrinkGoal"
-              >{{ btnText }}</SlimButton
+              >{{ textAutoCalcButton }}</SlimButton
             >
           </li>
         </ListInsetShadow>
@@ -110,8 +110,8 @@ const hasChanges = ref(false);
 const popupData = ref(null);
 const indexOfDrinkInPopup = ref(null);
 const drinkList = drinkSettings.value.list.statics;
-const btnText = computed(() => {
-  return drinkSettings.value.autoCalc ? 'włączone' : 'wyłączone';
+const textAutoCalcButton = computed(() => {
+  return drinkSettings.value.autoCalc ? 'tak' : 'nie';
 });
 const checkValueChange = () => {
   if (drinkSettings.value.goal !== useSettings().settings.drink.goal) {

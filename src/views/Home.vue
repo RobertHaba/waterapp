@@ -241,7 +241,7 @@ import EditIcon from '../components/icons/Edit.vue';
 import AddIcon from '../components/icons/Add.vue';
 import CloseIcon from '../components/icons/Close.vue';
 import SlimButton from '../components/buttons/SlimButton.vue';
-import Navbar from '../components/Navbar.vue';
+import Navbar from '../components/TheNavbar.vue';
 import Avatar from '../components/TheAvatar.vue';
 import { useProfile } from '../stores/profile';
 import { useSettings } from '../stores/settings';

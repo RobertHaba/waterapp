@@ -36,7 +36,7 @@ import UserStrokeIcon from '../components/icons/UserStroke.vue';
 import ArrowRightIcon from '../components/icons/ArrowRight.vue';
 import { ref, shallowRef } from 'vue';
 import Avatar from '../components/TheAvatar.vue';
-import Navbar from '../components/Navbar.vue';
+import Navbar from '../components/TheNavbar.vue';
 import { useProfile } from '../stores/profile.js';
 const profile = ref(useProfile());
 const routersList = shallowRef([

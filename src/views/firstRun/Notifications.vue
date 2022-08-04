@@ -39,7 +39,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import FirstConfigLayout from '@/components/FirstConfigLayout.vue';
+import FirstConfigLayout from '@/components/firstConfig/BaseLayout.vue';
 import HelloIllustration from '@/components/illustrations/Hello.vue';
 import InputRadio from '@/components/inputs/InputRadio.vue';
 import { useUserFirstConfig } from '@/stores/userFirstConfig';

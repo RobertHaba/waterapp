@@ -52,7 +52,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import FirstConfigLayout from '../../components/FirstConfigLayout.vue';
+import FirstConfigLayout from '@/components/firstConfig/BaseLayout.vue';
 import HelloIllustration from '../../components/illustrations/Hello.vue';
 import { useUserFirstConfig } from '@/stores/userFirstConfig';
 const router = useRouter();

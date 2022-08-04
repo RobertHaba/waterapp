@@ -54,7 +54,7 @@
 </template>
 <script setup>
 import TextWithIcon from '@/components/texts/TextWithIcon.vue';
-import FooterPopup from '@/components/FooterPopup.vue';
+import FooterPopup from '@/components/popups/FooterPopup.vue';
 import TrophyIcon from '@/components/icons/Trophy.vue';
 import { useSettings } from '@/stores/settings.js';
 const drinksList = useSettings().settings.drinks;
