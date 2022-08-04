@@ -62,8 +62,9 @@
             <div class="flex flex-wrap justify-around gap-3">
               <SlimButton
                 class="!gap-4 !bg-light"
-                v-for="drink in drinkList"
+                v-for="(drink, index) in drinkList"
                 :key="drink"
+                @click="openPopup(index)"
               >
                 <div class="flex items-center gap-2">
                   <TrophyIcon class="fill-dark w-4 h-4 -mt-0.5"></TrophyIcon>
@@ -77,37 +78,71 @@
       </div>
     </div>
     <footer>
-      <NavbarSettings @save-data="saveData"></NavbarSettings>
+      <NavbarSettings
+        @save-data="saveData"
+        :has-changes="hasChanges"
+      ></NavbarSettings>
     </footer>
+    <DrinkPropertiesPopup
+      v-if="isPopupOpen"
+      :drink="popupData"
+      @close-popup="closePopup"
+      @save-data="changeStaticDrink"
+      >Edytuj napój</DrinkPropertiesPopup
+    >
   </main>
 </template>
 
 <script setup>
+import NavbarSettings from '../../components/NavbarSettings.vue';
+import DrinkPropertiesPopup from '@/components/popups/DrinkPropertiesPopup.vue';
+import SlimButton from '../../components/buttons/SlimButton.vue';
 import ButtonReturnAsIcon from '../../components/buttons/ButtonReturnAsIcon.vue';
 import TrophyIcon from '@/components/icons/Trophy.vue';
 import TextWithIcon from '@/components/texts/TextWithIcon.vue';
-import SlimButton from '../../components/buttons/SlimButton.vue';
 import EditIcon from '../../components/icons/Edit.vue';
-import NavbarSettings from '../../components/NavbarSettings.vue';
 import { useSettings } from '@/stores/settings';
 import { useCalcGoal } from '@/composables/calcDrinkGoal.js';
 import { computed, ref } from '@vue/runtime-core';
 const drinkSettings = ref({ ...useSettings().settings.drink });
+const isPopupOpen = ref(false);
+const hasChanges = ref(false);
+const popupData = ref(null);
+const indexOfDrinkInPopup = ref(null);
 const drinkList = drinkSettings.value.list.statics;
 const btnText = computed(() => {
   return drinkSettings.value.autoCalc ? 'włączone' : 'wyłączone';
 });
-const saveData = () => {
-  useSettings().updateSettingsData('drink', drinkSettings);
-};
 const checkValueChange = () => {
   if (drinkSettings.value.goal !== useSettings().settings.drink.goal) {
     drinkSettings.value.autoCalc = false;
+    hasChanges.value = true;
+  } else {
+    hasChanges.value = false;
   }
 };
 const calcDailyDrinkGoal = () => {
   drinkSettings.value.goal = useCalcGoal();
   drinkSettings.value.autoCalc = true;
+  hasChanges.value = true;
+};
+const openPopup = (index) => {
+  indexOfDrinkInPopup.value = index;
+  popupData.value = { ...drinkList[index] };
+  isPopupOpen.value = true;
+};
+const changeStaticDrink = () => {
+  isPopupOpen.value = false;
+  useSettings().settings.drink.list.statics[indexOfDrinkInPopup.value] =
+    popupData.value;
+  useSettings().updateSettingsData('drink', useSettings().settings.drink);
+};
+const saveData = () => {
+  hasChanges.value = false;
+  useSettings().updateSettingsData('drink', drinkSettings);
+};
+const closePopup = () => {
+  isPopupOpen.value = false;
 };
 </script>
 

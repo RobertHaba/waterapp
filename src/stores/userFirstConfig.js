@@ -39,6 +39,7 @@ export const useUserFirstConfig = defineStore('userFirstConfig', {
           ],
         },
       },
+      drinks: [{ name: 'water', kcal: '0' }],
     },
   }),
   actions: {
