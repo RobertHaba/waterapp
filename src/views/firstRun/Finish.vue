@@ -10,10 +10,18 @@ import { setDoc, doc } from 'firebase/firestore';
 import { db } from '@/firestore/index';
 import { useAuth } from '@/stores/auth';
 import { useUserFirstConfig } from '@/stores/userFirstConfig';
+import { useCalcGoal } from '@/composables/calcDrinkGoal.js';
 const saveToDB = async () => {
+  useUserFirstConfig().settings.drink.goal = useCalcGoal(
+    useUserFirstConfig().user
+  );
   await setDoc(
     doc(db, useAuth().user.uid, 'profile'),
     useUserFirstConfig().user
+  );
+  await setDoc(
+    doc(db, useAuth().user.uid, 'settings'),
+    useUserFirstConfig().settings
   );
 };
 </script>

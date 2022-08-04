@@ -8,3 +8,8 @@
 .icon--avatar {
     background-image: url('./icons/avatar.svg');
 }
+
+.active {
+    background-color: theme('backgroundColor.blue');
+    color: theme('textColor.light');
+}

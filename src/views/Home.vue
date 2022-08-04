@@ -147,9 +147,11 @@
             >
               <DefaultButton
                 class-colors="pr-2 rounded-none"
-                @click="addDrink(500)"
+                @click="addDrink(drinkList.dynamic.capacity)"
                 ><EmptyGlassIcon class="w-6 h-6 fill-dark"></EmptyGlassIcon
-                ><span class="text-2xl font-normal">500ml</span></DefaultButton
+                ><span class="text-2xl font-normal"
+                  >{{ drinkList.dynamic.capacity }}ml</span
+                ></DefaultButton
               >
 
               <button class="p-4">
@@ -161,22 +163,12 @@
             ></DefaultButton>
           </div>
           <ul class="flex justify-between">
-            <li>
-              <SlimButton @click="addDrink(250)"
+            <li v-for="drink in drinkList.statics" :key="drink">
+              <SlimButton @click="addDrink(drink.capacity)"
                 ><EmptyGlassIcon class="w-4 h-4 fill-dark"></EmptyGlassIcon
-                ><span class="font-normal">250ml</span></SlimButton
-              >
-            </li>
-            <li>
-              <SlimButton
-                ><EmptyGlassIcon class="w-4 h-4 fill-dark"></EmptyGlassIcon
-                ><span class="font-normal">250ml</span></SlimButton
-              >
-            </li>
-            <li>
-              <SlimButton
-                ><EmptyGlassIcon class="w-4 h-4 fill-dark"></EmptyGlassIcon
-                ><span class="font-normal">250ml</span></SlimButton
+                ><span class="font-normal"
+                  >{{ drink.capacity }}ml</span
+                ></SlimButton
               >
             </li>
           </ul>
@@ -251,10 +243,14 @@ import CloseIcon from '../components/icons/Close.vue';
 import SlimButton from '../components/buttons/SlimButton.vue';
 import Navbar from '../components/Navbar.vue';
 import Avatar from '../components/TheAvatar.vue';
+import { useProfile } from '../stores/profile';
+import { useSettings } from '../stores/settings';
+const drinkSettings = useSettings().settings.drink;
+const drinkList = drinkSettings.list;
 
 const drink = ref({
   now: 1000,
-  goal: 2800,
+  goal: drinkSettings.goal,
 });
 const date = ref(new Date());
 const hour = ref(date.value.getHours());

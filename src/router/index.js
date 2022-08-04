@@ -19,7 +19,7 @@ const router = createRouter({
           (await checkIfDateExistsInDB()) === false
         ) {
           next({ name: 'gender' });
-        }
+        } else next({ name: 'signin' });
       },
     },
     {
@@ -34,7 +34,22 @@ const router = createRouter({
           (await checkIfDateExistsInDB()) === false
         ) {
           next({ name: 'gender' });
-        }
+        } else next({ name: 'signin' });
+      },
+    },
+    {
+      path: '/settings/drink',
+      name: 'drinkSettings',
+      component: () => import('../views/settings/DrinkSettings.vue'),
+      beforeEnter: async (to, from, next) => {
+        if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
+          next();
+        } else if (
+          (await userIsAuth()) &&
+          (await checkIfDateExistsInDB()) === false
+        ) {
+          next({ name: 'gender' });
+        } else next({ name: 'signin' });
       },
     },
     {
@@ -179,6 +194,9 @@ const router = createRouter({
   ],
 });
 const checkIfDateExistsInDB = async () => {
+  if (useAuth().user === false) {
+    return false;
+  }
   return (await useProfile().user) === null ? false : true;
 };
 const userIsAuth = async () => {

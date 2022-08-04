@@ -9,7 +9,10 @@
       <div class="relative">
         <ul class="flex flex-col gap-5">
           <li v-for="routerItem in routersList" :key="routerItem.path">
-            <router-link to="/" class="flex justify-between items-center h-10">
+            <router-link
+              :to="routerItem.path"
+              class="flex justify-between items-center h-10"
+            >
               <div class="flex gap-5 items-center">
                 <component
                   :is="routerItem.icon"
@@ -49,12 +52,12 @@ const routersList = shallowRef([
   },
   {
     icon: UserStrokeIcon,
-    name: 'Ustawienia wody',
-    path: '/',
+    name: 'Ustawienia napojów',
+    path: '/settings/drink',
   },
   {
     icon: UserStrokeIcon,
-    name: 'Napoje',
+    name: 'Lista napojów',
     path: '/',
   },
   {

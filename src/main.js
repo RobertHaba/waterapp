@@ -9,6 +9,7 @@ import './firestore/index';
 
 import { getAuth } from 'firebase/auth';
 import { useProfile } from './stores/profile';
+import { useSettings } from './stores/settings';
 
 import { useAuth } from './stores/auth';
 
@@ -19,18 +20,23 @@ import ButtonAsLink from './components/buttons/ButtonAsLink.vue';
 import MobileWave from './components/icons/MobileWave.vue';
 import ArrowLeft from './components/icons/ArrowLeft.vue';
 import ButtonReturnAsIcon from './components/buttons/ButtonReturnAsIcon.vue';
+import ListInsetShadow from './components/layouts/ListInsetShadow.vue';
 
 (async () => {
   const app = createApp(App).use(createPinia());
 
   const { bindUser } = useAuth();
   await bindUser(getAuth());
-  await useProfile().getUserData()
+  if (useAuth().user) {
+    await useProfile().getUserData();
+    await useSettings().getUserSettings();
+  }
   app.component('DynamicHeading', DynamicHeading);
   app.component('TitleWithInfo', TitleWithInfo);
   app.component('DefaultButton', TheButton);
   app.component('ButtonAsLink', ButtonAsLink);
   app.component('ReturnButton', ButtonReturnAsIcon);
+  app.component('ListInsetShadow', ListInsetShadow);
 
   app.use(router);
   app.mount('#app');
