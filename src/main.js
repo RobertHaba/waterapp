@@ -10,6 +10,7 @@ import './firestore/index';
 import { getAuth } from 'firebase/auth';
 import { useProfile } from './stores/profile';
 import { useSettings } from './stores/settings';
+import { useDrink } from './stores/drink';
 
 import { useAuth } from './stores/auth';
 
@@ -30,6 +31,7 @@ import ListInsetShadow from './components/layouts/ListInsetShadow.vue';
   if (useAuth().user) {
     await useProfile().getUserData();
     await useSettings().getUserSettings();
+    await useDrink().getDrinkData();
   }
   app.component('DynamicHeading', DynamicHeading);
   app.component('TitleWithInfo', TitleWithInfo);

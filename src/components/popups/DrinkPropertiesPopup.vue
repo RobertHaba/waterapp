@@ -35,6 +35,7 @@
             <select
               name="drinkName"
               class="w-full text-center border-b border-dark text-xl bg-light"
+              v-model="props.drink.name"
             >
               <option
                 :value="drink.name"

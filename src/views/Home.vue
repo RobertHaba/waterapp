@@ -131,7 +131,7 @@
           <div
             class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col justify-center items-center bg-light shadow-inset-light w-28 h-28 rounded-full"
           >
-            <span class="text-2xl font-bold pt-2">{{ drink.now }}ml</span>
+            <span class="text-2xl font-bold pt-2">{{ drink.total }}ml</span>
             <span class="text-sm">{{ drink.goal }}ml</span>
           </div>
         </div>
@@ -164,7 +164,7 @@
           </div>
           <ul class="flex justify-between">
             <li v-for="drink in drinkList.statics" :key="drink">
-              <SlimButton @click="addDrink(drink.capacity)"
+              <SlimButton @click="addDrink(drink)"
                 ><EmptyGlassIcon class="w-4 h-4 fill-dark"></EmptyGlassIcon
                 ><span class="font-normal"
                   >{{ drink.capacity }}ml</span
@@ -179,46 +179,22 @@
           >Ostatnie napoje</DynamicHeading
         >
         <ul class="flex flex-col gap-3 h-32 overflow-y-auto">
-          <li class="flex px-4 items-center justify-between">
+          <li
+            class="flex px-4 items-center justify-between"
+            v-for="drink in drinkHistory"
+            :key="drink.time"
+          >
             <div class="flex gap-4 items-center">
               <FullGlassIcon class="fill-dark w-6 h-6"></FullGlassIcon>
               <div class="flex flex gap-2 items-center">
-                <span class="font-bold text-lg leading-5">250ml</span>
-                <p class="">Woda</p>
+                <span class="font-bold text-lg leading-5"
+                  >{{ drink.capacity }}ml</span
+                >
+                <p class="">{{ drink.name }}</p>
               </div>
             </div>
             <div class="flex gap-1 items-center">
-              <time datetime="12:00">12:00</time>
-              <button class="p-3">
-                <CloseIcon class="w-4 h-4 fill-dark"></CloseIcon>
-              </button>
-            </div>
-          </li>
-          <li class="flex px-4 items-center justify-between">
-            <div class="flex gap-4 items-center">
-              <FullGlassIcon class="fill-dark w-6 h-6"></FullGlassIcon>
-              <div class="flex flex gap-2 items-center">
-                <span class="font-bold text-lg leading-5">250ml</span>
-                <p class="">Woda</p>
-              </div>
-            </div>
-            <div class="flex gap-1 items-center">
-              <time datetime="12:00">12:00</time>
-              <button class="p-3">
-                <CloseIcon class="w-4 h-4 fill-dark"></CloseIcon>
-              </button>
-            </div>
-          </li>
-          <li class="flex px-4 items-center justify-between">
-            <div class="flex gap-4 items-center">
-              <FullGlassIcon class="fill-dark w-6 h-6"></FullGlassIcon>
-              <div class="flex flex gap-2 items-center">
-                <span class="font-bold text-lg leading-5">250ml</span>
-                <p class="">Woda</p>
-              </div>
-            </div>
-            <div class="flex gap-1 items-center">
-              <time datetime="12:00">12:00</time>
+              <time datetime="12:00">{{ getDateFromDrink(drink.date) }}</time>
               <button class="p-3">
                 <CloseIcon class="w-4 h-4 fill-dark"></CloseIcon>
               </button>
@@ -245,19 +221,24 @@ import Navbar from '../components/TheNavbar.vue';
 import Avatar from '../components/TheAvatar.vue';
 import { useProfile } from '../stores/profile';
 import { useSettings } from '../stores/settings';
+import { useDrink } from '../stores/drink';
 const drinkSettings = useSettings().settings.drink;
 const drinkList = drinkSettings.list;
-
+const drinkData = useDrink().drink;
 const drink = ref({
-  now: 1000,
+  total: drinkData.total,
   goal: drinkSettings.goal,
 });
+const drinkHistory = ref(drinkData.history);
 const date = ref(new Date());
 const hour = ref(date.value.getHours());
 const minutes = ref(date.value.getMinutes());
 
 const drinkProgressPercentage = computed(() => {
-  const drinkCalcValue = ((drink.value.now * 100) / drink.value.goal).toFixed();
+  const drinkCalcValue = (
+    (drink.value.total * 100) /
+    drink.value.goal
+  ).toFixed();
   return drinkCalcValue >= 100 ? 100 : drinkCalcValue;
 });
 const dayProgressPercentage = computed(() => {
@@ -265,9 +246,16 @@ const dayProgressPercentage = computed(() => {
 });
 
 const addDrink = (value) => {
-  drink.value.now += value;
+  drink.value.total += value.capacity;
+  useDrink().addDrink(value);
 };
-
+const getDateFromDrink = (drinkDate) => {
+  const date = new Date(
+    drinkDate.seconds ? drinkDate.seconds * 1000 : drinkDate
+  );
+  console.log(date.toLocaleDateString('pl-PL'));
+  return date.getHours() + ':' + date.getMinutes();
+};
 setInterval(() => {
   date.value = new Date();
 }, 60000);

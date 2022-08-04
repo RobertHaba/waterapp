@@ -21,25 +21,29 @@ export const useUserFirstConfig = defineStore('userFirstConfig', {
         list: {
           dynamic: {
             capacity: 500,
-            name: 'water',
+            name: 'woda',
           },
           statics: [
             {
               capacity: 150,
-              name: 'water',
+              name: 'woda',
             },
             {
               capacity: 250,
-              name: 'water',
+              name: 'woda',
             },
             {
               capacity: 350,
-              name: 'water',
+              name: 'woda',
             },
           ],
         },
       },
-      drinks: [{ name: 'water', kcal: '0' }],
+      drinks: [{ name: 'woda', kcal: '0' }],
+    },
+    drink: {
+      total: 0,
+      history: [],
     },
   }),
   actions: {
