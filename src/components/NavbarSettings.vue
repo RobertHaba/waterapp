@@ -23,7 +23,7 @@ const routerGoBack = () => {
 const props = defineProps({
   hasChanges: Boolean,
 });
-const emit = defineEmits('saveData');
+const emit = defineEmits(['saveData']);
 const buttonText = computed(() => {
   return props.hasChanges ? 'Anuluj' : 'Zamknij';
 });

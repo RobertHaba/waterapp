@@ -31,7 +31,7 @@ import ListInsetShadow from './components/layouts/ListInsetShadow.vue';
   if (useAuth().user) {
     await useProfile().getUserData();
     await useSettings().getUserSettings();
-    await useDrink().getDrinkData();
+    await useDrink().getTodayDrinkHistory();
   }
   app.component('DynamicHeading', DynamicHeading);
   app.component('TitleWithInfo', TitleWithInfo);

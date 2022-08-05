@@ -40,11 +40,7 @@ export const useUserFirstConfig = defineStore('userFirstConfig', {
         },
       },
       drinks: [{ name: 'woda', kcal: '0' }],
-    },
-    drink: {
-      total: 0,
-      history: [],
-    },
+    }
   }),
   actions: {
     updateUserData(data) {

@@ -147,7 +147,7 @@
             >
               <DefaultButton
                 class-colors="pr-2 rounded-none"
-                @click="addDrink(drinkList.dynamic.capacity)"
+                @click="addDrink(drinkList.dynamic)"
                 ><EmptyGlassIcon class="w-6 h-6 fill-dark"></EmptyGlassIcon
                 ><span class="text-2xl font-normal"
                   >{{ drinkList.dynamic.capacity }}ml</span
@@ -178,7 +178,10 @@
         <DynamicHeading :level="3" class="text-xl"
           >Ostatnie napoje</DynamicHeading
         >
-        <ul class="flex flex-col gap-3 h-32 overflow-y-auto">
+        <ul
+          class="flex flex-col gap-3 h-32 overflow-y-auto"
+          v-if="drinkHistory.length"
+        >
           <li
             class="flex px-4 items-center justify-between"
             v-for="drink in drinkHistory"
@@ -194,13 +197,22 @@
               </div>
             </div>
             <div class="flex gap-1 items-center">
-              <time datetime="12:00">{{ getDateFromDrink(drink.date) }}</time>
-              <button class="p-3">
+              <time :datetime="getDateFromDrink(drink.date)">{{
+                getDateFromDrink(drink.date)
+              }}</time>
+              <button
+                class="p-3"
+                :aria-label="`Naciśnij, aby usunąć napój ${drink.name} o pojemności ${drink.capacity}`"
+                @click="removeDrink(drink)"
+              >
                 <CloseIcon class="w-4 h-4 fill-dark"></CloseIcon>
               </button>
             </div>
           </li>
         </ul>
+        <p v-else>
+          Jest tu całkowicie sucho... zacznij uzupełniać płyny, aby to zmienić
+        </p>
       </div>
     </div>
     <Navbar></Navbar>
@@ -222,17 +234,15 @@ import Avatar from '../components/TheAvatar.vue';
 import { useProfile } from '../stores/profile';
 import { useSettings } from '../stores/settings';
 import { useDrink } from '../stores/drink';
-const drinkSettings = useSettings().settings.drink;
-const drinkList = drinkSettings.list;
-const drinkData = useDrink().drink;
+const drinkSettingsState = useSettings().settings.drink;
+const drinkList = drinkSettingsState.list;
+const drinkDataState = useDrink().drink;
+const drinkHistoryState = useDrink().history;
 const drink = ref({
-  total: drinkData.total,
-  goal: drinkSettings.goal,
+  total: drinkDataState.total,
+  goal: drinkSettingsState.goal,
 });
-const drinkHistory = ref(drinkData.history);
-const date = ref(new Date());
-const hour = ref(date.value.getHours());
-const minutes = ref(date.value.getMinutes());
+const drinkHistory = ref(drinkHistoryState.today);
 
 const drinkProgressPercentage = computed(() => {
   const drinkCalcValue = (
@@ -241,21 +251,34 @@ const drinkProgressPercentage = computed(() => {
   ).toFixed();
   return drinkCalcValue >= 100 ? 100 : drinkCalcValue;
 });
-const dayProgressPercentage = computed(() => {
-  return (((hour.value * 60 + minutes.value) * 100) / 1440).toFixed();
-});
 
 const addDrink = (value) => {
   drink.value.total += value.capacity;
   useDrink().addDrink(value);
 };
-const getDateFromDrink = (drinkDate) => {
-  const date = new Date(
-    drinkDate.seconds ? drinkDate.seconds * 1000 : drinkDate
+const removeDrink = (drinkToRemove) => {
+  drinkHistory.value = drinkHistory.value.filter(
+    (drink) => drink.date !== drinkToRemove.date
   );
-  console.log(date.toLocaleDateString('pl-PL'));
-  return date.getHours() + ':' + date.getMinutes();
+  drink.value.total -= drinkToRemove.capacity;
+  useDrink().removeDrink(drinkToRemove);
 };
+const getDateFromDrink = (drinkDate) => {
+  const date = new Date(drinkDate);
+  const time = date.toLocaleTimeString('pl-PL', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  return time;
+};
+
+const date = ref(new Date());
+const hour = ref(date.value.getHours());
+const minutes = ref(date.value.getMinutes());
+
+const dayProgressPercentage = computed(() => {
+  return (((hour.value * 60 + minutes.value) * 100) / 1440).toFixed();
+});
 setInterval(() => {
   date.value = new Date();
 }, 60000);

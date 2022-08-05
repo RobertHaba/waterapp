@@ -23,10 +23,6 @@ const saveToDB = async () => {
     doc(db, useAuth().user.uid, 'settings'),
     useUserFirstConfig().settings
   );
-  await setDoc(
-    doc(db, useAuth().user.uid, 'drink'),
-    useUserFirstConfig().drink
-  );
 };
 </script>
 
