@@ -4,7 +4,7 @@
       <span class="icon icon--hello h-screen max-h-32"></span>
       <div class="flex flex-col justify-start">
         <p>Witaj ponownie</p>
-        <DynamicHeading :level="1" class="w-fit">Zaloguj się</DynamicHeading>
+        <DynamicHeading :level="1" class="w-fit text-3xl">Zaloguj się</DynamicHeading>
       </div>
       <form @submit.prevent="handlerForm" class="flex flex-col gap-2">
         <InputEmail
