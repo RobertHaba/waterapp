@@ -4,6 +4,7 @@
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     class="-z-10"
+    preserveAspectRatio="none"
   >
     <g filter="url(#filter0_i_68_1517)">
       <path

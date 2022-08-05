@@ -20,9 +20,9 @@
         <div class="relative">
           <div class="relative">
             <div class="absolute top-2 w-full flex justify-between px-12">
-              <FullGlassIcon class="w-6 h-6 fill-blue-100"></FullGlassIcon>
+              <FullGlassIcon class="w-6 h-6 fill-blue opacity-20"></FullGlassIcon>
               <EmptyGlassIcon
-                class="icon w-6 h-6 fill-blue-100"
+                class="icon w-6 h-6 fill-blue opacity-20"
               ></EmptyGlassIcon>
             </div>
             <svg class="circle-box -rotate-45">
@@ -77,8 +77,8 @@
             class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2"
           >
             <div class="absolute top-2 w-full flex justify-between px-9">
-              <MoonIcon class="icon w-4 h-4"></MoonIcon>
-              <SunIcon class="icon w-4 h-4"></SunIcon>
+              <MoonIcon class="icon w-4 h-4 fill-blue opacity-20"></MoonIcon>
+              <SunIcon class="icon w-4 h-4 fill-blue opacity-20"></SunIcon>
             </div>
             <svg class="circle-box circle-box--medium -rotate-45">
               <circle cx="75" cy="75" r="75"></circle>
@@ -154,7 +154,11 @@
                 ></DefaultButton
               >
 
-              <button class="p-4">
+              <button
+                class="p-4"
+                aria-label="Przycisk do zmiany parametrów napoju"
+                @click="openPopup"
+              >
                 <EditIcon class="w-4 h-4 fill-dark"></EditIcon>
               </button>
             </div>
@@ -180,11 +184,11 @@
         >
         <ul
           class="flex flex-col gap-3 h-32 overflow-y-auto"
-          v-if="drinkHistory.length"
+          v-if="drink.history.length"
         >
           <li
             class="flex px-4 items-center justify-between"
-            v-for="drink in drinkHistory"
+            v-for="drink in drink.history"
             :key="drink.time"
           >
             <div class="flex gap-4 items-center">
@@ -216,7 +220,18 @@
       </div>
     </div>
     <Navbar></Navbar>
+    <DrinkPropertiesPopup
+      v-if="popupData.isOpen"
+      :drink="popupData.drink"
+      @close-popup="closePopup"
+      @save-data="changeDynamicDrink"
+      >Edytuj napój</DrinkPropertiesPopup
+    >
   </main>
+  <MobileWaveSVG
+    class="fixed h-screen w-screen top-full transition-all"
+    :style="wave.transfromStyle"
+  ></MobileWaveSVG>
 </template>
 
 <script setup>
@@ -231,19 +246,23 @@ import CloseIcon from '../components/icons/Close.vue';
 import SlimButton from '../components/buttons/SlimButton.vue';
 import Navbar from '../components/TheNavbar.vue';
 import Avatar from '../components/TheAvatar.vue';
+import DrinkPropertiesPopup from '../components/popups/DrinkPropertiesPopup.vue';
 import { useProfile } from '../stores/profile';
 import { useSettings } from '../stores/settings';
 import { useDrink } from '../stores/drink';
+import { useWavePosition } from '@/stores/wavePosition';
+const wave = useWavePosition();
 const drinkSettingsState = useSettings().settings.drink;
 const drinkList = drinkSettingsState.list;
-const drinkDataState = useDrink().drink;
-const drinkHistoryState = useDrink().history;
 const drink = ref({
-  total: drinkDataState.total,
-  goal: drinkSettingsState.goal,
+  total: useDrink().drink.total,
+  goal: useSettings().settings.drink.goal,
+  history: useDrink().history.today,
 });
-const drinkHistory = ref(drinkHistoryState.today);
-
+const popupData = ref({
+  isOpen: false,
+  drink: null,
+});
 const drinkProgressPercentage = computed(() => {
   const drinkCalcValue = (
     (drink.value.total * 100) /
@@ -257,9 +276,10 @@ const addDrink = (value) => {
   useDrink().addDrink(value);
 };
 const removeDrink = (drinkToRemove) => {
-  drinkHistory.value = drinkHistory.value.filter(
-    (drink) => drink.date !== drinkToRemove.date
+  const index = drink.value.history.findIndex(
+    (drink) => drink.date === drinkToRemove.date
   );
+  drink.value.history.splice(index, 1);
   drink.value.total -= drinkToRemove.capacity;
   useDrink().removeDrink(drinkToRemove);
 };
@@ -271,7 +291,21 @@ const getDateFromDrink = (drinkDate) => {
   });
   return time;
 };
-
+const openPopup = () => {
+  popupData.value.drink = { ...drinkList.dynamic };
+  popupData.value.isOpen = true;
+};
+const changeDynamicDrink = () => {
+  popupData.value.isOpen = false;
+  useSettings().settings.drink.list.dynamic = popupData.value.drink;
+  useSettings().updateSettingsData('drink', useSettings().settings.drink);
+};
+const closePopup = () => {
+  popupData.value.isOpen = false;
+};
+const translateY = computed(() => {
+  return `transform: translateY(-${drinkProgressPercentage.value}%)`;
+});
 const date = ref(new Date());
 const hour = ref(date.value.getHours());
 const minutes = ref(date.value.getMinutes());
@@ -279,10 +313,13 @@ const minutes = ref(date.value.getMinutes());
 const dayProgressPercentage = computed(() => {
   return (((hour.value * 60 + minutes.value) * 100) / 1440).toFixed();
 });
+wave.updateTransformStyle(translateY.value);
 setInterval(() => {
   date.value = new Date();
 }, 60000);
-
+watch(drinkProgressPercentage, () => {
+  wave.updateTransformStyle(translateY.value);
+});
 watch(date, () => {
   minutes.value = date.value.getMinutes();
   hour.value = date.value.getHours();
@@ -322,7 +359,8 @@ watch(date, () => {
 
 circle:nth-child(1) {
   stroke-dashoffset: calc(626 - (626 * 0.75));
-  stroke: theme('colors.blue-100');
+  stroke: theme('colors.blue');
+  opacity: 10%;
 }
 
 circle:nth-child(2) {
@@ -333,7 +371,8 @@ circle:nth-child(2) {
 }
 .circle-box--medium circle:nth-child(1) {
   stroke-dashoffset: calc(470 - (470 * 0.75));
-  stroke: theme('colors.blue-100');
+  stroke: theme('colors.blue');
+  opacity: 10%;
 }
 
 .circle-box--medium circle:nth-child(2) {

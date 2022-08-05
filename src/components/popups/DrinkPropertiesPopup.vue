@@ -2,7 +2,9 @@
   <main class="fixed w-full min-h-screen p-4 py-10 pb-28 top-0 left-0 bg-light">
     <div class="relative h-full max-w-sm flex flex-col gap-8 mx-auto">
       <DynamicHeading><slot></slot></DynamicHeading>
-      <ListInsetShadow>
+      <ListInsetShadow
+        class="fixed w-[calc(100%-2rem)] max-w-sm bottom-1/2 translate-y-1/2"
+      >
         <li class="flex flex-col gap-2 justify-between">
           <label for="capacity"
             ><TextWithIcon>
