@@ -28,6 +28,10 @@
     </div>
     <Navbar></Navbar>
   </main>
+  <MobileWaveSVG
+    class="fixed h-screen w-screen top-full transition-all"
+    :style="wave.transfromStyle"
+  ></MobileWaveSVG>
 </template>
 
 <script setup>
@@ -38,6 +42,8 @@ import { ref, shallowRef } from 'vue';
 import Avatar from '../components/TheAvatar.vue';
 import Navbar from '../components/TheNavbar.vue';
 import { useProfile } from '../stores/profile.js';
+import { useWavePosition } from '@/stores/wavePosition';
+const wave = useWavePosition();
 const profile = ref(useProfile());
 const routersList = shallowRef([
   {

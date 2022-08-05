@@ -12,6 +12,7 @@ module.exports = {
         'blue-100': '#E2EDFF',
         'blue-500': '#D4E4FF',
         light: '#FDFFFF',
+        red: '#FF6663'
       },
       boxShadow: {
         'inset-light': 'inset 0px 2px 12px rgba(75, 104, 206, 0.2)',

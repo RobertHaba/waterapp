@@ -26,8 +26,8 @@
                 :placeholder="drinkSettings.goal"
                 min="1"
                 max="99999"
-                @keyup="checkValueChange"
-                @click="checkValueChange"
+                @keyup="checkInputChange"
+                @click="checkInputChange"
               />
               <label for="goal" class="border-b border-dark pl-2">ml</label>
             </div>
@@ -83,19 +83,19 @@
         :has-changes="hasChanges"
       ></NavbarSettings>
     </footer>
-    <DrinkPropertiesPopup
-      v-if="isPopupOpen"
-      :drink="popupData"
+    <EditDrinkPopup
+      v-if="popupData.isOpen"
+      :drink="popupData.drink"
       @close-popup="closePopup"
       @save-data="changeStaticDrink"
-      >Edytuj napój</DrinkPropertiesPopup
+      >Edytuj napój</EditDrinkPopup
     >
   </main>
 </template>
 
 <script setup>
 import NavbarSettings from '../../components/NavbarSettings.vue';
-import DrinkPropertiesPopup from '@/components/popups/DrinkPropertiesPopup.vue';
+import EditDrinkPopup from '@/components/popups/EditDrinkPopup.vue';
 import SlimButton from '../../components/buttons/SlimButton.vue';
 import ButtonReturnAsIcon from '../../components/buttons/ButtonReturnAsIcon.vue';
 import TrophyIcon from '@/components/icons/Trophy.vue';
@@ -105,15 +105,17 @@ import { useSettings } from '@/stores/settings';
 import { useCalcGoal } from '@/composables/calcDrinkGoal.js';
 import { computed, ref } from '@vue/runtime-core';
 const drinkSettings = ref({ ...useSettings().settings.drink });
-const isPopupOpen = ref(false);
 const hasChanges = ref(false);
-const popupData = ref(null);
-const indexOfDrinkInPopup = ref(null);
+const popupData = ref({
+  isOpen: false,
+  drink: null,
+  drinkIndex: null,
+});
 const drinkList = drinkSettings.value.list.statics;
 const textAutoCalcButton = computed(() => {
   return drinkSettings.value.autoCalc ? 'tak' : 'nie';
 });
-const checkValueChange = () => {
+const checkInputChange = () => {
   if (drinkSettings.value.goal !== useSettings().settings.drink.goal) {
     drinkSettings.value.autoCalc = false;
     hasChanges.value = true;
@@ -127,14 +129,14 @@ const calcDailyDrinkGoal = () => {
   hasChanges.value = true;
 };
 const openPopup = (index) => {
-  indexOfDrinkInPopup.value = index;
-  popupData.value = { ...drinkList[index] };
-  isPopupOpen.value = true;
+  popupData.value.drinkIndex = index;
+  popupData.value.drink = { ...drinkList[index] };
+  popupData.value.isOpen = true;
 };
 const changeStaticDrink = () => {
-  isPopupOpen.value = false;
-  useSettings().settings.drink.list.statics[indexOfDrinkInPopup.value] =
-    popupData.value;
+  popupData.value.isOpen = false;
+  useSettings().settings.drink.list.statics[popupData.value.drinkIndex] =
+    popupData.value.drink;
   useSettings().updateSettingsData('drink', useSettings().settings.drink);
 };
 const saveData = () => {
@@ -142,7 +144,7 @@ const saveData = () => {
   useSettings().updateSettingsData('drink', drinkSettings);
 };
 const closePopup = () => {
-  isPopupOpen.value = false;
+  popupData.value.isOpen = false;
 };
 </script>
 

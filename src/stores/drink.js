@@ -26,9 +26,14 @@ export const useDrink = defineStore('drink', {
         this.updateTotalDrinkInDB();
       }
     },
-    removeDrink(drink) {
+    removeDrink(drinkToRemove) {
+      const index = this.history.today.findIndex(
+        (drink) => drink.date === drinkToRemove.date
+      );
+      this.history.today.splice(index, 1);
+      this.drink.total -= drinkToRemove.capacity;
       if (useAuth().user.uid) {
-        this.removeDrinkFromDB(drink);
+        this.removeDrinkFromDB(drinkToRemove);
       }
     },
     async removeDrinkFromDB(drink) {

@@ -20,7 +20,9 @@
         <div class="relative">
           <div class="relative">
             <div class="absolute top-2 w-full flex justify-between px-12">
-              <FullGlassIcon class="w-6 h-6 fill-blue opacity-20"></FullGlassIcon>
+              <FullGlassIcon
+                class="w-6 h-6 fill-blue opacity-20"
+              ></FullGlassIcon>
               <EmptyGlassIcon
                 class="icon w-6 h-6 fill-blue opacity-20"
               ></EmptyGlassIcon>
@@ -157,12 +159,12 @@
               <button
                 class="p-4"
                 aria-label="Przycisk do zmiany parametrów napoju"
-                @click="openPopup"
+                @click="openPopup(drinkList.dynamic)"
               >
                 <EditIcon class="w-4 h-4 fill-dark"></EditIcon>
               </button>
             </div>
-            <DefaultButton
+            <DefaultButton @click="openPopup()"
               ><AddIcon class="fill-light w-6 h-6"></AddIcon
             ></DefaultButton>
           </div>
@@ -220,12 +222,12 @@
       </div>
     </div>
     <Navbar></Navbar>
-    <DrinkPropertiesPopup
+    <EditDrinkPopup
       v-if="popupData.isOpen"
       :drink="popupData.drink"
       @close-popup="closePopup"
       @save-data="changeDynamicDrink"
-      >Edytuj napój</DrinkPropertiesPopup
+      >{{ popupDrinkText }}</EditDrinkPopup
     >
   </main>
   <MobileWaveSVG
@@ -246,7 +248,7 @@ import CloseIcon from '../components/icons/Close.vue';
 import SlimButton from '../components/buttons/SlimButton.vue';
 import Navbar from '../components/TheNavbar.vue';
 import Avatar from '../components/TheAvatar.vue';
-import DrinkPropertiesPopup from '../components/popups/DrinkPropertiesPopup.vue';
+import EditDrinkPopup from '../components/popups/EditDrinkPopup.vue';
 import { useProfile } from '../stores/profile';
 import { useSettings } from '../stores/settings';
 import { useDrink } from '../stores/drink';
@@ -262,24 +264,22 @@ const drink = ref({
 const popupData = ref({
   isOpen: false,
   drink: null,
+  autoAdd: false,
+  title: 'Edytuj napój',
 });
 const drinkProgressPercentage = computed(() => {
-  const drinkCalcValue = (
+  const drinkPercentage = (
     (drink.value.total * 100) /
     drink.value.goal
   ).toFixed();
-  return drinkCalcValue >= 100 ? 100 : drinkCalcValue;
+  return drinkPercentage >= 100 ? 100 : drinkPercentage;
 });
 
-const addDrink = (value) => {
-  drink.value.total += value.capacity;
-  useDrink().addDrink(value);
+const addDrink = (drinkItem) => {
+  drink.value.total += drinkItem.capacity;
+  useDrink().addDrink(drinkItem);
 };
 const removeDrink = (drinkToRemove) => {
-  const index = drink.value.history.findIndex(
-    (drink) => drink.date === drinkToRemove.date
-  );
-  drink.value.history.splice(index, 1);
   drink.value.total -= drinkToRemove.capacity;
   useDrink().removeDrink(drinkToRemove);
 };
@@ -291,38 +291,57 @@ const getDateFromDrink = (drinkDate) => {
   });
   return time;
 };
-const openPopup = () => {
-  popupData.value.drink = { ...drinkList.dynamic };
+const openPopup = (drinkItem = null) => {
+  if (drinkItem !== null) {
+    popupData.value.drink = { ...drinkItem };
+  } else {
+    popupData.value.drink = {
+      capacity: 10,
+      name: 'woda',
+    };
+    popupData.value.autoAdd = true;
+  }
   popupData.value.isOpen = true;
 };
 const changeDynamicDrink = () => {
-  popupData.value.isOpen = false;
-  useSettings().settings.drink.list.dynamic = popupData.value.drink;
-  useSettings().updateSettingsData('drink', useSettings().settings.drink);
+  if (popupData.value.autoAdd) {
+    addDrink(popupData.value.drink);
+  } else {
+    useSettings().settings.drink.list.dynamic = popupData.value.drink;
+    useSettings().updateSettingsData('drink', useSettings().settings.drink);
+    popupData.value.drink = null;
+  }
+  closePopup();
 };
 const closePopup = () => {
   popupData.value.isOpen = false;
+  popupData.value.autoAdd = false;
 };
+const popupDrinkText = computed(() => {
+  return popupData.value.autoAdd ? 'Dodaj napój' : 'Edytuj napój';
+});
 const translateY = computed(() => {
   return `transform: translateY(-${drinkProgressPercentage.value}%)`;
 });
 const date = ref(new Date());
-const hour = ref(date.value.getHours());
-const minutes = ref(date.value.getMinutes());
-
-const dayProgressPercentage = computed(() => {
-  return (((hour.value * 60 + minutes.value) * 100) / 1440).toFixed();
-});
-wave.updateTransformStyle(translateY.value);
 setInterval(() => {
   date.value = new Date();
 }, 60000);
+const day = ref({
+  hour: date.value.getHours(),
+  minutes: date.value.getMinutes(),
+});
+const dayProgressPercentage = computed(() => {
+  return (((day.value.hour * 60 + day.value.minutes) * 100) / 1440).toFixed();
+});
+wave.updateTransformStyle(translateY.value);
+
 watch(drinkProgressPercentage, () => {
   wave.updateTransformStyle(translateY.value);
 });
 watch(date, () => {
-  minutes.value = date.value.getMinutes();
-  hour.value = date.value.getHours();
+  day.value.minutes = date.value.getMinutes();
+  day.value.hour = date.value.getHours();
 });
 </script>
 
@@ -365,7 +384,7 @@ circle:nth-child(1) {
 
 circle:nth-child(2) {
   stroke-dashoffset: calc(
-    631 - (631 * v-bind(drinkProgressPercentage) * 0.75) / 100
+    626 - (626 * v-bind(drinkProgressPercentage) * 0.75) / 100
   );
   stroke: theme('colors.blue');
 }
