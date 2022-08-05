@@ -2,7 +2,7 @@
   <main class="relative w-full min-h-screen p-4 py-10 pb-28">
     <div class="relative h-full max-w-sm flex flex-col gap-8 mx-auto">
       <header class="flex w-full">
-        <ButtonReturnAsIcon></ButtonReturnAsIcon>
+        <ReturnButton></ReturnButton>
         <div class="w-[calc(100%-4rem)] flex justify-center items-center">
           <DynamicHeading class="text-2xl">Ustawienia napojów</DynamicHeading>
         </div>
@@ -97,7 +97,6 @@
 import NavbarSettings from '../../components/NavbarSettings.vue';
 import EditDrinkPopup from '@/components/popups/EditDrinkPopup.vue';
 import SlimButton from '../../components/buttons/SlimButton.vue';
-import ButtonReturnAsIcon from '../../components/buttons/ButtonReturnAsIcon.vue';
 import TrophyIcon from '@/components/icons/Trophy.vue';
 import TextWithIcon from '@/components/texts/TextWithIcon.vue';
 import EditIcon from '../../components/icons/Edit.vue';
@@ -125,6 +124,7 @@ const checkInputChange = () => {
 };
 const calcDailyDrinkGoal = () => {
   drinkSettings.value.goal = useCalcGoal();
+  console.log(drinkSettings.value.goal);
   drinkSettings.value.autoCalc = true;
   hasChanges.value = true;
 };

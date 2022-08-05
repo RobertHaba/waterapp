@@ -1,0 +1,134 @@
+<template>
+  <SettingsLayout :has-changes="hasChanges" @save-data="saveData">
+    <template #title>Konto</template>
+    <ListInsetShadow class="gap-6">
+      <AccountListItem input-id="name"
+        ><template #title>Imię</template>
+        <input
+          type="text"
+          id="name"
+          autocomplete="name"
+          v-model="user.name"
+          @input="removeNonLetters"
+          maxlength="13"
+          class="w-32 text-right text-lg border-b border-dark leading-none"
+        />
+      </AccountListItem>
+      <AccountListItem input-id="gender"
+        ><template #title>Płeć</template>
+        <BaseSelect
+          class="w-32 text-right text-lg bg-light"
+          id="gender"
+          required
+          :select-options="genderSelectOptions"
+          v-model="user.gender"
+        ></BaseSelect>
+      </AccountListItem>
+      <AccountListItem input-id="weight"
+        ><template #title>Waga</template>
+        <template #error v-if="!isWeightDataValid"
+          >Podaj wagę z przedziału od 3 do 300kg</template
+        >
+        <input
+          type="number"
+          id="weight"
+          autocomplete="weight"
+          v-model="user.weight"
+          min="3"
+          max="300"
+          required
+          class="w-26 text-right text-lg border-b border-dark leading-none"
+        />
+        <span for="goal" class="border-b text-right w-6 border-dark">kg</span>
+      </AccountListItem>
+      <AccountListItem input-id="year"
+        ><template #title>Rok urodzenia</template>
+        <template #error v-if="!isYearDataValid"
+          >Podaj rok z przedziału od {{ yearNow - 150 }} do
+          {{ yearNow }}</template
+        >
+        <input
+          type="number"
+          id="year"
+          autocomplete="year"
+          v-model="user.year"
+          :min="minYear"
+          :max="yearNow"
+          class="w-32 text-right text-lg border-b border-dark leading-none"
+          placeholder="np. 2000"
+        />
+      </AccountListItem>
+      <AccountListItem input-id="activity"
+        ><template #title>Aktywność</template>
+        <BaseSelect
+          class="w-32 text-right text-lg bg-light"
+          id="activity"
+          :select-options="activitySelectOptions"
+          required
+          v-model="user.activity"
+        ></BaseSelect>
+      </AccountListItem>
+    </ListInsetShadow>
+  </SettingsLayout>
+</template>
+
+<script setup>
+import SettingsLayout from '@/components/layouts/SettingsLayout.vue';
+import AccountListItem from '@/components/layouts/AccountListItem.vue';
+import BaseSelect from '../../components/inputs/BaseSelect.vue';
+
+import { computed, ref } from 'vue';
+import { useProfile } from '@/stores/profile.js';
+import { useCalcGoal } from '@/composables/calcDrinkGoal';
+import { useSettings } from '@/stores/settings';
+const settingsStore = useSettings();
+const user = ref({ ...useProfile().user });
+const hasChanges = ref(true);
+const date = new Date();
+const yearNow = ref(date.getFullYear());
+const minYear = ref(yearNow.value - 150);
+const saveData = () => {
+  if (!isWeightDataValid.value && !isYearDataValid.value) {
+    return;
+  }
+  user.value.name = newUserName.value;
+  useProfile().updateUserData(user.value);
+  console.log();
+  if (settingsStore.settings.drink.autoCalc) {
+    settingsStore.updateSettingsData('drink', {
+      autoCalc: true,
+      goal: useCalcGoal(),
+      list: settingsStore.settings.drink.list,
+    });
+  }
+  //add else for choose to autoCalc and update goal
+  console.log('Save');
+};
+const newUserName = computed(() => {
+  return user.value.name == useProfile().user.name || user.value.name.length > 0
+    ? user.value.name
+    : 'Gość';
+});
+
+const isWeightDataValid = computed(() => {
+  return (
+    (user.value.weight >= 3 && user.value.weight <= 300) ||
+    useProfile().user.weight == user.value.weight
+  );
+});
+const isYearDataValid = computed(() => {
+  return (
+    (user.value.year >= minYear.value && user.value.year <= yearNow.value) ||
+    useProfile().user.year == user.value.year
+  );
+});
+const activitySelectOptions = [
+  { name: 'mała', value: 'low' },
+  { name: 'średnia', value: 'medium' },
+  { name: 'wysoka', value: 'high' },
+];
+const genderSelectOptions = [
+  { name: 'mężczyna', value: 'man' },
+  { name: 'kobieta', value: 'woman' },
+];
+</script>

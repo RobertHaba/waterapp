@@ -22,6 +22,7 @@ import MobileWave from './components/icons/MobileWave.vue';
 import ArrowLeft from './components/icons/ArrowLeft.vue';
 import ButtonReturnAsIcon from './components/buttons/ButtonReturnAsIcon.vue';
 import ListInsetShadow from './components/layouts/ListInsetShadow.vue';
+import BaseLayout from './components/layouts/BaseLayout.vue';
 
 (async () => {
   const app = createApp(App).use(createPinia());
@@ -39,6 +40,7 @@ import ListInsetShadow from './components/layouts/ListInsetShadow.vue';
   app.component('ButtonAsLink', ButtonAsLink);
   app.component('ReturnButton', ButtonReturnAsIcon);
   app.component('ListInsetShadow', ListInsetShadow);
+  app.component('BaseLayout', BaseLayout);
 
   app.use(router);
   app.mount('#app');

@@ -12,7 +12,7 @@ module.exports = {
         'blue-100': '#E2EDFF',
         'blue-500': '#D4E4FF',
         light: '#FDFFFF',
-        red: '#FF6663'
+        red: '#FF6663',
       },
       boxShadow: {
         'inset-light': 'inset 0px 2px 12px rgba(75, 104, 206, 0.2)',
@@ -22,6 +22,7 @@ module.exports = {
         '1/8': 'calc(100%/8)',
         '1/7': 'calc(100%/7)',
         '1/6': 'calc(100%/6)',
+        26: '6.5rem',
         30: '7.5rem',
         34: '8.5rem',
       },

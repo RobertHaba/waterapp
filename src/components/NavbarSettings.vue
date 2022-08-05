@@ -6,7 +6,7 @@
       <DefaultButton class="!bg-light !text-dark" @click="routerGoBack">{{
         buttonText
       }}</DefaultButton>
-      <DefaultButton @click="saveData" v-if="props.hasChanges"
+      <DefaultButton @click="saveData" v-if="props.hasChanges" button-type="submit"
         >Zapisz</DefaultButton
       >
     </ul>

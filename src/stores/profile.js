@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useAuth } from './auth';
 import { db } from '../firestore/index';
 export const useProfile = defineStore('profile', {
@@ -21,6 +21,16 @@ export const useProfile = defineStore('profile', {
       if (docSnap.exists()) {
         this.settings = docSnap.data();
       }
+    },
+    updateUserData(newData) {
+      this.user = newData;
+      if (useAuth().user.uid) {
+        this.updateUserDataInDB(newData);
+      }
+    },
+    async updateUserDataInDB(newData) {
+      const docRef = doc(db, useAuth().user.uid, 'profile');
+      await updateDoc(docRef, newData);
     },
     updateSettingsData(keyName, newValue) {
       this.settings[keyName] = newValue;

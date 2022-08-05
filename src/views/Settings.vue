@@ -54,7 +54,7 @@ const routersList = shallowRef([
   {
     icon: UserStrokeIcon,
     name: 'Konto',
-    path: '/',
+    path: '/settings/account',
   },
   {
     icon: UserStrokeIcon,

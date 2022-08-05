@@ -53,6 +53,21 @@ const router = createRouter({
       },
     },
     {
+      path: '/settings/account',
+      name: 'account',
+      component: () => import('../views/settings/AccountView.vue'),
+      beforeEnter: async (to, from, next) => {
+        if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
+          next();
+        } else if (
+          (await userIsAuth()) &&
+          (await checkIfDateExistsInDB()) === false
+        ) {
+          next({ name: 'gender' });
+        } else next({ name: 'signin' });
+      },
+    },
+    {
       path: '/welcome',
       name: 'welcome',
       component: () => import('../views/Welcome.vue'),
