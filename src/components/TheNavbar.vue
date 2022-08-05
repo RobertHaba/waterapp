@@ -23,7 +23,7 @@
         label="Przejdź do ustawień"
         path="/settings"
       >
-        <ChartIcon class="w-6 h-6 fill-dark"></ChartIcon>
+        <SettingsIcon class="w-6 h-6 fill-dark"></SettingsIcon>
       </NavbarItem>
     </ul>
   </nav>
@@ -33,6 +33,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import ChartIcon from './icons/Chart.vue';
+import SettingsIcon from './icons/Settings.vue';
 import NavbarItem from './icons/NavbarItem.vue';
 import WaterDropIcon from './icons/WaterDrop.vue';
 

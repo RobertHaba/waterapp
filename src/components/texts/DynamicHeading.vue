@@ -1,5 +1,5 @@
 <template>
-  <component :is="`h${$props.level}`" class="font-bold text-dark text-3xl"
+  <component :is="`h${$props.level}`" class="font-bold text-dark"
     ><slot>WaterApp</slot></component
   >
 </template>

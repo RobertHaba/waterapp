@@ -2,7 +2,7 @@
   <main class="relative w-full min-h-screen p-4 py-10 pb-28">
     <div class="relative h-full max-w-sm flex flex-col gap-8 mx-auto">
       <header class="flex justify-between">
-        <DynamicHeading class="w-fit"></DynamicHeading>
+        <DynamicHeading class="w-fit text-3xl"></DynamicHeading>
         <div>
           <Avatar></Avatar>
         </div>
@@ -131,7 +131,7 @@
             </svg>
           </div>
           <div
-            class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col justify-center items-center bg-light shadow-inset-light w-28 h-28 rounded-full"
+            class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col justify-center items-center bg-blue/5 shadow-inset-light w-28 h-28 rounded-full"
           >
             <span class="text-2xl font-bold pt-2">{{ drink.total }}ml</span>
             <span class="text-sm">{{ drink.goal }}ml</span>
@@ -184,14 +184,17 @@
         <DynamicHeading :level="3" class="text-xl"
           >Ostatnie napoje</DynamicHeading
         >
-        <ul
+        <TransitionGroup
           class="flex flex-col gap-3 h-32 overflow-y-auto"
+          name="fade"
+          tag="ul"
+          appear=""
           v-if="drink.history.length"
         >
           <li
             class="flex px-4 items-center justify-between"
             v-for="drink in drink.history"
-            :key="drink.time"
+            :key="drink.date"
           >
             <div class="flex gap-4 items-center">
               <FullGlassIcon class="fill-dark w-6 h-6"></FullGlassIcon>
@@ -215,7 +218,7 @@
               </button>
             </div>
           </li>
-        </ul>
+        </TransitionGroup>
         <p v-else>
           Jest tu całkowicie sucho... zacznij uzupełniać płyny, aby to zmienić
         </p>
@@ -399,5 +402,23 @@ circle:nth-child(2) {
     470 - (470 * v-bind(dayProgressPercentage) * 0.75) / 100
   );
   stroke: theme('colors.blue-500');
+}
+
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+/* 2. declare enter from and leave to state */
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+/* 3. ensure leaving items are taken out of layout flow so that moving
+      animations can be calculated correctly. */
+.fade-leave-active {
 }
 </style>
