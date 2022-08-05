@@ -185,8 +185,8 @@
           >Ostatnie napoje</DynamicHeading
         >
         <TransitionGroup
-          class="flex flex-col gap-3 h-32 overflow-y-auto"
-          name="fade"
+          class="flex flex-col gap-3 h-32 overflow-y-auto drink-history-list"
+          name="slide"
           tag="ul"
           appear=""
           v-if="drink.history.length"
@@ -404,21 +404,20 @@ circle:nth-child(2) {
   stroke: theme('colors.blue-500');
 }
 
-.fade-move,
-.fade-enter-active,
-.fade-leave-active {
+.slide-move,
+.slide-enter-active,
+.slide-leave-active {
   transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
 }
 
 /* 2. declare enter from and leave to state */
-.fade-enter-from,
-.fade-leave-to {
+.slide-enter-from,
+.slide-leave-to {
   opacity: 0;
   transform: translateX(-50px);
 }
 
 /* 3. ensure leaving items are taken out of layout flow so that moving
       animations can be calculated correctly. */
-.fade-leave-active {
-}
+
 </style>

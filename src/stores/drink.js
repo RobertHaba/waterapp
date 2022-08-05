@@ -22,9 +22,6 @@ export const useDrink = defineStore('drink', {
     addDrink(drink) {
       this.addDrinkToHistory(drink);
       this.drink.total += drink.capacity;
-      if (useAuth().user.uid) {
-        this.updateTotalDrinkInDB();
-      }
     },
     removeDrink(drinkToRemove) {
       const index = this.history.today.findIndex(
@@ -42,10 +39,6 @@ export const useDrink = defineStore('drink', {
       await deleteDoc(
         doc(db, useAuth().user.uid, 'history', today, '' + drink.date)
       );
-    },
-    async updateTotalDrinkInDB() {
-      const docRef = doc(db, useAuth().user.uid, 'drink');
-      await updateDoc(docRef, this.drink);
     },
     async getTodayDrinkHistory() {
       const date = new Date();

@@ -6,9 +6,14 @@
       <DefaultButton class="!bg-light !text-dark" @click="routerGoBack">{{
         buttonText
       }}</DefaultButton>
-      <DefaultButton @click="saveData" v-if="props.hasChanges" button-type="submit"
-        >Zapisz</DefaultButton
-      >
+      <transition-group tag="div" name="fade">
+        <DefaultButton
+          @click="saveData"
+          v-if="props.hasChanges"
+          button-type="submit"
+          >Zapisz</DefaultButton
+        >
+      </transition-group>
     </ul>
   </nav>
 </template>
@@ -31,3 +36,14 @@ const saveData = () => {
   emit('saveData');
 };
 </script>
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+</style>

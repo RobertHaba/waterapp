@@ -9,7 +9,7 @@
           id="name"
           autocomplete="name"
           v-model="user.name"
-          @input="removeNonLetters"
+          @input="watchForValueChange(1, user.name, useProfile().user.name)"
           maxlength="13"
           class="w-32 text-right text-lg border-b border-dark leading-none"
         />
@@ -21,6 +21,7 @@
           id="gender"
           required
           :select-options="genderSelectOptions"
+          @input="watchForValueChange(2, user.gender, useProfile().user.gender)"
           v-model="user.gender"
         ></BaseSelect>
       </AccountListItem>
@@ -37,6 +38,7 @@
           min="3"
           max="300"
           required
+          @input="watchForValueChange(3, user.weight, useProfile().user.weight)"
           class="w-26 text-right text-lg border-b border-dark leading-none"
         />
         <span for="goal" class="border-b text-right w-6 border-dark">kg</span>
@@ -55,6 +57,7 @@
           :min="minYear"
           :max="yearNow"
           class="w-32 text-right text-lg border-b border-dark leading-none"
+          @input="watchForValueChange(4, user.year, useProfile().user.year)"
           placeholder="np. 2000"
         />
       </AccountListItem>
@@ -65,6 +68,9 @@
           id="activity"
           :select-options="activitySelectOptions"
           required
+          @input="
+            watchForValueChange(5, user.activity, useProfile().user.activity)
+          "
           v-model="user.activity"
         ></BaseSelect>
       </AccountListItem>
@@ -81,9 +87,11 @@ import { computed, ref } from 'vue';
 import { useProfile } from '@/stores/profile.js';
 import { useCalcGoal } from '@/composables/calcDrinkGoal';
 import { useSettings } from '@/stores/settings';
+import { useWatchForValueChange } from '@/composables/watchForValueChange';
 const settingsStore = useSettings();
 const user = ref({ ...useProfile().user });
-const hasChanges = ref(true);
+const hasChanges = ref(false);
+const changesLog = ref([]);
 const date = new Date();
 const yearNow = ref(date.getFullYear());
 const minYear = ref(yearNow.value - 150);
@@ -122,6 +130,21 @@ const isYearDataValid = computed(() => {
     useProfile().user.year == user.value.year
   );
 });
+const watchForValueChange = (elID, newVal, oldVal) => {
+  const index = changesLog.value.findIndex((item) => item.id === elID);
+  if (index === -1) {
+    changesLog.value.push({
+      id: elID,
+      status: useWatchForValueChange(newVal, oldVal),
+    });
+  } else {
+    changesLog.value[index].status = useWatchForValueChange(newVal, oldVal);
+  }
+  checkIfLogHasChanges();
+};
+const checkIfLogHasChanges = () => [
+  (hasChanges.value = changesLog.value.find((item) => item.status === true)),
+];
 const activitySelectOptions = [
   { name: 'mała', value: 'low' },
   { name: 'średnia', value: 'medium' },
