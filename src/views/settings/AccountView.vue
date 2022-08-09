@@ -93,7 +93,10 @@ import { computed, ref } from 'vue';
 import { useProfile } from '@/stores/profile.js';
 import { useCalcGoal } from '@/composables/calcDrinkGoal';
 import { useSettings } from '@/stores/settings';
-import { useWatchForValueChange } from '@/composables/watchForValueChange';
+import {
+  useCheckForLogChanges,
+  useAddChangeLog,
+} from '@/composables/useWatchForValueChange';
 const settingsStore = useSettings();
 const user = ref({ ...useProfile().user });
 const hasChanges = ref(false);
@@ -148,21 +151,8 @@ const isYearDataValid = computed(() => {
   );
 });
 const watchForValueChange = (elID, newVal, oldVal) => {
-  const index = changesLog.value.findIndex((item) => item.id === elID);
-  if (index === -1) {
-    changesLog.value.push({
-      id: elID,
-      status: useWatchForValueChange(newVal, oldVal),
-    });
-  } else {
-    changesLog.value[index].status = useWatchForValueChange(newVal, oldVal);
-  }
-  checkIfLogHasChanges();
-};
-const checkIfLogHasChanges = () => {
-  hasChanges.value = changesLog.value.find((item) => item.status === true)
-    ? true
-    : false;
+  changesLog.value = useAddChangeLog(changesLog.value, elID, newVal, oldVal);
+  hasChanges.value = useCheckForLogChanges(changesLog.value);
 };
 
 const updateGoal = () => {

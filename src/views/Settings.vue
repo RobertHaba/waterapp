@@ -36,6 +36,8 @@
 
 <script setup>
 import BellIcon from '../components/icons/Bell.vue';
+import ListIcon from '../components/icons/ListIcon.vue';
+import InfoIcon from '../components/icons/InfoIcon.vue';
 import UserStrokeIcon from '../components/icons/UserStroke.vue';
 import ArrowRightIcon from '../components/icons/ArrowRight.vue';
 import { ref, shallowRef } from 'vue';
@@ -47,11 +49,6 @@ const wave = useWavePosition();
 const profile = ref(useProfile());
 const routersList = shallowRef([
   {
-    icon: BellIcon,
-    name: 'Powiadomienia',
-    path: '/',
-  },
-  {
     icon: UserStrokeIcon,
     name: 'Konto',
     path: '/settings/account',
@@ -62,12 +59,17 @@ const routersList = shallowRef([
     path: '/settings/drink',
   },
   {
-    icon: UserStrokeIcon,
+    icon: ListIcon,
     name: 'Lista napojów',
     path: '/settings/drinks',
   },
   {
-    icon: UserStrokeIcon,
+    icon: BellIcon,
+    name: 'Powiadomienia',
+    path: '/settings/notifications',
+  },
+  {
+    icon: InfoIcon,
     name: 'Informacje',
     path: '/',
   },

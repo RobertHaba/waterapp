@@ -60,10 +60,11 @@ const hours = ref({ active: true, wakeUp: '07:00', bedtime: '23:00' });
 const user = ref(useUserFirstConfig().user);
 
 const pushDataToStorage = () => {
-  if (hours.value.wakeUp.length === 0 && hours.value.bedtime.length === 0) {
+  if (hours.value.wakeUp === null && hours.value.bedtime === null) {
     return;
   }
-  user.value.notifications = hours.value;
+  user.value.notifications.wakeUp = hours.value.wakeUp;
+  user.value.notifications.bedtime = hours.value.bedtime;
   useUserFirstConfig().updateUserData(user.value);
   router.push({ name: 'finish' });
 };

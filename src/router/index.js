@@ -83,6 +83,21 @@ const router = createRouter({
       },
     },
     {
+      path: '/settings/notifications',
+      name: 'notificationsSettings',
+      component: () => import('../views/settings/NotificationsView.vue'),
+      beforeEnter: async (to, from, next) => {
+        if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
+          next();
+        } else if (
+          (await userIsAuth()) &&
+          (await checkIfDateExistsInDB()) === false
+        ) {
+          next({ name: 'gender' });
+        } else next({ name: 'signin' });
+      },
+    },
+    {
       path: '/welcome',
       name: 'welcome',
       component: () => import('../views/Welcome.vue'),

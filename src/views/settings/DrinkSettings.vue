@@ -45,6 +45,7 @@
               </p>
             </div>
             <SlimButton
+        class="text-sm !px-4"
               :class="{ active: drinkSettings.autoCalc === true }"
               @click="calcDailyDrinkGoal"
               >{{ textAutoCalcButton }}</SlimButton

@@ -12,6 +12,8 @@ export const useUserFirstConfig = defineStore('userFirstConfig', {
         active: false,
         wakeUp: null,
         bedtime: null,
+        sound: true,
+        vibrations: true,
       },
     },
     settings: {
@@ -40,7 +42,7 @@ export const useUserFirstConfig = defineStore('userFirstConfig', {
         },
       },
       drinks: [{ name: 'woda', kcal: '0' }],
-    }
+    },
   }),
   actions: {
     updateUserData(data) {
