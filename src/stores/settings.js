@@ -2,17 +2,24 @@ import { defineStore } from 'pinia';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useAuth } from './auth';
 import { db } from '../firestore/index';
+import { useGetFromLocalStorage } from '@/composables/useLocalStorage';
+import { useGetDataFromDB } from '@/composables/useFirebase.js';
+
 export const useSettings = defineStore('userSettings', {
   state: () => ({
     settings: null,
   }),
   actions: {
     async getUserSettings() {
-      const docRef = doc(db, useAuth().user.uid, 'settings');
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        this.settings = docSnap.data();
+      if (useAuth().isFirebaseDB) {
+        this.settings = await this.getSettingsDataFromDB();
+        return;
       }
+      this.settings = useGetFromLocalStorage('settings');
+    },
+    getSettingsDataFromDB() {
+      const docRef = doc(db, useAuth().user.uid, 'settings');
+      return useGetDataFromDB(docRef);
     },
     updateSettingsData(keyName, newValue) {
       this.settings[keyName] = newValue;

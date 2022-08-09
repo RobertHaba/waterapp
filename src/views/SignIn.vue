@@ -4,7 +4,9 @@
       <span class="icon icon--hello h-screen max-h-32"></span>
       <div class="flex flex-col justify-start">
         <p>Witaj ponownie</p>
-        <DynamicHeading :level="1" class="w-fit text-3xl">Zaloguj się</DynamicHeading>
+        <DynamicHeading :level="1" class="w-fit text-3xl"
+          >Zaloguj się</DynamicHeading
+        >
       </div>
       <form @submit.prevent="handlerForm" class="flex flex-col gap-2">
         <InputEmail
@@ -42,6 +44,7 @@
         <DefaultButton
           class="text-dark"
           classColors="bg-blue-500 shadow-inset-light"
+          @click="continueAsGuest"
         >
           <UserSVG class="w-5 h-5"></UserSVG> Gość</DefaultButton
         >
@@ -69,12 +72,14 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from 'firebase/auth';
+import { useAuth } from '@/stores/auth';
 import InputEmail from '../components/inputs/InputEmail.vue';
 import InputPassword from '../components/inputs/InputPassword.vue';
 import GoogleSVG from '../components/icons/Google.vue';
 import UserSVG from '../components/icons/User.vue';
 const router = useRouter();
 const currentUser = getAuth().currentUser;
+
 const user = ref({
   email: {
     value: '',
@@ -125,6 +130,10 @@ const signInWithGoogle = () => {
     .catch((error) => {
       console.log(error);
     });
+};
+const continueAsGuest = () => {
+  useAuth().user = 'Guest';
+  router.push('/');
 };
 </script>
 

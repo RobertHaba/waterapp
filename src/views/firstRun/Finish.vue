@@ -1,7 +1,6 @@
 <template>
   <div>
-    <router-link to="/app">a</router-link>
-    <button @click="saveToDB">save</button>
+    <button class="w-16 h-10 bg-blue" @click="saveData">save</button>
   </div>
 </template>
 
@@ -11,10 +10,18 @@ import { db } from '@/firestore/index';
 import { useAuth } from '@/stores/auth';
 import { useUserFirstConfig } from '@/stores/userFirstConfig';
 import { useCalcGoal } from '@/composables/calcDrinkGoal.js';
-const saveToDB = async () => {
+import { useSaveInLocalStorage } from '@/composables/useLocalStorage.js';
+const saveData = () => {
   useUserFirstConfig().settings.drink.goal = useCalcGoal(
     useUserFirstConfig().user
   );
+  if (useAuth().token !== null) {
+    saveToDB();
+    return;
+  }
+  saveInLocalStorage();
+};
+const saveToDB = async () => {
   await setDoc(
     doc(db, useAuth().user.uid, 'profile'),
     useUserFirstConfig().user
@@ -24,6 +31,9 @@ const saveToDB = async () => {
     useUserFirstConfig().settings
   );
 };
+const saveInLocalStorage = () => {
+  useSaveInLocalStorage('user', { name: useUserFirstConfig().user.name });
+  useSaveInLocalStorage('profile', useUserFirstConfig().user);
+  useSaveInLocalStorage('settings', useUserFirstConfig().settings);
+};
 </script>
-
-<style lang="scss" scoped></style>

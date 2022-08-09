@@ -27,8 +27,12 @@ import BaseLayout from './components/layouts/BaseLayout.vue';
 (async () => {
   const app = createApp(App).use(createPinia());
 
-  const { bindUser } = useAuth();
-  await bindUser(getAuth());
+  const { bindUserFromFirebase, bindUserFromLocalStorage } = useAuth();
+  await bindUserFromFirebase(getAuth());
+  if (useAuth().isFirebaseDB === false) {
+    console.log(useAuth().isFirebaseDB);
+    bindUserFromLocalStorage();
+  }
   if (useAuth().user) {
     await useProfile().getUserData();
     await useSettings().getUserSettings();
