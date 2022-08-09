@@ -14,7 +14,6 @@ import { db } from '../firestore/index';
 import {
   useGetFromLocalStorage,
   useSaveInLocalStorage,
-  useRemoveFromLocalStorage,
 } from '@/composables/useLocalStorage';
 export const useDrink = defineStore('drink', {
   state: () => ({

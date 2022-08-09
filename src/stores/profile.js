@@ -1,8 +1,11 @@
 import { defineStore } from 'pinia';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { useAuth } from './auth';
 import { db } from '../firestore/index';
-import { useGetFromLocalStorage } from '@/composables/useLocalStorage';
+import {
+  useGetFromLocalStorage,
+  useSaveInLocalStorage,
+} from '@/composables/useLocalStorage';
 import { useGetDataFromDB } from '@/composables/useFirebase.js';
 
 export const useProfile = defineStore('profile', {
@@ -25,7 +28,9 @@ export const useProfile = defineStore('profile', {
       this.user = newData;
       if (useAuth().isFirebaseDB) {
         this.updateUserDataInDB(newData);
+        return;
       }
+      useSaveInLocalStorage('profile', this.user);
     },
     async updateUserDataInDB(newData) {
       const docRef = doc(db, useAuth().user.uid, 'profile');

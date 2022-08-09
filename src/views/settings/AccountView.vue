@@ -75,6 +75,11 @@
         ></BaseSelect>
       </AccountListItem>
     </ListInsetShadow>
+    <AccountDataChangedPopup
+      v-if="isPopupOpen"
+      @close-popup="closePopup"
+      @save-data="updateGoal"
+    ></AccountDataChangedPopup>
   </SettingsLayout>
 </template>
 
@@ -82,6 +87,7 @@
 import SettingsLayout from '@/components/layouts/SettingsLayout.vue';
 import AccountListItem from '@/components/layouts/AccountListItem.vue';
 import BaseSelect from '../../components/inputs/BaseSelect.vue';
+import AccountDataChangedPopup from '@/components/popups/AccountDataChangedPopup.vue';
 
 import { computed, ref } from 'vue';
 import { useProfile } from '@/stores/profile.js';
@@ -91,6 +97,7 @@ import { useWatchForValueChange } from '@/composables/watchForValueChange';
 const settingsStore = useSettings();
 const user = ref({ ...useProfile().user });
 const hasChanges = ref(false);
+const isPopupOpen = ref(false);
 const changesLog = ref([]);
 const date = new Date();
 const yearNow = ref(date.getFullYear());
@@ -101,16 +108,26 @@ const saveData = () => {
   }
   user.value.name = newUserName.value;
   useProfile().updateUserData(user.value);
-  console.log();
   if (settingsStore.settings.drink.autoCalc) {
-    settingsStore.updateSettingsData('drink', {
-      autoCalc: true,
-      goal: useCalcGoal(),
-      list: settingsStore.settings.drink.list,
-    });
+    updateGoal();
+    resetRefs();
+    return;
   }
-  //add else for choose to autoCalc and update goal
-  console.log('Save');
+  const isImportantValueChanged = changesLog.value.find(
+    (log) => log.id === 5 || log.id === 3
+  );
+  resetRefs();
+  if (
+    isImportantValueChanged &&
+    useSettings().settings.drink.goal !== useCalcGoal()
+  ) {
+    isPopupOpen.value = true;
+  }
+};
+const resetRefs = () => {
+  changesLog.value = [];
+  user.value = { ...useProfile().user };
+  hasChanges.value = false;
 };
 const newUserName = computed(() => {
   return user.value.name == useProfile().user.name || user.value.name.length > 0
@@ -142,9 +159,23 @@ const watchForValueChange = (elID, newVal, oldVal) => {
   }
   checkIfLogHasChanges();
 };
-const checkIfLogHasChanges = () => [
-  (hasChanges.value = changesLog.value.find((item) => item.status === true)),
-];
+const checkIfLogHasChanges = () => {
+  hasChanges.value = changesLog.value.find((item) => item.status === true)
+    ? true
+    : false;
+};
+
+const updateGoal = () => {
+  settingsStore.updateSettingsData('drink', {
+    autoCalc: true,
+    goal: useCalcGoal(),
+    list: settingsStore.settings.drink.list,
+  });
+  closePopup();
+};
+const closePopup = () => {
+  isPopupOpen.value = false;
+};
 const activitySelectOptions = [
   { name: 'mała', value: 'low' },
   { name: 'średnia', value: 'medium' },

@@ -3,25 +3,25 @@ import { useProfile } from '@/stores/profile';
 export function useCalcGoal(userData = useProfile().user) {
   const user = userData;
   let weight = user.weight;
-  let weightResults;
+  let drinkGoal;
 
   if (weight >= 20) {
-    weightResults = 10 * 100 + 10 * 50 + (weight - 20) * 20;
+    drinkGoal = 10 * 100 + 10 * 50 + (weight - 20) * 20;
   } else if (weight > 10) {
-    weightResults = 10 * 100 + (weight - 10) * 50;
+    drinkGoal = 10 * 100 + (weight - 10) * 50;
   } else {
-    weightResults = weight * 100;
+    drinkGoal = weight * 100;
   }
   switch (user.activity) {
     case 'low':
-      weightResults += 350;
+      drinkGoal += 350;
       break;
     case 'medium':
-      weightResults += 650;
+      drinkGoal += 650;
       break;
     case 'high':
-      weightResults += 1300;
+      drinkGoal += 1300;
       break;
   }
-  return weightResults;
+  return drinkGoal;
 }

@@ -64,7 +64,7 @@ const routersList = shallowRef([
   {
     icon: UserStrokeIcon,
     name: 'Lista napojów',
-    path: '/',
+    path: '/settings/drinks',
   },
   {
     icon: UserStrokeIcon,

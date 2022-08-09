@@ -4,9 +4,11 @@
   >
     <ul class="flex w-full max-w-sm gap-10 justify-between">
       <DefaultButton class="!bg-light !text-dark" @click="closePopup"
-        >Anuluj</DefaultButton
+        ><slot name="close">Anuluj</slot></DefaultButton
       >
-      <DefaultButton @click="saveData">Zapisz</DefaultButton>
+      <DefaultButton @click="saveData"
+        ><slot name="save">Zapisz</slot></DefaultButton
+      >
     </ul>
   </nav>
 </template>

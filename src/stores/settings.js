@@ -1,8 +1,11 @@
 import { defineStore } from 'pinia';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { useAuth } from './auth';
 import { db } from '../firestore/index';
-import { useGetFromLocalStorage } from '@/composables/useLocalStorage';
+import {
+  useGetFromLocalStorage,
+  useSaveInLocalStorage,
+} from '@/composables/useLocalStorage';
 import { useGetDataFromDB } from '@/composables/useFirebase.js';
 
 export const useSettings = defineStore('userSettings', {
@@ -23,10 +26,11 @@ export const useSettings = defineStore('userSettings', {
     },
     updateSettingsData(keyName, newValue) {
       this.settings[keyName] = newValue;
-      console.log(useAuth().user.uid);
-      if (useAuth().user.uid) {
+      if (useAuth().isFirebaseDB) {
         this.updateSettingsInDB();
+        return;
       }
+      useSaveInLocalStorage('settings', this.settings);
     },
     async updateSettingsInDB() {
       const docRef = doc(db, useAuth().user.uid, 'settings');
