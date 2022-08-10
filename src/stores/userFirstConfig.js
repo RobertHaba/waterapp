@@ -10,8 +10,8 @@ export const useUserFirstConfig = defineStore('userFirstConfig', {
       name: null,
       notifications: {
         active: false,
-        wakeUp: null,
-        bedtime: null,
+        wakeUp: '07:00',
+        bedtime: '23:00',
         sound: true,
         vibrations: true,
       },

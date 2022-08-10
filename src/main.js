@@ -17,7 +17,7 @@ import { useAuth } from './stores/auth';
 import DynamicHeading from './components/DynamicHeading.vue';
 import TitleAndDescription from './components/texts/TitleAndDescription.vue';
 import BaseButton from './components/buttons/BaseButton.vue';
-import WaveIcon from '././components/icons/WaveIcon.vue'
+import WaveIcon from '././components/icons/WaveIcon.vue';
 import ArrowLeftIcon from './components/icons/ArrowLeftIcon.vue';
 import ReturnButton from './components/buttons/ReturnButton.vue';
 import ShadowList from './components/ShadowList.vue';

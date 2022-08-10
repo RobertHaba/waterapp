@@ -98,27 +98,32 @@
 </template>
 
 <script setup>
-import SettingsLayout from '@/components/SettingsLayout.vue';
-import BellIcon from '@/components/icons/BellIcon.vue';
-import TextAndIcon from '@/components/texts/TextAndIcon.vue';
-import SmallButton from '@/components/buttons/SmallButton.vue';
+import SettingsLayout from "@/components/SettingsLayout.vue";
+import BellIcon from "@/components/icons/BellIcon.vue";
+import TextAndIcon from "@/components/texts/TextAndIcon.vue";
+import SmallButton from "@/components/buttons/SmallButton.vue";
 import {
   useCheckForLogChanges,
   useAddChangeLog,
-} from '@/composables/useWatchForValueChange';
+} from "@/composables/useWatchForValueChange";
+import { useRequestForNotificationPermission } from "@/composables/usePushNotifications.js";
 
-import { useProfile } from '@/stores/profile.js';
-import { ref } from 'vue';
+import { useProfile } from "@/stores/profile.js";
+import { ref } from "vue";
 const notificationSettings = ref({ ...useProfile().user.notifications });
 const hasChanges = ref(false);
 const changesLog = ref([]);
 const buttonText = (status) => {
-  return status ? 'Włączone' : 'Wyłączone';
+  return status ? "Włączone" : "Wyłączone";
 };
-const toggleStatus = (name, elID, value) => {
-  notificationSettings.value[name] = !value;
-  console.log(notificationSettings.value[name]);
-  console.log(useProfile().user.notifications[name]);
+const toggleStatus = async (name, elID, value) => {
+  if (Notification.permission === "granted") {
+    notificationSettings.value[name] = !value;
+  } else {
+    notificationSettings.value.active =
+      await useRequestForNotificationPermission();
+    saveData();
+  }
   watchForValueChange(
     elID,
     notificationSettings.value[name],

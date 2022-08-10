@@ -37,23 +37,27 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import FirstConfigLayout from '@/components/FirstConfigLayout.vue';
-import HelloIllustration from '@/components/illustrations/Hello.vue';
-import InputRadio from '@/components/inputs/InputRadio.vue';
-import { useUserFirstConfig } from '@/stores/userFirstConfig';
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import FirstConfigLayout from "@/components/FirstConfigLayout.vue";
+import HelloIllustration from "@/components/illustrations/Hello.vue";
+import InputRadio from "@/components/inputs/InputRadio.vue";
+import { useUserFirstConfig } from "@/stores/userFirstConfig";
+
+import { useRequestForNotificationPermission } from "@/composables/usePushNotifications.js";
 const router = useRouter();
 const activeItem = ref(true);
 const user = ref(useUserFirstConfig().user);
 
-const pushDataToStorage = () => {
-  user.value.notifications.active = activeItem.value;
+const pushDataToStorage = async () => {
+  user.value.notifications.active = activeItem.value
+    ? await useRequestForNotificationPermission()
+    : false;
   useUserFirstConfig().updateUserData(user.value);
-  if (activeItem.value) {
-    router.push({ name: 'activityHours' });
+  if (user.value.notifications.active) {
+    router.push({ name: "activityHours" });
   } else {
-    router.push({ name: 'finish' });
+    router.push({ name: "finish" });
   }
 };
 </script>

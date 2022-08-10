@@ -62,6 +62,10 @@ export const useDrink = defineStore('drink', {
           this.history.today = drinkHistoryFromLocalStorage[lastId][today];
         }
       }
+      if (!this.history.today) {
+        this.history.today = [];
+        return;
+      }
       this.getTodayTodalDrink();
     },
     async getTodayDrinkHistoryFromDB(today) {
@@ -91,7 +95,10 @@ export const useDrink = defineStore('drink', {
         this.addTodayDrinkHistoryInDB(timestamp, today, drinkWithDate);
         return;
       }
-      useSaveInLocalStorage('history', [{ [today]: this.history.today }]);
+      useSaveInLocalStorage('history', [
+        ...this.history.all,
+        { [today]: this.history.today },
+      ]);
     },
     async addTodayDrinkHistoryInDB(timestamp, today, drink) {
       const docRef = doc(
