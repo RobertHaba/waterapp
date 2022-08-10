@@ -1,49 +1,49 @@
 <template>
-  <FirstConfigLayout
+  <first-config-layout
     :stepNumber="3"
     header-title="Potrzebujemy Aktywność"
     header-text="asd"
   >
     <template v-slot:illustration>
-      <HelloIllustration></HelloIllustration>
+      <hello-illustration></hello-illustration>
     </template>
     <template v-slot:form>
-      <DynamicHeading :level="2" class="text-xl">Wybierz płeć</DynamicHeading>
+      <dynamic-heading :level="2" class="text-xl">Wybierz płeć</dynamic-heading>
       <form class="flex flex-col gap-8" @submit.prevent="pushDataToStorage">
         <div class="flex gap-4 items-center">
-          <InputRadio
+          <input-radio
             :class="{ 'font-bold': activeItem === 'low' }"
             @click="activeItem = 'low'"
             input-name="low"
-            >mała</InputRadio
+            >mała</input-radio
           >
           <span class="w-px h-4 border border-blue-500"></span>
-          <InputRadio
+          <input-radio
             :class="{ 'font-bold': activeItem === 'medium' }"
             @click="activeItem = 'medium'"
             input-name="medium"
-            >średnia</InputRadio
+            >średnia</input-radio
           >
           <span class="w-px h-4 border border-blue-500"></span>
-          <InputRadio
+          <input-radio
             :class="{ 'font-bold': activeItem === 'high' }"
             @click="activeItem = 'high'"
             input-name="high"
-            >wysoka</InputRadio
+            >wysoka</input-radio
           >
         </div>
         <div class="flex justify-center">
-          <DefaultButton type="submit">Dalej</DefaultButton>
+          <base-button type="submit">Dalej</base-button>
         </div>
       </form>
     </template>
-  </FirstConfigLayout>
+  </first-config-layout>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import FirstConfigLayout from '@/components/firstConfig/BaseLayout.vue';
+import FirstConfigLayout from '@/components/FirstConfigLayout.vue';
 import HelloIllustration from '@/components/illustrations/Hello.vue';
 import InputRadio from '@/components/inputs/InputRadio.vue';
 import { useUserFirstConfig } from '@/stores/userFirstConfig';

@@ -3,26 +3,26 @@
     <div class="relative h-full max-w-sm flex flex-col gap-8 mx-auto">
       <span class="icon icon--hello h-screen max-h-32"></span>
       <div class="flex flex-col justify-start">
-        <p>Witaj ponownie</p>
-        <DynamicHeading :level="1" class="w-fit text-3xl"
-          >Zaloguj się</DynamicHeading
+        <p>Dołącz do nas</p>
+        <dynamic-heading :level="1" class="w-fit text-3xl"
+          >Utwórz konto</dynamic-heading
         >
       </div>
       <form @submit.prevent="handlerForm" class="flex flex-col gap-2">
-        <InputEmail
+        <input-email
           v-model:email="user.email.value"
           :has-error="getInputsStatus"
           :form-has-lunched="formHasLunched"
           :error-code="errCode"
-        ></InputEmail>
-        <InputPassword
+        ></input-email>
+        <input-password
           v-model:password="user.password.value"
           :has-error="getInputsStatus"
           :form-has-lunched="formHasLunched"
           :error-code="errCode"
-        ></InputPassword>
-        <DefaultButton button-type="submit" class="w-full"
-          >Zaloguj się</DefaultButton
+        ></input-password>
+        <base-button button-type="submit" class="w-full"
+          >Zarejestruj się</base-button
         >
       </form>
       <div class="relative flex">
@@ -34,31 +34,30 @@
         </p>
       </div>
       <div class="flex justify-between">
-        <DefaultButton
+        <base-button
           class="text-dark"
           classColors="bg-blue-500 shadow-inset-light"
           @click="signInWithGoogle"
         >
-          <GoogleSVG class="w-5 h-5"></GoogleSVG> Google</DefaultButton
+          <google-icon class="w-5 h-5"></google-icon> Google</base-button
         >
-        <DefaultButton
+        <base-button
           class="text-dark"
           classColors="bg-blue-500 shadow-inset-light"
-          @click="continueAsGuest"
         >
-          <UserSVG class="w-5 h-5"></UserSVG> Gość</DefaultButton
+          <user-icon class="w-5 h-5"></user-icon> Gość</base-button
         >
       </div>
       <footer class="flex justify-between py-5">
-        <p>Nie masz konta?</p>
-        <router-link to="/register" class="font-bold text-blue"
-          >Zarejestruj się</router-link
+        <p>Posiadasz konto?</p>
+        <router-link to="/signin" class="font-bold text-blue"
+          >Zaloguj się</router-link
         >
       </footer>
     </div>
-    <MobileWaveSVG
+    <wave-icon
       class="fixed left-0 right-0 top-full -translate-y-24"
-    ></MobileWaveSVG>
+    ></wave-icon>
   </main>
 </template>
 
@@ -68,18 +67,15 @@ import { useRouter } from 'vue-router';
 
 import {
   getAuth,
-  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
 } from 'firebase/auth';
-import { useAuth } from '@/stores/auth';
 import InputEmail from '../components/inputs/InputEmail.vue';
 import InputPassword from '../components/inputs/InputPassword.vue';
-import GoogleSVG from '../components/icons/Google.vue';
-import UserSVG from '../components/icons/User.vue';
+import GoogleIcon from '../components/icons/GoogleIcon.vue';
+import UserIcon from '../components/icons/UserIcon.vue';
 const router = useRouter();
-const currentUser = getAuth().currentUser;
-
 const user = ref({
   email: {
     value: '',
@@ -102,19 +98,18 @@ const getInputsStatus = (input) => {
 const handlerForm = () => {
   formHasLunched.value = true;
   if (user.value.email.error === false && user.value.password.error === false) {
-    signIn();
+    register();
   }
 };
 
-const signIn = () => {
-  signInWithEmailAndPassword(
+const register = () => {
+  createUserWithEmailAndPassword(
     getAuth(),
     user.value.email.value,
     user.value.password.value
   )
     .then((data) => {
-      console.log(auth.currentUser);
-      router.push('/');
+      router.push('/signin');
     })
     .catch((err) => {
       console.log(err);
@@ -130,10 +125,6 @@ const signInWithGoogle = () => {
     .catch((error) => {
       console.log(error);
     });
-};
-const continueAsGuest = () => {
-  useAuth().user = 'Guest';
-  router.push('/');
 };
 </script>
 

@@ -3,28 +3,28 @@
     class="fixed bottom-0 w-full h-16 left-1/2 -translate-x-1/2 flex items-center justify-center bg-blue-100"
   >
     <ul class="flex w-full max-w-sm gap-10 justify-center">
-      <NavbarItem
+      <navbar-list-item
         :class="activeRouterName === 'stats' ? 'shadow-inset-light' : ''"
         label="Przejdź do statystyk"
         path="/"
       >
-        <ChartIcon class="w-6 h-6 fill-dark"></ChartIcon>
-      </NavbarItem>
-      <NavbarItem
+        <chart-icon class="w-6 h-6 fill-dark"></chart-icon>
+      </navbar-list-item>
+      <navbar-list-item
         :class="activeRouterName === 'home' ? 'shadow-inset-light' : ''"
         label="Przejdź do strony głównej"
         path="/"
       >
-        <WaterDropIcon class="w-6 h-6 fill-dark"></WaterDropIcon>
-      </NavbarItem>
+        <water-drop-icon class="w-6 h-6 fill-dark"></water-drop-icon>
+      </navbar-list-item>
 
-      <NavbarItem
+      <navbar-list-item
         :class="activeRouterName === 'settings' ? 'shadow-inset-light' : ''"
         label="Przejdź do ustawień"
         path="/settings"
       >
-        <SettingsIcon class="w-6 h-6 fill-dark"></SettingsIcon>
-      </NavbarItem>
+        <settings-icon class="w-6 h-6 fill-dark"></settings-icon>
+      </navbar-list-item>
     </ul>
   </nav>
 </template>
@@ -32,10 +32,10 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import ChartIcon from './icons/Chart.vue';
-import SettingsIcon from './icons/Settings.vue';
-import NavbarItem from './icons/NavbarItem.vue';
-import WaterDropIcon from './icons/WaterDrop.vue';
+import ChartIcon from './icons/ChartIcon.vue';
+import SettingsIcon from './icons/SettingsIcon.vue';
+import NavbarListItem from './NavbarListItem.vue';
+import WaterDropIcon from './icons/WaterDropIcon.vue';
 
 const router = useRouter();
 const activeRouterName = ref(router.currentRoute.value.name);

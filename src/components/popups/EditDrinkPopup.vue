@@ -1,19 +1,19 @@
 <template>
   <main class="fixed w-full min-h-screen p-4 py-10 pb-28 top-0 left-0 bg-light">
     <div class="relative h-full max-w-sm flex flex-col gap-8 mx-auto">
-      <DynamicHeading class="text-2xl"><slot></slot></DynamicHeading>
+      <dynamic-heading class="text-2xl"><slot></slot></dynamic-heading>
       <form @submit.prevent="">
-        <ListInsetShadow
+        <shadow-list
           class="fixed w-[calc(100%-2rem)] max-w-sm bottom-1/2 translate-y-1/2"
         >
           <li class="flex flex-col gap-2 justify-between">
             <label for="capacity"
-              ><TextWithIcon>
+              ><text-and-icon>
                 <template #icon
-                  ><TrophyIcon class="fill-dark w-4 h-4 -mt-0.5"></TrophyIcon
+                  ><trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon
                 ></template>
                 <template #text>Pojemność</template>
-              </TextWithIcon></label
+              </text-and-icon></label
             >
             <div class="flex items-end">
               <input
@@ -34,12 +34,12 @@
             </p>
           </li>
           <li class="flex flex-col gap-2 justify-between">
-            <TextWithIcon>
+            <text-and-icon>
               <template #icon
-                ><TrophyIcon class="fill-dark w-4 h-4 -mt-0.5"></TrophyIcon
+                ><trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon
               ></template>
               <template #text>Typ</template>
-            </TextWithIcon>
+            </text-and-icon>
             <div class="flex items-end">
               <select
                 name="drinkName"
@@ -57,20 +57,20 @@
               </select>
             </div>
           </li>
-        </ListInsetShadow>
+        </shadow-list>
 
-        <FooterPopup
+        <popup-navbar
           @save-data="saveData"
           @close-popup="closePopup"
-        ></FooterPopup>
+        ></popup-navbar>
       </form>
     </div>
   </main>
 </template>
 <script setup>
-import TextWithIcon from '@/components/texts/TextWithIcon.vue';
-import FooterPopup from '@/components/popups/FooterPopup.vue';
-import TrophyIcon from '@/components/icons/Trophy.vue';
+import TextAndIcon from '@/components/texts/TextAndIcon.vue';
+import PopupNavbar from '@/components/popups/PopupNavbar.vue';
+import TrophyIcon from '@/components/icons/TrophyIcon.vue';
 import { useSettings } from '@/stores/settings.js';
 import { ref } from '@vue/reactivity';
 import { onMounted } from '@vue/runtime-core';

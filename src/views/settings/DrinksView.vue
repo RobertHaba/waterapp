@@ -1,11 +1,11 @@
 <template>
-  <SettingsLayout :has-changes="hasChanges" @save-data="saveData">
+  <settings-layout :has-changes="hasChanges" @save-data="saveData">
     <template #title>Napoje</template>
-    <ListInsetShadow class="gap-6"></ListInsetShadow
-  ></SettingsLayout>
+    <shadow-list class="gap-6"></shadow-list
+  ></settings-layout>
 </template>
 
 <script setup>
-import SettingsLayout from '@/components/layouts/SettingsLayout.vue';
-import AccountListItem from '@/components/layouts/AccountListItem.vue';
+import SettingsLayout from '@/components/SettingsLayout.vue';
+import ShadowListItem from '@/components/ShadowListItem.vue';
 </script>

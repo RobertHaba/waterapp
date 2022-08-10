@@ -9,7 +9,7 @@ import { setDoc, doc } from 'firebase/firestore';
 import { db } from '@/firestore/index';
 import { useAuth } from '@/stores/auth';
 import { useUserFirstConfig } from '@/stores/userFirstConfig';
-import { useCalcGoal } from '@/composables/calcDrinkGoal.js';
+import { useCalcGoal } from '@/composables/useCalcDrinkGoal.js';
 import { useSaveInLocalStorage } from '@/composables/useLocalStorage.js';
 const saveData = () => {
   useUserFirstConfig().settings.drink.goal = useCalcGoal(

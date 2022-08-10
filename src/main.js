@@ -14,15 +14,14 @@ import { useDrink } from './stores/drink';
 
 import { useAuth } from './stores/auth';
 
-import DynamicHeading from './components/texts/DynamicHeading.vue';
-import TitleWithInfo from './components/texts/TitleWithInfo.vue';
-import TheButton from './components/buttons/TheButton.vue';
-import ButtonAsLink from './components/buttons/ButtonAsLink.vue';
-import MobileWave from './components/icons/MobileWave.vue';
-import ArrowLeft from './components/icons/ArrowLeft.vue';
-import ButtonReturnAsIcon from './components/buttons/ButtonReturnAsIcon.vue';
-import ListInsetShadow from './components/layouts/ListInsetShadow.vue';
-import BaseLayout from './components/layouts/BaseLayout.vue';
+import DynamicHeading from './components/DynamicHeading.vue';
+import TitleAndDescription from './components/texts/TitleAndDescription.vue';
+import BaseButton from './components/buttons/BaseButton.vue';
+import WaveIcon from '././components/icons/WaveIcon.vue'
+import ArrowLeftIcon from './components/icons/ArrowLeftIcon.vue';
+import ReturnButton from './components/buttons/ReturnButton.vue';
+import ShadowList from './components/ShadowList.vue';
+import BaseLayout from './components/BaseLayout.vue';
 
 (async () => {
   const app = createApp(App).use(createPinia());
@@ -39,17 +38,16 @@ import BaseLayout from './components/layouts/BaseLayout.vue';
     await useDrink().getTodayDrinkHistory();
   }
   app.component('DynamicHeading', DynamicHeading);
-  app.component('TitleWithInfo', TitleWithInfo);
-  app.component('DefaultButton', TheButton);
-  app.component('ButtonAsLink', ButtonAsLink);
-  app.component('ReturnButton', ButtonReturnAsIcon);
-  app.component('ListInsetShadow', ListInsetShadow);
+  app.component('TitleAndDescription', TitleAndDescription);
+  app.component('BaseButton', BaseButton);
+  app.component('ReturnButton', ReturnButton);
+  app.component('ShadowList', ShadowList);
   app.component('BaseLayout', BaseLayout);
 
   app.use(router);
   app.mount('#app');
 
   //ICONS
-  app.component('MobileWaveSVG', MobileWave);
-  app.component('ArrowLeftSVG', ArrowLeft);
+  app.component('WaveIcon', WaveIcon);
+  app.component('ArrowLeftIcon', ArrowLeftIcon);
 })();

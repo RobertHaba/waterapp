@@ -2,20 +2,20 @@
   <main class="relative w-full min-h-screen p-4 py-10 pb-28">
     <div class="relative h-full max-w-sm flex flex-col gap-8 mx-auto">
       <header class="flex w-full">
-        <ReturnButton></ReturnButton>
+        <return-button></return-button>
         <div class="w-[calc(100%-4rem)] flex justify-center items-center">
-          <DynamicHeading class="text-2xl">Ustawienia napojów</DynamicHeading>
+          <dynamic-heading class="text-2xl">Ustawienia napojów</dynamic-heading>
         </div>
       </header>
       <div class="flex flex-col gap-4">
-        <ListInsetShadow>
+        <shadow-list>
           <li class="flex gap-2 justify-between">
-            <TextWithIcon>
+            <text-and-icon>
               <template #icon
-                ><TrophyIcon class="fill-dark w-4 h-4 -mt-0.5"></TrophyIcon
+                ><trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon
               ></template>
               <template #text>Dzienny cel</template>
-            </TextWithIcon>
+            </text-and-icon>
             <div class="flex h-fit">
               <input
                 type="number"
@@ -34,75 +34,75 @@
           </li>
           <li class="flex gap-2 justify-between">
             <div class="flex flex-col gap-4">
-              <TextWithIcon>
+              <text-and-icon>
                 <template #icon
-                  ><TrophyIcon class="fill-dark w-4 h-4 -mt-0.5"></TrophyIcon
+                  ><trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon
                 ></template>
                 <template #text>Wylicz dzienny cel</template>
-              </TextWithIcon>
+              </text-and-icon>
               <p class="text-sm leading-4">
                 Automatycznie oblicza dzienne zapotrzebowanie wody dla organizmu
               </p>
             </div>
-            <SlimButton
-        class="text-sm !px-4"
+            <SmallButton
+              class="text-sm !px-4"
               :class="{ active: drinkSettings.autoCalc === true }"
               @click="calcDailyDrinkGoal"
-              >{{ textAutoCalcButton }}</SlimButton
+              >{{ textAutoCalcButton }}</SmallButton
             >
           </li>
-        </ListInsetShadow>
-        <ListInsetShadow>
+        </shadow-list>
+        <shadow-list>
           <li class="flex flex-col gap-6">
-            <TextWithIcon>
+            <text-and-icon>
               <template #icon
-                ><TrophyIcon class="fill-dark w-4 h-4 -mt-0.5"></TrophyIcon
+                ><trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon
               ></template>
               <template #text>Przypięte pojemności</template>
-            </TextWithIcon>
+            </text-and-icon>
             <div class="flex flex-wrap justify-around gap-3">
-              <SlimButton
+              <SmallButton
                 class="!gap-4 !bg-light"
                 v-for="(drink, index) in drinkList"
                 :key="drink"
                 @click="openPopup(index)"
               >
                 <div class="flex items-center gap-2">
-                  <TrophyIcon class="fill-dark w-4 h-4 -mt-0.5"></TrophyIcon>
+                  <trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon>
                   <span>{{ drink.capacity }}ml</span>
                 </div>
-                <EditIcon class="fill-dark w-4 h-4 -mt-0.5"></EditIcon>
-              </SlimButton>
+                <edit-icon class="fill-dark w-4 h-4 -mt-0.5"></edit-icon>
+              </SmallButton>
             </div>
           </li>
-        </ListInsetShadow>
+        </shadow-list>
       </div>
     </div>
     <footer>
-      <NavbarSettings
+      <settings-navbar
         @save-data="saveData"
         :has-changes="hasChanges"
-      ></NavbarSettings>
+      ></settings-navbar>
     </footer>
-    <EditDrinkPopup
+    <edit-drink-popup
       v-if="popupData.isOpen"
       :drink="popupData.drink"
       @close-popup="closePopup"
       @save-data="changeStaticDrink"
-      >Edytuj napój</EditDrinkPopup
+      >Edytuj napój</edit-drink-popup
     >
   </main>
 </template>
 
 <script setup>
-import NavbarSettings from '../../components/NavbarSettings.vue';
+import SettingsNavbar from '../../components/SettingsNavbar.vue';
 import EditDrinkPopup from '@/components/popups/EditDrinkPopup.vue';
-import SlimButton from '../../components/buttons/SlimButton.vue';
-import TrophyIcon from '@/components/icons/Trophy.vue';
-import TextWithIcon from '@/components/texts/TextWithIcon.vue';
-import EditIcon from '../../components/icons/Edit.vue';
+import SmallButton from '../../components/buttons/SmallButton.vue';
+import TrophyIcon from '@/components/icons/TrophyIcon.vue';
+import TextAndIcon from '@/components/texts/TextAndIcon.vue';
+import EditIcon from '../../components/icons/EditIcon.vue';
 import { useSettings } from '@/stores/settings';
-import { useCalcGoal } from '@/composables/calcDrinkGoal.js';
+import { useCalcGoal } from '@/composables/useCalcDrinkGoal.js';
 import { computed, ref } from '@vue/runtime-core';
 const drinkSettings = ref({ ...useSettings().settings.drink });
 const hasChanges = ref(false);

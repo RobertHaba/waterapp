@@ -1,6 +1,6 @@
 <template>
   <button class="p-2" @click="routerGoBack">
-    <ArrowLeftSVG class="icon h-6 w-6"></ArrowLeftSVG>
+    <ArrowLeftIcon class="icon h-6 w-6"></ArrowLeftIcon>
   </button>
 </template>
 

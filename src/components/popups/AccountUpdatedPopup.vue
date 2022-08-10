@@ -6,13 +6,13 @@
       class="realitve w-full max-w-sm flex flex-col gap-8 bg-light p-6 shadow-lg rounded-lg"
     >
       <div class="w-full flex justify-center">
-        <FormsIllustration></FormsIllustration>
+        <forms-illustration></forms-illustration>
       </div>
       <div class="flex flex-col gap-4">
-        <DynamicHeading :level="2" class="text-lg">
+        <dynamic-heading :level="2" class="text-lg">
           Twoje dane zostały zmienione, czy chcesz wyliczyć nowe zapotrzebowanie
           płynów?
-        </DynamicHeading>
+        </dynamic-heading>
         <ul>
           <li>
             <p>
@@ -30,24 +30,23 @@
           </li>
         </ul>
       </div>
-      <FooterPopup
+      <popup-navbar
         class="relative px-0"
         @close-popup="closePopup"
         @save-data="saveData"
       >
         <template #close>Nie</template>
         <template #save>Tak</template>
-      </FooterPopup>
+      </popup-navbar>
     </div>
   </div>
 </template>
 
 <script setup>
 import FormsIllustration from '@/components/illustrations/FormsIllustration.vue';
-import DynamicHeading from '../texts/DynamicHeading.vue';
-import FooterPopup from './FooterPopup.vue';
+import PopupNavbar from './PopupNavbar.vue';
 import { useSettings } from '@/stores/settings';
-import { useCalcGoal } from '@/composables/calcDrinkGoal';
+import { useCalcGoal } from '@/composables/useCalcDrinkGoal';
 
 const emit = defineEmits(['closePopup', 'saveData']);
 

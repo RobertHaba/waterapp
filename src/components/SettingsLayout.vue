@@ -1,11 +1,11 @@
 <template>
-  <BaseLayout>
+  <base-layout>
     <header class="flex w-full">
-      <ReturnButton></ReturnButton>
+      <return-button></return-button>
       <div class="w-[calc(100%-4rem)] flex justify-center items-center">
-        <DynamicHeading class="text-2xl"
+        <dynamic-heading class="text-2xl"
           ><slot name="title"></slot
-        ></DynamicHeading>
+        ></dynamic-heading>
       </div>
     </header>
 
@@ -14,14 +14,14 @@
         <slot></slot>
       </div>
       <footer>
-        <NavbarSettings :has-changes="props.hasChanges"></NavbarSettings>
+        <settings-navbar :has-changes="props.hasChanges"></settings-navbar>
       </footer>
     </form>
-  </BaseLayout>
+  </base-layout>
 </template>
 
 <script setup>
-import NavbarSettings from '@/components/NavbarSettings.vue';
+import SettingsNavbar from '@/components/SettingsNavbar.vue';
 const props = defineProps({
   hasChanges: Boolean,
 });

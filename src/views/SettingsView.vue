@@ -1,9 +1,9 @@
 <template>
   <main class="relative w-full min-h-screen p-4 py-10 pb-28">
     <div class="relative h-full max-w-sm flex flex-col gap-8 mx-auto">
-      <DynamicHeading class="text-3xl"></DynamicHeading>
+      <dynamic-heading class="text-3xl"></dynamic-heading>
       <div class="relative w-full flex flex-col items-center gap-4 mt-24 mb-8">
-        <Avatar class="w-24 h-24"></Avatar>
+        <user-avatar class="w-24 h-24"></user-avatar>
         <p v-if="profile" class="text-2xl font-bold">{{ profile.user.name }}</p>
       </div>
       <div class="relative">
@@ -26,23 +26,23 @@
         </ul>
       </div>
     </div>
-    <Navbar></Navbar>
+    <main-navbar></main-navbar>
   </main>
-  <MobileWaveSVG
+  <wave-icon
     class="fixed h-screen w-screen top-full transition-all"
     :style="wave.transfromStyle"
-  ></MobileWaveSVG>
+  ></wave-icon>
 </template>
 
 <script setup>
-import BellIcon from '../components/icons/Bell.vue';
+import BellIcon from '../components/icons/BellIcon.vue';
 import ListIcon from '../components/icons/ListIcon.vue';
 import InfoIcon from '../components/icons/InfoIcon.vue';
-import UserStrokeIcon from '../components/icons/UserStroke.vue';
-import ArrowRightIcon from '../components/icons/ArrowRight.vue';
+import UserStrokeIcon from '../components/icons/UserStrokeIcon.vue';
+import ArrowRightIcon from '../components/icons/ArrowRightIcon.vue';
 import { ref, shallowRef } from 'vue';
-import Avatar from '../components/TheAvatar.vue';
-import Navbar from '../components/TheNavbar.vue';
+import UserAvatar from '../components/TheAvatar.vue';
+import MainNavbar from '../components/TheNavbar.vue';
 import { useProfile } from '../stores/profile.js';
 import { useWavePosition } from '@/stores/wavePosition';
 const wave = useWavePosition();

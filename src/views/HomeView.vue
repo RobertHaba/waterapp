@@ -2,30 +2,30 @@
   <main class="relative w-full min-h-screen p-4 py-10 pb-28">
     <div class="relative h-full max-w-sm flex flex-col gap-8 mx-auto">
       <header class="flex justify-between">
-        <DynamicHeading class="w-fit text-3xl"></DynamicHeading>
+        <dynamic-heading class="w-fit text-3xl"></dynamic-heading>
         <div>
-          <Avatar></Avatar>
+          <user-avatar></user-avatar>
         </div>
       </header>
       <div>
-        <TitleWithInfo>
+        <title-and-description>
           <template #title>Świetnie Ci idzie!</template>
           <template #text
             >Utrzymuj takie tempo, a Twoje nawodnienie będzie na idealnym
             poziomie.</template
           >
-        </TitleWithInfo>
+        </title-and-description>
       </div>
       <div class="w-full flex justify-center">
         <div class="relative">
           <div class="relative">
             <div class="absolute top-2 w-full flex justify-between px-12">
-              <FullGlassIcon
+              <full-glass-icon
                 class="w-6 h-6 fill-blue opacity-20"
-              ></FullGlassIcon>
-              <EmptyGlassIcon
+              ></full-glass-icon>
+              <empty-glass-icon
                 class="icon w-6 h-6 fill-blue opacity-20"
-              ></EmptyGlassIcon>
+              ></empty-glass-icon>
             </div>
             <svg class="circle-box -rotate-45">
               <circle cx="100" cy="100" r="100"></circle>
@@ -79,8 +79,8 @@
             class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2"
           >
             <div class="absolute top-2 w-full flex justify-between px-9">
-              <MoonIcon class="icon w-4 h-4 fill-blue opacity-20"></MoonIcon>
-              <SunIcon class="icon w-4 h-4 fill-blue opacity-20"></SunIcon>
+              <moon-icon class="icon w-4 h-4 fill-blue opacity-20"></moon-icon>
+              <sun-icon class="icon w-4 h-4 fill-blue opacity-20"></sun-icon>
             </div>
             <svg class="circle-box circle-box--medium -rotate-45">
               <circle cx="75" cy="75" r="75"></circle>
@@ -139,21 +139,21 @@
         </div>
       </div>
       <div class="flex flex-col gap-6">
-        <DynamicHeading :level="3" class="text-xl"
-          >Uzupełnij płyny</DynamicHeading
+        <dynamic-heading :level="3" class="text-xl"
+          >Uzupełnij płyny</dynamic-heading
         >
         <div class="flex flex-col gap-6">
           <div class="flex justify-between">
             <div
               class="shadow-inset-light bg-blue-500 w-fit flex rounded-full pr-2"
             >
-              <DefaultButton
+              <base-button
                 class-colors="pr-2 rounded-none"
                 @click="addDrink(drinkList.dynamic)"
-                ><EmptyGlassIcon class="w-6 h-6 fill-dark"></EmptyGlassIcon
+                ><empty-glass-icon class="w-6 h-6 fill-dark"></empty-glass-icon
                 ><span class="text-2xl font-normal"
                   >{{ drinkList.dynamic.capacity }}ml</span
-                ></DefaultButton
+                ></base-button
               >
 
               <button
@@ -161,28 +161,28 @@
                 aria-label="Przycisk do zmiany parametrów napoju"
                 @click="openPopup(drinkList.dynamic)"
               >
-                <EditIcon class="w-4 h-4 fill-dark"></EditIcon>
+                <edit-icon class="w-4 h-4 fill-dark"></edit-icon>
               </button>
             </div>
-            <DefaultButton @click="openPopup()"
-              ><AddIcon class="fill-light w-6 h-6"></AddIcon
-            ></DefaultButton>
+            <base-button @click="openPopup()"
+              ><add-icon class="fill-light w-6 h-6"></add-icon
+            ></base-button>
           </div>
           <ul class="flex justify-between">
             <li v-for="drink in drinkList.statics" :key="drink">
-              <SlimButton @click="addDrink(drink)"
-                ><EmptyGlassIcon class="w-4 h-4 fill-dark"></EmptyGlassIcon
+              <SmallButton @click="addDrink(drink)"
+                ><empty-glass-icon class="w-4 h-4 fill-dark"></empty-glass-icon
                 ><span class="font-normal"
                   >{{ drink.capacity }}ml</span
-                ></SlimButton
+                ></SmallButton
               >
             </li>
           </ul>
         </div>
       </div>
       <div class="flex flex-col gap-6">
-        <DynamicHeading :level="3" class="text-xl"
-          >Ostatnie napoje</DynamicHeading
+        <dynamic-heading :level="3" class="text-xl"
+          >Ostatnie napoje</dynamic-heading
         >
         <TransitionGroup
           class="flex flex-col gap-3 h-32 overflow-y-auto drink-history-list"
@@ -197,7 +197,7 @@
             :key="drink.date"
           >
             <div class="flex gap-4 items-center">
-              <FullGlassIcon class="fill-dark w-6 h-6"></FullGlassIcon>
+              <full-glass-icon class="fill-dark w-6 h-6"></full-glass-icon>
               <div class="flex flex gap-2 items-center">
                 <span class="font-bold text-lg leading-5"
                   >{{ drink.capacity }}ml</span
@@ -214,7 +214,7 @@
                 :aria-label="`Naciśnij, aby usunąć napój ${drink.name} o pojemności ${drink.capacity}`"
                 @click="removeDrink(drink)"
               >
-                <CloseIcon class="w-4 h-4 fill-dark"></CloseIcon>
+                <close-icon class="w-4 h-4 fill-dark"></close-icon>
               </button>
             </div>
           </li>
@@ -224,33 +224,33 @@
         </p>
       </div>
     </div>
-    <Navbar></Navbar>
-    <EditDrinkPopup
+    <main-navbar></main-navbar>
+    <edit-drink-popup
       v-if="popupData.isOpen"
       :drink="popupData.drink"
       @close-popup="closePopup"
       @save-data="changeDynamicDrink"
-      >{{ popupDrinkText }}</EditDrinkPopup
+      >{{ popupDrinkText }}</edit-drink-popup
     >
   </main>
-  <MobileWaveSVG
+  <wave-icon
     class="fixed h-screen w-screen top-full transition-all"
     :style="wave.transfromStyle"
-  ></MobileWaveSVG>
+  ></wave-icon>
 </template>
 
 <script setup>
 import { computed, ref, watch } from 'vue';
-import MoonIcon from '../components/icons/Moon.vue';
-import SunIcon from '../components/icons/Sun.vue';
-import FullGlassIcon from '../components/icons/FullGlass.vue';
-import EmptyGlassIcon from '../components/icons/EmptyGlass.vue';
-import EditIcon from '../components/icons/Edit.vue';
-import AddIcon from '../components/icons/Add.vue';
-import CloseIcon from '../components/icons/Close.vue';
-import SlimButton from '../components/buttons/SlimButton.vue';
-import Navbar from '../components/TheNavbar.vue';
-import Avatar from '../components/TheAvatar.vue';
+import MoonIcon from '../components/icons/MoonIcon.vue';
+import SunIcon from '../components/icons/SunIcon.vue';
+import FullGlassIcon from '../components/icons/FullGlassIcon.vue';
+import EmptyGlassIcon from '../components/icons/EmptyGlassIcon.vue';
+import EditIcon from '../components/icons/EditIcon.vue';
+import AddIcon from '../components/icons/AddIcon.vue';
+import CloseIcon from '../components/icons/CloseIcon.vue';
+import SmallButton from '../components/buttons/SmallButton.vue';
+import MainNavbar from '../components/TheNavbar.vue';
+import UserAvatar from '../components/TheAvatar.vue';
 import EditDrinkPopup from '../components/popups/EditDrinkPopup.vue';
 import { useProfile } from '../stores/profile';
 import { useSettings } from '../stores/settings';
@@ -419,5 +419,4 @@ circle:nth-child(2) {
 
 /* 3. ensure leaving items are taken out of layout flow so that moving
       animations can be calculated correctly. */
-
 </style>

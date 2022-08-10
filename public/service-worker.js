@@ -1,11 +1,11 @@
 self.addEventListener('fetch', () => console.log('fetch'));
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
-    .register('./service-worker.js')
+    .register('./service-worker.js', { scope: '/' })
     .then(function (reg) {
-      console.log('Successfully registered service worker', reg);
+      reg.pushManager.getSubscription().then((sub) => {
+        console.log(sub);
+      });
     })
-    .catch(function (err) {
-      console.warn('Error whilst registering service worker', err);
-    });
+    .catch(function () {});
 }

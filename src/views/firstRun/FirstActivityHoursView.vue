@@ -1,11 +1,11 @@
 <template>
-  <FirstConfigLayout
+  <first-config-layout
     :stepNumber="7"
     header-title="Godziny aktywności"
     header-text="asd"
   >
     <template v-slot:illustration>
-      <HelloIllustration></HelloIllustration>
+      <hello-illustration></hello-illustration>
     </template>
     <template v-slot:form>
       <form
@@ -38,20 +38,20 @@
           </div>
         </div>
         <div class="flex justify-center">
-          <DefaultButton type="submit">Dalej</DefaultButton>
+          <base-button type="submit">Dalej</base-button>
         </div>
       </form>
       <div class="w-full flex justify-center py-2">
         <router-link to="/finish" class="px-4 py-2">pomiń</router-link>
       </div>
     </template>
-  </FirstConfigLayout>
+  </first-config-layout>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import FirstConfigLayout from '@/components/firstConfig/BaseLayout.vue';
+import FirstConfigLayout from '@/components/FirstConfigLayout.vue';
 import HelloIllustration from '@/components/illustrations/Hello.vue';
 import InputRadio from '@/components/inputs/InputRadio.vue';
 import { useUserFirstConfig } from '@/stores/userFirstConfig';

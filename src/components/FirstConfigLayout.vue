@@ -4,30 +4,30 @@
       class="relative h-full max-w-sm flex flex-col items-center gap-8 mx-auto"
     >
       <header class="w-full flex items-center">
-        <ReturnButton></ReturnButton>
-        <SteppersProgressDot
+        <return-button></return-button>
+        <first-config-progress
           :num-of-steps="steps"
           :active="props.stepNumber"
-        ></SteppersProgressDot>
+        ></first-config-progress>
       </header>
-      <TitleWithInfo :level="1" class="text-center">
+      <title-and-description :level="1" class="text-center">
         <template v-slot:title> {{ props.headerTitle }} </template>
         <template v-slot:text> {{ props.headerText }} </template>
-      </TitleWithInfo>
+      </title-and-description>
       <div>
         <slot name="illustration"> </slot>
       </div>
       <div class="flex flex-col gap-3"><slot name="form"></slot></div>
     </div>
-    <MobileWaveSVG
+    <wave-icon
       class="fixed left-0 right-0 top-full transition-all"
       :style="wave.transfromStyle"
-    ></MobileWaveSVG>
+    ></wave-icon>
   </main>
 </template>
 <script setup>
 import { onMounted, ref, computed } from 'vue';
-import SteppersProgressDot from '@/components/firstConfig/SteppersProgressDot.vue';
+import FirstConfigProgress from '@/components/FirstConfigProgress.vue';
 import { useWavePosition } from '@/stores/wavePosition';
 const props = defineProps({
   stepNumber: Number,

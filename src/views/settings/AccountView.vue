@@ -1,8 +1,8 @@
 <template>
-  <SettingsLayout :has-changes="hasChanges" @save-data="saveData">
+  <settings-layout :has-changes="hasChanges" @save-data="saveData">
     <template #title>Konto</template>
-    <ListInsetShadow class="gap-6">
-      <AccountListItem input-id="name"
+    <shadow-list class="gap-6">
+      <shadow-list-item input-id="name"
         ><template #title>Imię</template>
         <input
           type="text"
@@ -13,19 +13,19 @@
           maxlength="13"
           class="w-32 text-right text-lg border-b border-dark leading-none"
         />
-      </AccountListItem>
-      <AccountListItem input-id="gender"
+      </shadow-list-item>
+      <shadow-list-item input-id="gender"
         ><template #title>Płeć</template>
-        <BaseSelect
+        <base-select
           class="w-32 text-right text-lg bg-light"
           id="gender"
           required
           :select-options="genderSelectOptions"
           @input="watchForValueChange(2, user.gender, useProfile().user.gender)"
           v-model="user.gender"
-        ></BaseSelect>
-      </AccountListItem>
-      <AccountListItem input-id="weight"
+        ></base-select>
+      </shadow-list-item>
+      <shadow-list-item input-id="weight"
         ><template #title>Waga</template>
         <template #error v-if="!isWeightDataValid"
           >Podaj wagę z przedziału od 3 do 300kg</template
@@ -42,8 +42,8 @@
           class="w-26 text-right text-lg border-b border-dark leading-none"
         />
         <span for="goal" class="border-b text-right w-6 border-dark">kg</span>
-      </AccountListItem>
-      <AccountListItem input-id="year"
+      </shadow-list-item>
+      <shadow-list-item input-id="year"
         ><template #title>Rok urodzenia</template>
         <template #error v-if="!isYearDataValid"
           >Podaj rok z przedziału od {{ yearNow - 150 }} do
@@ -60,10 +60,10 @@
           @input="watchForValueChange(4, user.year, useProfile().user.year)"
           placeholder="np. 2000"
         />
-      </AccountListItem>
-      <AccountListItem input-id="activity"
+      </shadow-list-item>
+      <shadow-list-item input-id="activity"
         ><template #title>Aktywność</template>
-        <BaseSelect
+        <base-select
           class="w-32 text-right text-lg bg-light"
           id="activity"
           :select-options="activitySelectOptions"
@@ -72,26 +72,26 @@
             watchForValueChange(5, user.activity, useProfile().user.activity)
           "
           v-model="user.activity"
-        ></BaseSelect>
-      </AccountListItem>
-    </ListInsetShadow>
-    <AccountDataChangedPopup
+        ></base-select>
+      </shadow-list-item>
+    </shadow-list>
+    <account-updated-popup
       v-if="isPopupOpen"
       @close-popup="closePopup"
       @save-data="updateGoal"
-    ></AccountDataChangedPopup>
-  </SettingsLayout>
+    ></account-updated-popup>
+  </settings-layout>
 </template>
 
 <script setup>
-import SettingsLayout from '@/components/layouts/SettingsLayout.vue';
-import AccountListItem from '@/components/layouts/AccountListItem.vue';
+import SettingsLayout from '@/components/SettingsLayout.vue';
+import ShadowListItem from '@/components/ShadowListItem.vue';
 import BaseSelect from '../../components/inputs/BaseSelect.vue';
-import AccountDataChangedPopup from '@/components/popups/AccountDataChangedPopup.vue';
+import AccountUpdatedPopup from '@/components/popups/AccountUpdatedPopup.vue';
 
 import { computed, ref } from 'vue';
 import { useProfile } from '@/stores/profile.js';
-import { useCalcGoal } from '@/composables/calcDrinkGoal';
+import { useCalcGoal } from '@/composables/useCalcDrinkGoal';
 import { useSettings } from '@/stores/settings';
 import {
   useCheckForLogChanges,

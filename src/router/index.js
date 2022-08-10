@@ -10,7 +10,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/Home.vue'),
+      component: () => import('../views/HomeView.vue'),
       beforeEnter: async (to, from, next) => {
         if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
           next();
@@ -25,7 +25,7 @@ const router = createRouter({
     {
       path: '/settings',
       name: 'settings',
-      component: () => import('../views/Settings.vue'),
+      component: () => import('../views/SettingsView.vue'),
       beforeEnter: async (to, from, next) => {
         if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
           next();
@@ -40,7 +40,7 @@ const router = createRouter({
     {
       path: '/settings/drink',
       name: 'drinkSettings',
-      component: () => import('../views/settings/DrinkSettings.vue'),
+      component: () => import('../views/settings/DrinkSettingsView.vue'),
       beforeEnter: async (to, from, next) => {
         if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
           next();
@@ -100,7 +100,7 @@ const router = createRouter({
     {
       path: '/welcome',
       name: 'welcome',
-      component: () => import('../views/Welcome.vue'),
+      component: () => import('../views/WelcomeView.vue'),
       beforeEnter: async (to, from, next) => {
         if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
           next({ name: 'home' });
@@ -115,7 +115,7 @@ const router = createRouter({
     {
       path: '/register',
       name: 'register',
-      component: () => import('../views/Register.vue'),
+      component: () => import('../views/RegisterView.vue'),
       beforeEnter: async (to, from, next) => {
         if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
           next({ name: 'home' });
@@ -130,7 +130,7 @@ const router = createRouter({
     {
       path: '/signin',
       name: 'signin',
-      component: () => import('../views/SignIn.vue'),
+      component: () => import('../views/SignInView.vue'),
       beforeEnter: async (to, from, next) => {
         if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
           next({ name: 'home' });
@@ -145,7 +145,7 @@ const router = createRouter({
     {
       path: '/gender',
       name: 'gender',
-      component: () => import('../views/firstRun/Gender.vue'),
+      component: () => import('../views/firstRun/FirstGenderView.vue'),
       beforeEnter: async (to, from, next) => {
         if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
           next({ name: 'home' });
@@ -160,7 +160,7 @@ const router = createRouter({
     {
       path: '/weight',
       name: 'weight',
-      component: () => import('../views/firstRun/Weight.vue'),
+      component: () => import('../views/firstRun/FirstWeightView.vue'),
       beforeEnter: (to, from, next) => {
         if (from.name === 'gender' || from.name === 'activity') {
           next();
@@ -170,7 +170,7 @@ const router = createRouter({
     {
       path: '/activity',
       name: 'activity',
-      component: () => import('../views/firstRun/Activity.vue'),
+      component: () => import('../views/firstRun/FirstActivityView.vue'),
       beforeEnter: (to, from, next) => {
         if (from.name === 'weight' || from.name === 'year') {
           next();
@@ -180,7 +180,7 @@ const router = createRouter({
     {
       path: '/year',
       name: 'year',
-      component: () => import('../views/firstRun/Year.vue'),
+      component: () => import('../views/firstRun/FirstYearView.vue'),
       beforeEnter: (to, from, next) => {
         if (from.name === 'activity' || from.name === 'name') {
           next();
@@ -190,7 +190,7 @@ const router = createRouter({
     {
       path: '/name',
       name: 'name',
-      component: () => import('../views/firstRun/Name.vue'),
+      component: () => import('../views/firstRun/FIrstNameView.vue'),
       beforeEnter: (to, from, next) => {
         if (from.name === 'year' || from.name === 'notifications') {
           next();
@@ -200,7 +200,7 @@ const router = createRouter({
     {
       path: '/notifications',
       name: 'notifications',
-      component: () => import('../views/firstRun/Notifications.vue'),
+      component: () => import('../views/firstRun/FirstNotificationsView.vue'),
       beforeEnter: (to, from, next) => {
         if (
           from.name === 'name' ||
@@ -214,7 +214,7 @@ const router = createRouter({
     {
       path: '/activityHours',
       name: 'activityHours',
-      component: () => import('../views/firstRun/ActivityHours.vue'),
+      component: () => import('../views/firstRun/FirstActivityHoursView.vue'),
       beforeEnter: (to, from, next) => {
         if (from.name === 'notifications' || from.name === 'finish') {
           next();
@@ -224,7 +224,7 @@ const router = createRouter({
     {
       path: '/finish',
       name: 'finish',
-      component: () => import('../views/firstRun/Finish.vue'),
+      component: () => import('../views/firstRun/FirstFinishView.vue'),
       // beforeEnter: (to, from, next) => {
       //   if (from.name === 'notifications' || from.name === 'activityHours') {
       //     next();
@@ -234,7 +234,7 @@ const router = createRouter({
     {
       path: '/:pathMatch(.*)',
       name: 'notFound',
-      component: () => import('../views/NotFound.vue'),
+      component: () => import('../views/NotFoundView.vue'),
     },
   ],
 });

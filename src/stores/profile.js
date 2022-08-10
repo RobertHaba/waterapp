@@ -18,6 +18,7 @@ export const useProfile = defineStore('profile', {
         this.user = await this.getUserDataFromDB();
         return;
       }
+
       this.user = useGetFromLocalStorage('profile');
     },
     getUserDataFromDB() {

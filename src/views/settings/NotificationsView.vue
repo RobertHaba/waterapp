@@ -1,61 +1,61 @@
 <template>
-  <SettingsLayout :has-changes="hasChanges" @save-data="saveData">
+  <settings-layout :has-changes="hasChanges" @save-data="saveData">
     <template #title>Powiadomienia</template>
-    <ListInsetShadow class="gap-6">
+    <shadow-list class="gap-6">
       <li class="flex gap-6 justify-between flex-wrap">
-        <TextWithIcon>
+        <text-and-icon>
           <template #icon
-            ><BellIcon class="fill-dark w-4 h-4 -mt-0.5"></BellIcon
+            ><bell-icon class="fill-dark w-4 h-4 -mt-0.5"></bell-icon
           ></template>
           <template #text>Powiadomienia</template>
-        </TextWithIcon>
-        <SlimButton
+        </text-and-icon>
+        <SmallButton
           class="text-sm !px-4"
           @click="toggleStatus('active', 1, notificationSettings.active)"
           :class="{ active: notificationSettings.active === true }"
-          >{{ buttonText(notificationSettings.active) }}</SlimButton
+          >{{ buttonText(notificationSettings.active) }}</SmallButton
         >
       </li>
-    </ListInsetShadow>
-    <ListInsetShadow v-if="notificationSettings.active">
+    </shadow-list>
+    <shadow-list v-if="notificationSettings.active">
       <li class="flex gap-6 justify-between flex-wrap">
-        <TextWithIcon>
+        <text-and-icon>
           <template #icon
-            ><BellIcon class="fill-dark w-4 h-4 -mt-0.5"></BellIcon
+            ><bell-icon class="fill-dark w-4 h-4 -mt-0.5"></bell-icon
           ></template>
           <template #text>Dźwięki</template>
-        </TextWithIcon>
-        <SlimButton
+        </text-and-icon>
+        <SmallButton
           class="text-sm !px-4"
           @click="toggleStatus('sound', 2, notificationSettings.sound)"
           :class="{ active: notificationSettings.sound === true }"
-          >{{ buttonText(notificationSettings.sound) }}</SlimButton
+          >{{ buttonText(notificationSettings.sound) }}</SmallButton
         >
       </li>
       <li class="flex gap-6 justify-between flex-wrap">
-        <TextWithIcon>
+        <text-and-icon>
           <template #icon
-            ><BellIcon class="fill-dark w-4 h-4 -mt-0.5"></BellIcon
+            ><bell-icon class="fill-dark w-4 h-4 -mt-0.5"></bell-icon
           ></template>
           <template #text>Wibracje</template>
-        </TextWithIcon>
-        <SlimButton
+        </text-and-icon>
+        <SmallButton
           class="text-sm !px-4"
           @click="
             toggleStatus('vibrations', 3, notificationSettings.vibrations)
           "
           :class="{ active: notificationSettings.vibrations === true }"
-          >{{ buttonText(notificationSettings.vibrations) }}</SlimButton
+          >{{ buttonText(notificationSettings.vibrations) }}</SmallButton
         >
       </li>
 
       <li class="flex gap-3 justify-between flex-wrap">
-        <TextWithIcon>
+        <text-and-icon>
           <template #icon
-            ><BellIcon class="fill-dark w-4 h-4 -mt-0.5"></BellIcon
+            ><bell-icon class="fill-dark w-4 h-4 -mt-0.5"></bell-icon
           ></template>
           <template #text>Godziny aktywności</template>
-        </TextWithIcon>
+        </text-and-icon>
         <p class="text-sm leading-4">
           Ustaw godziny, w których chcesz otrzymywać powiadomienia. <br />
           Aktualne godziny:
@@ -72,12 +72,12 @@
         </p>
       </li>
       <li class="flex gap-3 justify-between flex-wrap">
-        <TextWithIcon>
+        <text-and-icon>
           <template #icon
-            ><BellIcon class="fill-dark w-4 h-4 -mt-0.5"></BellIcon
+            ><bell-icon class="fill-dark w-4 h-4 -mt-0.5"></bell-icon
           ></template>
           <template #text>Dni</template>
-        </TextWithIcon>
+        </text-and-icon>
         <p class="text-sm leading-4">
           Ustaw dni, w których powiadomienia mają być aktywne. <br />
           Aktualne dni:
@@ -93,15 +93,15 @@
           <span v-else>pn - ndz</span>
         </p>
       </li>
-    </ListInsetShadow>
-  </SettingsLayout>
+    </shadow-list>
+  </settings-layout>
 </template>
 
 <script setup>
-import SettingsLayout from '@/components/layouts/SettingsLayout.vue';
-import BellIcon from '@/components/icons/Bell.vue';
-import TextWithIcon from '@/components/texts/TextWithIcon.vue';
-import SlimButton from '@/components/buttons/SlimButton.vue';
+import SettingsLayout from '@/components/SettingsLayout.vue';
+import BellIcon from '@/components/icons/BellIcon.vue';
+import TextAndIcon from '@/components/texts/TextAndIcon.vue';
+import SmallButton from '@/components/buttons/SmallButton.vue';
 import {
   useCheckForLogChanges,
   useAddChangeLog,

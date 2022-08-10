@@ -6,28 +6,33 @@
   >
     <div class="h-full max-w-sm flex flex-col justify-between mx-auto">
       <header class="w-full">
-        <DynamicHeading
+        <dynamic-heading
           :level="1"
           class="text-center text-3xl"
-        ></DynamicHeading>
+        ></dynamic-heading>
       </header>
       <div class="flex flex-col gap-4">
         <span class="icon w-auto h-screen max-h-64 icon--hello"></span>
-        <TitleWithInfo class="mx-auto text-center">
+        <title-and-description class="mx-auto text-center">
           <template v-slot:title>Zadbaj o swoje nawodnienie</template>
           <template v-slot:text>
             Utrzymuj takie tempo, a Twoje nawodnienie będzie na idealnym
             poziomie.
           </template>
-        </TitleWithInfo>
+        </title-and-description>
       </div>
       <footer class="flex justify-center">
-        <ButtonAsLink text="Zaczynajmy" link="/register"></ButtonAsLink>
+        <router-link
+          to="/register"
+          class="px-8 py-3 font-bold bg-blue text-light rounded-full text-lg"
+        >
+          Zaczynajmy
+        </router-link>
       </footer>
     </div>
-    <MobileWaveSVG
+    <wave-icon
       class="absolute -z-10 left-0 w-full h-auto top-[calc(100%-5rem)]"
-    ></MobileWaveSVG>
+    ></wave-icon>
   </main>
 </template>
 <style>
