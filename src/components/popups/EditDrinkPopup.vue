@@ -1,5 +1,5 @@
 <template>
-  <main class="fixed w-full min-h-screen p-4 py-10 pb-28 top-0 left-0 bg-light">
+  <main class="fixed w-full min-h-screen p-4 py-10 pb-28 top-0 left-0 bg-light z-20">
     <div class="relative h-full max-w-sm flex flex-col gap-8 mx-auto">
       <dynamic-heading class="text-2xl"><slot></slot></dynamic-heading>
       <form @submit.prevent="">
