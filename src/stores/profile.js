@@ -23,7 +23,6 @@ export const useProfile = defineStore('profile', {
     },
     getUserDataFromDB() {
       const docRef = doc(db, useAuth().user.uid, 'profile');
-      console.log(useGetDataFromDB(docRef));
       return useGetDataFromDB(docRef);
     },
     updateUserData(newData) {

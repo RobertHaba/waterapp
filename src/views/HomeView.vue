@@ -419,31 +419,31 @@ watch(drinkProgressPercentage, () => {
   height: 150px;
   stroke-width: 10;
   transform: translate(5px, 5px);
-  stroke-dasharray: 470;
-  stroke-dashoffset: 470;
+  stroke-dasharray: 470px;
+  stroke-dashoffset: 470px;
 }
 
 circle:nth-child(1) {
-  stroke-dashoffset: calc(626 - (626 * 0.75));
+  stroke-dashoffset: calc(626px - (626px * 0.75));
   stroke: theme("colors.blue");
   opacity: 10%;
 }
 
 circle:nth-child(2) {
   stroke-dashoffset: calc(
-    626 - (626 * v-bind(drinkProgressPercentage) * 0.75) / 100
+    626px - (626px * v-bind(drinkProgressPercentage) * 0.75) / 100
   );
   stroke: theme("colors.blue");
 }
 .circle-box--medium circle:nth-child(1) {
-  stroke-dashoffset: calc(470 - (470 * 0.75));
+  stroke-dashoffset: calc(470px - (470px * 0.75));
   stroke: theme("colors.blue");
   opacity: 10%;
 }
 
 .circle-box--medium circle:nth-child(2) {
   stroke-dashoffset: calc(
-    470 - (470 * v-bind(dayProgressPercentage) * 0.75) / 100
+    470px - (470px * v-bind(dayProgressPercentage) * 0.75) / 100
   );
   stroke: theme("colors.blue-500");
 }

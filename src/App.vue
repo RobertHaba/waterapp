@@ -45,7 +45,7 @@ const intervalToSendNotification = () => {
       });
       if (availableHours.find((avHour) => avHour === hourNow))
         sendNotification();
-    }, 1000);
+    }, 59000);
   }
 };
 
