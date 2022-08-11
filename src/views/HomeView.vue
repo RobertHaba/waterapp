@@ -131,7 +131,21 @@
             </svg>
           </div>
           <div
-            class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col justify-center items-center bg-blue/5 shadow-inset-light w-28 h-28 rounded-full"
+            class="
+              absolute
+              top-1/2
+              -translate-y-1/2
+              left-1/2
+              -translate-x-1/2
+              flex flex-col
+              justify-center
+              items-center
+              bg-blue/5
+              shadow-inset-light
+              w-28
+              h-28
+              rounded-full
+            "
           >
             <span class="text-2xl font-bold pt-2">{{ drink.total }}ml</span>
             <span class="text-sm">{{ drink.goal }}ml</span>
@@ -145,7 +159,14 @@
         <div class="flex flex-col gap-6">
           <div class="flex justify-between">
             <div
-              class="shadow-inset-light bg-blue-500 w-fit flex rounded-full pr-2"
+              class="
+                shadow-inset-light
+                bg-blue-500
+                w-fit
+                flex
+                rounded-full
+                pr-2
+              "
             >
               <base-button
                 class-colors="pr-2 rounded-none"
@@ -240,22 +261,23 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue';
-import MoonIcon from '../components/icons/MoonIcon.vue';
-import SunIcon from '../components/icons/SunIcon.vue';
-import FullGlassIcon from '../components/icons/FullGlassIcon.vue';
-import EmptyGlassIcon from '../components/icons/EmptyGlassIcon.vue';
-import EditIcon from '../components/icons/EditIcon.vue';
-import AddIcon from '../components/icons/AddIcon.vue';
-import CloseIcon from '../components/icons/CloseIcon.vue';
-import SmallButton from '../components/buttons/SmallButton.vue';
-import MainNavbar from '../components/TheNavbar.vue';
-import UserAvatar from '../components/TheAvatar.vue';
-import EditDrinkPopup from '../components/popups/EditDrinkPopup.vue';
-import { useProfile } from '../stores/profile';
-import { useSettings } from '../stores/settings';
-import { useDrink } from '../stores/drink';
-import { useWavePosition } from '@/stores/wavePosition';
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import MoonIcon from "../components/icons/MoonIcon.vue";
+import SunIcon from "../components/icons/SunIcon.vue";
+import FullGlassIcon from "../components/icons/FullGlassIcon.vue";
+import EmptyGlassIcon from "../components/icons/EmptyGlassIcon.vue";
+import EditIcon from "../components/icons/EditIcon.vue";
+import AddIcon from "../components/icons/AddIcon.vue";
+import CloseIcon from "../components/icons/CloseIcon.vue";
+import SmallButton from "../components/buttons/SmallButton.vue";
+import MainNavbar from "../components/TheNavbar.vue";
+import UserAvatar from "../components/TheAvatar.vue";
+import EditDrinkPopup from "../components/popups/EditDrinkPopup.vue";
+import { useProfile } from "../stores/profile";
+import { useSettings } from "../stores/settings";
+import { useDrink } from "../stores/drink";
+import { useWavePosition } from "@/stores/wavePosition";
+import localforage from "localforage";
 const wave = useWavePosition();
 const drinkSettingsState = useSettings().settings.drink;
 const drinkList = drinkSettingsState.list;
@@ -268,7 +290,7 @@ const popupData = ref({
   isOpen: false,
   drink: null,
   autoAdd: false,
-  title: 'Edytuj napój',
+  title: "Edytuj napój",
 });
 const drinkProgressPercentage = computed(() => {
   const drinkPercentage = (
@@ -288,9 +310,9 @@ const removeDrink = (drinkToRemove) => {
 };
 const getDateFromDrink = (drinkDate) => {
   const date = new Date(drinkDate);
-  const time = date.toLocaleTimeString('pl-PL', {
-    hour: '2-digit',
-    minute: '2-digit',
+  const time = date.toLocaleTimeString("pl-PL", {
+    hour: "2-digit",
+    minute: "2-digit",
   });
   return time;
 };
@@ -300,7 +322,7 @@ const openPopup = (drinkItem = null) => {
   } else {
     popupData.value.drink = {
       capacity: 10,
-      name: 'woda',
+      name: "woda",
     };
     popupData.value.autoAdd = true;
   }
@@ -311,7 +333,7 @@ const changeDynamicDrink = () => {
     addDrink(popupData.value.drink);
   } else {
     useSettings().settings.drink.list.dynamic = popupData.value.drink;
-    useSettings().updateSettingsData('drink', useSettings().settings.drink);
+    useSettings().updateSettingsData("drink", useSettings().settings.drink);
     popupData.value.drink = null;
   }
   closePopup();
@@ -321,15 +343,10 @@ const closePopup = () => {
   popupData.value.autoAdd = false;
 };
 const popupDrinkText = computed(() => {
-  return popupData.value.autoAdd ? 'Dodaj napój' : 'Edytuj napój';
+  return popupData.value.autoAdd ? "Dodaj napój" : "Edytuj napój";
 });
-const translateY = computed(() => {
-  return `transform: translateY(-${drinkProgressPercentage.value}%)`;
-});
+
 const date = ref(new Date());
-setInterval(() => {
-  date.value = new Date();
-}, 60000);
 const day = ref({
   hour: date.value.getHours(),
   minutes: date.value.getMinutes(),
@@ -337,14 +354,41 @@ const day = ref({
 const dayProgressPercentage = computed(() => {
   return (((day.value.hour * 60 + day.value.minutes) * 100) / 1440).toFixed();
 });
+watch(date, () => {
+  day.value.minutes = date.value.getMinutes();
+  day.value.hour = date.value.getHours();
+});
+
+let intervalDrinkFromNotifications, intervalDayProgress;
+onMounted(() => {
+  intervalDayProgress = setInterval(() => {
+    date.value = new Date();
+  }, 60000);
+  // Get data from localforage (indexeddb) when user CTA in Notification
+  intervalDrinkFromNotifications = setInterval(() => {
+    localforage.keys().then((keys) => {
+      keys.forEach(async (key) => {
+        const drinkItem = await localforage.getItem(key, (err, val) => {
+          return val;
+        });
+        addDrink(drinkItem);
+        localforage.removeItem(key);
+      });
+    });
+  }, 2000);
+});
+onUnmounted(() => {
+  clearInterval(intervalDayProgress);
+  clearInterval(intervalDrinkFromNotifications);
+});
+
+const translateY = computed(() => {
+  return `transform: translateY(-${drinkProgressPercentage.value}%)`;
+});
 wave.updateTransformStyle(translateY.value);
 
 watch(drinkProgressPercentage, () => {
   wave.updateTransformStyle(translateY.value);
-});
-watch(date, () => {
-  day.value.minutes = date.value.getMinutes();
-  day.value.hour = date.value.getHours();
 });
 </script>
 
@@ -381,7 +425,7 @@ watch(date, () => {
 
 circle:nth-child(1) {
   stroke-dashoffset: calc(626 - (626 * 0.75));
-  stroke: theme('colors.blue');
+  stroke: theme("colors.blue");
   opacity: 10%;
 }
 
@@ -389,11 +433,11 @@ circle:nth-child(2) {
   stroke-dashoffset: calc(
     626 - (626 * v-bind(drinkProgressPercentage) * 0.75) / 100
   );
-  stroke: theme('colors.blue');
+  stroke: theme("colors.blue");
 }
 .circle-box--medium circle:nth-child(1) {
   stroke-dashoffset: calc(470 - (470 * 0.75));
-  stroke: theme('colors.blue');
+  stroke: theme("colors.blue");
   opacity: 10%;
 }
 
@@ -401,7 +445,7 @@ circle:nth-child(2) {
   stroke-dashoffset: calc(
     470 - (470 * v-bind(dayProgressPercentage) * 0.75) / 100
   );
-  stroke: theme('colors.blue-500');
+  stroke: theme("colors.blue-500");
 }
 
 .slide-move,

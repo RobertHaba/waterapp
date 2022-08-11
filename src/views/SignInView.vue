@@ -28,7 +28,17 @@
       <div class="relative flex">
         <span class="h-px w-full bg-blue-100"></span>
         <p
-          class="absolute -top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white px-4 font-bold rounded-full"
+          class="
+            absolute
+            -top-1/2
+            -translate-y-1/2
+            left-1/2
+            -translate-x-1/2
+            bg-white
+            px-4
+            font-bold
+            rounded-full
+          "
         >
           lub użyj
         </p>
@@ -63,38 +73,42 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 import {
   getAuth,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
-} from 'firebase/auth';
-import { useAuth } from '@/stores/auth';
-import InputEmail from '../components/inputs/InputEmail.vue';
-import InputPassword from '../components/inputs/InputPassword.vue';
-import GoogleIcon from '../components/icons/GoogleIcon.vue';
-import UserIcon from '../components/icons/UserIcon.vue';
+} from "firebase/auth";
+import { useAuth } from "@/stores/auth";
+
+import InputEmail from "../components/inputs/InputEmail.vue";
+import InputPassword from "../components/inputs/InputPassword.vue";
+import GoogleIcon from "../components/icons/GoogleIcon.vue";
+import UserIcon from "../components/icons/UserIcon.vue";
+import { useSaveInLocalStorage } from "@/composables/useLocalStorage.js";
+import { useGetAppData } from "@/composables/useGetAppData.js";
+
 const router = useRouter();
 
 const user = ref({
   email: {
-    value: '',
+    value: "",
     error: null,
   },
   password: {
-    value: '',
+    value: "",
     error: null,
   },
 });
 const errCode = ref(null);
 const formHasLunched = ref(false);
 const getInputsStatus = (input) => {
-  if (input.name === 'email') {
+  if (input.name === "email") {
     user.value.email.error = input.status;
-  } else if (input.name === 'password') {
+  } else if (input.name === "password") {
     user.value.password.error = input.status;
   }
 };
@@ -112,7 +126,10 @@ const signIn = () => {
     user.value.password.value
   )
     .then((data) => {
-      router.push('/');
+      useSaveInLocalStorage("isFirebaseAccount", true);
+      useGetAppData();
+      useAuth().bindUserFromFirebase();
+      router.push("/");
     })
     .catch((err) => {
       console.log(err);
@@ -122,21 +139,27 @@ const signIn = () => {
 const signInWithGoogle = () => {
   const provider = new GoogleAuthProvider();
   signInWithPopup(getAuth(), provider)
-    .then((res) => {
-      router.push('/');
+    .then(() => {
+      useSaveInLocalStorage("isFirebaseAccount", true);
+      useGetAppData();
+      useAuth().bindUserFromFirebase();
+      router.push("/");
     })
     .catch((error) => {
       console.log(error);
     });
 };
 const continueAsGuest = () => {
-  useAuth().user = 'Guest';
-  router.push('/');
+  useAuth().user = "Guest";
+  useGetAppData();
+  useSaveInLocalStorage("isFirebaseAccount", false);
+  useAuth().bindUserFromLocalStorage();
+  router.push("/");
 };
 </script>
 
 <style>
 .icon--hello {
-  background-image: url('../assets/illustrations/hello.svg');
+  background-image: url("../assets/illustrations/hello.svg");
 }
 </style>

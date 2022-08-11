@@ -7,11 +7,6 @@ import router from './router';
 import './assets/main.css';
 import './firestore/index';
 
-import { getAuth } from 'firebase/auth';
-import { useProfile } from './stores/profile';
-import { useSettings } from './stores/settings';
-import { useDrink } from './stores/drink';
-
 import { useAuth } from './stores/auth';
 
 import DynamicHeading from './components/DynamicHeading.vue';
@@ -22,21 +17,18 @@ import ArrowLeftIcon from './components/icons/ArrowLeftIcon.vue';
 import ReturnButton from './components/buttons/ReturnButton.vue';
 import ShadowList from './components/ShadowList.vue';
 import BaseLayout from './components/BaseLayout.vue';
-
+import { useGetFromLocalStorage } from './composables/useLocalStorage';
+import { useGetAppData } from './composables/useGetAppData.js';
 (async () => {
   const app = createApp(App).use(createPinia());
 
-  const { bindUserFromFirebase, bindUserFromLocalStorage } = useAuth();
-  await bindUserFromFirebase(getAuth());
-  if (useAuth().isFirebaseDB === false) {
-    console.log(useAuth().isFirebaseDB);
-    bindUserFromLocalStorage();
+  const isFirebaseAccount = useGetFromLocalStorage('isFirebaseAccount');
+  if (!isFirebaseAccount) {
+    useAuth().bindUserFromLocalStorage();
+  } else {
+    await useAuth().bindUserFromFirebase();
   }
-  if (useAuth().user) {
-    await useProfile().getUserData();
-    await useSettings().getUserSettings();
-    await useDrink().getTodayDrinkHistory();
-  }
+  await useGetAppData();
   app.component('DynamicHeading', DynamicHeading);
   app.component('TitleAndDescription', TitleAndDescription);
   app.component('BaseButton', BaseButton);

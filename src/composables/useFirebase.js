@@ -4,4 +4,5 @@ export async function useGetDataFromDB(docRef) {
   if (docSnap.exists()) {
     return docSnap.data();
   }
+  return null;
 }

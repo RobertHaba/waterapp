@@ -10,7 +10,7 @@ import { useGetDataFromDB } from '@/composables/useFirebase.js';
 
 export const useSettings = defineStore('userSettings', {
   state: () => ({
-    settings: null,
+    settings: undefined,
   }),
   actions: {
     async getUserSettings() {

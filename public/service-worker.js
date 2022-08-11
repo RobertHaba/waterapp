@@ -5,8 +5,8 @@ self.addEventListener('notificationclick', function (event) {
     console.log('Notification Click.');
     return;
   }
-  const date = new Date();
-  const timestamp = +date;
+  const timestamp = new Date().getTime();
+  console.log(event.notification.timestamp);
   let drink = {
     capacity: 0,
     date: timestamp,

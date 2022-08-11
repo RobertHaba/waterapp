@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuth } from '../stores/auth';
 import { useProfile } from '../stores/profile';
-import { db } from '@/firestore/index';
-import { collection, doc, getDoc } from 'firebase/firestore';
+import { useGetAppData } from '@/composables/useGetAppData.js';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -242,7 +241,10 @@ const checkIfDateExistsInDB = async () => {
   if (useAuth().user === false) {
     return false;
   }
-  return (await useProfile().user) === null ? false : true;
+  if (useProfile().user === null) {
+    await useGetAppData();
+  }
+  return useProfile().user === null ? false : true;
 };
 const userIsAuth = async () => {
   const auth = useAuth();

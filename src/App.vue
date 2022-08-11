@@ -33,8 +33,6 @@ const getAvailableHours = () => {
 };
 
 const intervalToSendNotification = () => {
-  sendNotification();
-
   if (!useProfile().user) {
     return;
   } else if (useProfile().user.notifications.active) {

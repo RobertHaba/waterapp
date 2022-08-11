@@ -1,6 +1,7 @@
-import { getIdTokenResult, onAuthStateChanged } from 'firebase/auth';
+import { getIdTokenResult, onAuthStateChanged, getAuth } from 'firebase/auth';
 import { defineStore } from 'pinia';
 import { useGetFromLocalStorage } from '@/composables/useLocalStorage';
+
 export const useAuth = defineStore({
   id: 'Auth',
   state() {
@@ -18,15 +19,15 @@ export const useAuth = defineStore({
         this.user = userFromLocalStorage;
       }
     },
-    bindUserFromFirebase(auth) {
+    bindUserFromFirebase(res) {
       return new Promise((resolve, reject) => {
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(getAuth(), async (user) => {
+          console.log('1');
           this.user = user;
           if (user) {
-            this.token = await getIdTokenResult(user);
             this.isFirebaseDB = true;
+            this.token = await getIdTokenResult(user);
           }
-
           resolve();
         });
       });

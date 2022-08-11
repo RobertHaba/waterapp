@@ -54,13 +54,18 @@ export const useDrink = defineStore('drink', {
       const today = date.toLocaleDateString('pl-PL');
       if (useAuth().isFirebaseDB) {
         await this.getTodayDrinkHistoryFromDB(today);
-      } else {
-        const drinkHistoryFromLocalStorage = useGetFromLocalStorage('history');
-        if (drinkHistoryFromLocalStorage) {
-          const lastId = drinkHistoryFromLocalStorage.length - 1;
-          this.history.all = drinkHistoryFromLocalStorage;
-          this.history.today = drinkHistoryFromLocalStorage[lastId][today];
+        this.getTodayTodalDrink();
+        return;
+      }
+      const drinkHistoryFromLocalStorage = useGetFromLocalStorage('history');
+      if (drinkHistoryFromLocalStorage) {
+        const drinkHistoryLength = drinkHistoryFromLocalStorage.length;
+        const lastId = drinkHistoryLength - 1;
+        this.history.today = drinkHistoryFromLocalStorage[lastId][today];
+        if (drinkHistoryLength > 1) {
+          drinkHistoryFromLocalStorage.pop();
         }
+        this.history.all = drinkHistoryFromLocalStorage;
       }
       if (!this.history.today) {
         this.history.today = [];
