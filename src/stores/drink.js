@@ -14,6 +14,7 @@ import { db } from '../firestore/index';
 import {
   useGetFromLocalStorage,
   useSaveInLocalStorage,
+  useGetFromArrayLocalStorage,
 } from '@/composables/useLocalStorage';
 export const useDrink = defineStore('drink', {
   state: () => ({
@@ -57,16 +58,13 @@ export const useDrink = defineStore('drink', {
         this.getTodayTodalDrink();
         return;
       }
-      const drinkHistoryFromLocalStorage = useGetFromLocalStorage('history');
-      if (drinkHistoryFromLocalStorage) {
-        const drinkHistoryLength = drinkHistoryFromLocalStorage.length;
-        const lastId = drinkHistoryLength - 1;
-        this.history.today = drinkHistoryFromLocalStorage[lastId][today];
-        if (drinkHistoryLength > 1) {
-          drinkHistoryFromLocalStorage.pop();
-        }
-        this.history.all = drinkHistoryFromLocalStorage;
+      const result = useGetFromArrayLocalStorage('history');
+      if (result) {
+        console.log(result);
+        this.history.today = result.today;
+        this.history.all = result.others;
       }
+
       if (!this.history.today) {
         this.history.today = [];
         return;
@@ -112,10 +110,6 @@ export const useDrink = defineStore('drink', {
         'history/' + today + '/' + timestamp
       );
       await setDoc(docRef, { ...drink });
-    },
-    async createTodayHistoryDocInDB(today) {
-      const docRef = doc(db, useAuth().user.uid, 'history');
-      await addDoc(collection(docRef, today));
     },
   },
 });

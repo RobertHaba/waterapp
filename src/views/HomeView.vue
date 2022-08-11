@@ -206,7 +206,13 @@
           >Ostatnie napoje</dynamic-heading
         >
         <TransitionGroup
-          class="flex flex-col gap-3 h-32 overflow-y-auto drink-history-list"
+          class="
+            flex flex-col
+            gap-3
+            max-h-32
+            overflow-y-auto
+            drink-history-list
+          "
           name="slide"
           tag="ul"
           appear=""
@@ -244,6 +250,30 @@
           Jest tu całkowicie sucho... zacznij uzupełniać płyny, aby to zmienić
         </p>
       </div>
+      <div
+        class="flex flex-col gap-4"
+        v-if="Object.keys(yesterdayGoal).length !== 0"
+      >
+        <dynamic-heading :level="3" class="text-xl"
+          >Wczorajszy dzień</dynamic-heading
+        >
+        <div class="px-4">
+          <text-and-icon>
+            <template #icon>
+              <trophy-icon class="fill-dark h-4 w-4"></trophy-icon>
+            </template>
+            <template #text>
+              <span class="text-lg">
+                {{ yesterdayGoal.total }}/{{ yesterdayGoal.goal }}ml
+              </span>
+            </template>
+          </text-and-icon>
+          <p>
+            Udało Ci się osiągnąć {{ yesterdayGoalPercentages }}% wczorajszego
+            celu!
+          </p>
+        </div>
+      </div>
     </div>
     <main-navbar></main-navbar>
     <edit-drink-popup
@@ -262,23 +292,18 @@
 
 <script setup>
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-import MoonIcon from "../components/icons/MoonIcon.vue";
-import SunIcon from "../components/icons/SunIcon.vue";
-import FullGlassIcon from "../components/icons/FullGlassIcon.vue";
-import EmptyGlassIcon from "../components/icons/EmptyGlassIcon.vue";
-import EditIcon from "../components/icons/EditIcon.vue";
-import AddIcon from "../components/icons/AddIcon.vue";
-import CloseIcon from "../components/icons/CloseIcon.vue";
 import SmallButton from "../components/buttons/SmallButton.vue";
 import MainNavbar from "../components/TheNavbar.vue";
 import UserAvatar from "../components/TheAvatar.vue";
 import EditDrinkPopup from "../components/popups/EditDrinkPopup.vue";
-import { useProfile } from "../stores/profile";
+import TextAndIcon from "../components/texts/TextAndIcon.vue";
 import { useSettings } from "../stores/settings";
 import { useDrink } from "../stores/drink";
 import { useWavePosition } from "@/stores/wavePosition";
+import { useCalcPercentages } from "@/composables/useCalcPercentages";
 import localforage from "localforage";
-const wave = useWavePosition();
+
+/* DRINK */
 const drinkSettingsState = useSettings().settings.drink;
 const drinkList = drinkSettingsState.list;
 const drink = ref({
@@ -286,20 +311,9 @@ const drink = ref({
   goal: useSettings().settings.drink.goal,
   history: useDrink().history.today,
 });
-const popupData = ref({
-  isOpen: false,
-  drink: null,
-  autoAdd: false,
-  title: "Edytuj napój",
-});
 const drinkProgressPercentage = computed(() => {
-  const drinkPercentage = (
-    (drink.value.total * 100) /
-    drink.value.goal
-  ).toFixed();
-  return drinkPercentage >= 100 ? 100 : drinkPercentage;
+  return useCalcPercentages(drink.value.total, drink.value.goal);
 });
-
 const addDrink = (drinkItem) => {
   drink.value.total += drinkItem.capacity;
   useDrink().addDrink(drinkItem);
@@ -316,6 +330,20 @@ const getDateFromDrink = (drinkDate) => {
   });
   return time;
 };
+/* Yesterday goal */
+const yesterdayGoal = useSettings().goalHistory.yesterday;
+const yesterdayGoalPercentages = computed(() => {
+  return useCalcPercentages(yesterdayGoal.total, yesterdayGoal.goal);
+});
+
+/* POPUP */
+
+const popupData = ref({
+  isOpen: false,
+  drink: null,
+  autoAdd: false,
+  title: "Edytuj napój",
+});
 const openPopup = (drinkItem = null) => {
   if (drinkItem !== null) {
     popupData.value.drink = { ...drinkItem };
@@ -345,7 +373,7 @@ const closePopup = () => {
 const popupDrinkText = computed(() => {
   return popupData.value.autoAdd ? "Dodaj napój" : "Edytuj napój";
 });
-
+/* DATE PROGRESS */
 const date = ref(new Date());
 const day = ref({
   hour: date.value.getHours(),
@@ -381,7 +409,8 @@ onUnmounted(() => {
   clearInterval(intervalDayProgress);
   clearInterval(intervalDrinkFromNotifications);
 });
-
+/*WAVE */
+const wave = useWavePosition();
 const translateY = computed(() => {
   return `transform: translateY(-${drinkProgressPercentage.value}%)`;
 });
@@ -390,6 +419,15 @@ wave.updateTransformStyle(translateY.value);
 watch(drinkProgressPercentage, () => {
   wave.updateTransformStyle(translateY.value);
 });
+/* Icons */
+import MoonIcon from "../components/icons/MoonIcon.vue";
+import SunIcon from "../components/icons/SunIcon.vue";
+import FullGlassIcon from "../components/icons/FullGlassIcon.vue";
+import EmptyGlassIcon from "../components/icons/EmptyGlassIcon.vue";
+import EditIcon from "../components/icons/EditIcon.vue";
+import AddIcon from "../components/icons/AddIcon.vue";
+import CloseIcon from "../components/icons/CloseIcon.vue";
+import TrophyIcon from "../components/icons/TrophyIcon.vue";
 </script>
 
 <style scoped>

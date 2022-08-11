@@ -84,19 +84,19 @@
 </template>
 
 <script setup>
-import SettingsLayout from '@/components/SettingsLayout.vue';
-import ShadowListItem from '@/components/ShadowListItem.vue';
-import BaseSelect from '../../components/inputs/BaseSelect.vue';
-import AccountUpdatedPopup from '@/components/popups/AccountUpdatedPopup.vue';
+import SettingsLayout from "@/components/SettingsLayout.vue";
+import ShadowListItem from "@/components/ShadowListItem.vue";
+import BaseSelect from "../../components/inputs/BaseSelect.vue";
+import AccountUpdatedPopup from "@/components/popups/AccountUpdatedPopup.vue";
 
-import { computed, ref } from 'vue';
-import { useProfile } from '@/stores/profile.js';
-import { useCalcGoal } from '@/composables/useCalcDrinkGoal';
-import { useSettings } from '@/stores/settings';
+import { computed, ref } from "vue";
+import { useProfile } from "@/stores/profile.js";
+import { useCalcGoal } from "@/composables/useCalcDrinkGoal";
+import { useSettings } from "@/stores/settings";
 import {
   useCheckForLogChanges,
   useAddChangeLog,
-} from '@/composables/useWatchForValueChange';
+} from "@/composables/useWatchForValueChange";
 const settingsStore = useSettings();
 const user = ref({ ...useProfile().user });
 const hasChanges = ref(false);
@@ -135,7 +135,7 @@ const resetRefs = () => {
 const newUserName = computed(() => {
   return user.value.name == useProfile().user.name || user.value.name.length > 0
     ? user.value.name
-    : 'Gość';
+    : "Gość";
 });
 
 const isWeightDataValid = computed(() => {
@@ -156,7 +156,7 @@ const watchForValueChange = (elID, newVal, oldVal) => {
 };
 
 const updateGoal = () => {
-  settingsStore.updateSettingsData('drink', {
+  settingsStore.updateSettingsData("drink", {
     autoCalc: true,
     goal: useCalcGoal(),
     list: settingsStore.settings.drink.list,
@@ -167,12 +167,12 @@ const closePopup = () => {
   isPopupOpen.value = false;
 };
 const activitySelectOptions = [
-  { name: 'mała', value: 'low' },
-  { name: 'średnia', value: 'medium' },
-  { name: 'wysoka', value: 'high' },
+  { name: "mała", value: "low" },
+  { name: "średnia", value: "medium" },
+  { name: "wysoka", value: "high" },
 ];
 const genderSelectOptions = [
-  { name: 'mężczyna', value: 'man' },
-  { name: 'kobieta', value: 'woman' },
+  { name: "mężczyna", value: "man" },
+  { name: "kobieta", value: "woman" },
 ];
 </script>

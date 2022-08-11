@@ -17,7 +17,9 @@
         >
       </li>
     </shadow-list>
-    <shadow-list v-if="notificationSettings.active">
+    <shadow-list
+      :class="{ 'mask cursor-default': !notificationSettings.active }"
+    >
       <li class="flex gap-6 justify-between flex-wrap">
         <text-and-icon>
           <template #icon
@@ -26,6 +28,7 @@
           <template #text>Dźwięki</template>
         </text-and-icon>
         <SmallButton
+          :disabled="!notificationSettings.active"
           class="text-sm !px-4"
           @click="toggleStatus('sound', 2, notificationSettings.sound)"
           :class="{ active: notificationSettings.sound === true }"
@@ -40,6 +43,7 @@
           <template #text>Wibracje</template>
         </text-and-icon>
         <SmallButton
+          :disabled="!notificationSettings.active"
           class="text-sm !px-4"
           @click="
             toggleStatus('vibrations', 3, notificationSettings.vibrations)
@@ -117,12 +121,21 @@ const buttonText = (status) => {
   return status ? "Włączone" : "Wyłączone";
 };
 const toggleStatus = async (name, elID, value) => {
-  if (Notification.permission === "granted") {
+  console.log();
+  if (
+    Notification.permission === "granted" &&
+    notificationSettings.value.active
+  ) {
+    console.log("Normal toggle");
     notificationSettings.value[name] = !value;
-  } else {
+  } else if (Notification.permission === "granted" && name === "active") {
+    notificationSettings.value.active = !value;
+  } else if (Notification.permission !== "granted" && name === "active") {
     notificationSettings.value.active =
       await useRequestForNotificationPermission();
     saveData();
+  } else {
+    return;
   }
   watchForValueChange(
     elID,
@@ -145,3 +158,8 @@ const watchForValueChange = (elID, newVal, oldVal) => {
   hasChanges.value = useCheckForLogChanges(changesLog.value);
 };
 </script>
+<style scoped>
+.mask {
+  opacity: 0.4;
+}
+</style>
