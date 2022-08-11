@@ -14,7 +14,13 @@
             type="number"
             name=""
             id="goal"
-            class="w-24 text-right text-lg font-bold border-b border-dark leading-none"
+            class="
+              w-24
+              text-right text-lg
+              font-bold
+              border-b border-dark
+              leading-none
+            "
             v-model="drinkSettings.goal"
             :placeholder="drinkSettings.goal"
             min="1"
@@ -81,26 +87,25 @@
 
 <script setup>
 /* Imports */
-import { computed, ref } from '@vue/runtime-core';
-import SettingsLayout from '@/components/SettingsLayout.vue';
-import EditDrinkPopup from '@/components/popups/EditDrinkPopup.vue';
-import SmallButton from '../../components/buttons/SmallButton.vue';
-import TrophyIcon from '@/components/icons/TrophyIcon.vue';
-import TextAndIcon from '@/components/texts/TextAndIcon.vue';
-import EditIcon from '../../components/icons/EditIcon.vue';
-import { useSettings } from '@/stores/settings';
-import { useCalcGoal } from '@/composables/useCalcDrinkGoal.js';
+import { computed, ref } from "@vue/runtime-core";
+import SettingsLayout from "@/components/SettingsLayout.vue";
+import EditDrinkPopup from "@/components/popups/EditDrinkPopup.vue";
+import SmallButton from "../../components/buttons/SmallButton.vue";
+import { useSettings } from "@/stores/settings";
+import { useCalcGoal } from "@/composables/useCalcDrinkGoal.js";
 const hasChanges = ref(false);
 const drinkSettings = ref({ ...useSettings().settings.drink });
 const drinkList = drinkSettings.value.list.statics;
 const textAutoCalcButton = computed(() => {
-  return drinkSettings.value.autoCalc ? 'tak' : 'nie';
+  return drinkSettings.value.autoCalc ? "tak" : "nie";
 });
 const checkInputChange = () => {
+  console.log(useSettings().settings.drink.goal);
   if (drinkSettings.value.goal !== useSettings().settings.drink.goal) {
     drinkSettings.value.autoCalc = false;
     hasChanges.value = true;
   } else {
+    drinkSettings.value.autoCalc = useSettings().settings.drink.autoCalc;
     hasChanges.value = false;
   }
 };
@@ -114,9 +119,14 @@ const calcDailyDrinkGoal = () => {
 };
 const saveData = () => {
   hasChanges.value = false;
-  useSettings().updateSettingsData('drink', drinkSettings);
-};
+  useSettings().updateSettingsData("drink", drinkSettings.value);
 
+  resetRefs();
+};
+const resetRefs = () => {
+  drinkSettings.value = { ...useSettings().settings.drink };
+  hasChanges.value = false;
+};
 /* Popup */
 
 const popupData = ref({
@@ -133,9 +143,14 @@ const changeStaticDrink = () => {
   popupData.value.isOpen = false;
   useSettings().settings.drink.list.statics[popupData.value.drinkIndex] =
     popupData.value.drink;
-  useSettings().updateSettingsData('drink', useSettings().settings.drink);
+  useSettings().updateSettingsData("drink", useSettings().settings.drink);
 };
 const closePopup = () => {
   popupData.value.isOpen = false;
 };
+/* ICONS */
+
+import TrophyIcon from "@/components/icons/TrophyIcon.vue";
+import TextAndIcon from "@/components/texts/TextAndIcon.vue";
+import EditIcon from "../../components/icons/EditIcon.vue";
 </script>
