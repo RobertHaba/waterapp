@@ -6,7 +6,6 @@ export const useWavePosition = defineStore('wavePosition', {
   }),
   actions: {
     updateTransformStyle(style) {
-      console.log(style);
       this.transfromStyle = style;
     },
   },

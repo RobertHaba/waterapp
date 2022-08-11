@@ -4,3 +4,12 @@
     background-size: 100% 100%;
     background-repeat: no-repeat;
 }
+
+.icon--avatar {
+    background-image: url('./icons/avatar.svg');
+}
+
+.active {
+    background-color: theme('backgroundColor.blue');
+    color: theme('textColor.light');
+}
