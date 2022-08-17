@@ -14,9 +14,9 @@ import { useCalcGoal } from "@/composables/useCalcDrinkGoal.js";
 import { useSaveInLocalStorage } from "@/composables/useLocalStorage.js";
 import { useToday } from "@/composables/useDate.js";
 const saveData = () => {
-  useUserFirstConfig().settings.drink.goal = useCalcGoal(
-    useUserFirstConfig().user
-  );
+  const calculatedGoal = useCalcGoal(useUserFirstConfig().user);
+  useUserFirstConfig().settings.water.goal = calculatedGoal;
+  useUserFirstConfig().settings.drink.goal = calculatedGoal;
   if (useAuth().token !== null) {
     saveToDB();
     return;

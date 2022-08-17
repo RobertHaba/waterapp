@@ -21,71 +21,87 @@ export const useDrink = defineStore('drink', {
     drink: {
       total: 0,
     },
+    water: {
+      total: 0,
+    },
     history: { today: [], all: [] },
+    waterHistory: { today: [], all: [] },
+    drinkHistory: { today: [], all: [] },
   }),
   actions: {
-    addDrink(drink) {
-      this.addDrinkToHistory(drink);
-      this.drink.total += drink.capacity;
+    addDrink(drink, mode) {
+      this.addDrinkToHistory(drink, mode);
+      this[mode].total += drink.capacity;
     },
-    removeDrink(drinkToRemove) {
+    removeDrink(drinkToRemove, mode) {
       const date = new Date(drinkToRemove.date);
       const today = date.toLocaleDateString('pl-PL');
-      const index = this.history.today.findIndex(
+      const historyPath = mode + 'History';
+      const index = this[historyPath].today.findIndex(
         (drink) => drink.date === drinkToRemove.date
       );
-      this.history.today.splice(index, 1);
-      this.drink.total -= drinkToRemove.capacity;
+      this[historyPath].today.splice(index, 1);
+      this[mode].total -= drinkToRemove.capacity;
       if (useAuth().isFirebaseDB) {
-        this.removeDrinkFromDB(today, drinkToRemove);
+        this.removeDrinkFromDB(today, drinkToRemove, historyPath);
         return;
       }
-      this.history.all[this.history.all.length - 1] = {
-        [today]: this.history.today,
-      };
-      useSaveInLocalStorage('history', this.history.all);
+      const allHistoryLength = this[historyPath].all.length;
+      if (this[historyPath].today.length > 0) {
+        this[historyPath].all[allHistoryLength] = {
+          [today]: this[historyPath].today,
+        };
+      }
+      useSaveInLocalStorage(historyPath, this[historyPath].all);
     },
-    async removeDrinkFromDB(today, drink) {
+    async removeDrinkFromDB(today, drink, historyPath) {
       await deleteDoc(
-        doc(db, useAuth().user.uid, 'history', today, '' + drink.date)
+        doc(db, useAuth().user.uid, historyPath, today, '' + drink.date)
       );
     },
     async getTodayDrinkHistory() {
       const date = new Date();
       const today = date.toLocaleDateString('pl-PL');
       if (useAuth().isFirebaseDB) {
-        await this.getTodayDrinkHistoryFromDB(today);
-        this.getTodayTodalDrink();
+        await this.getTodayDrinkHistoryFromDB(today, 'waterHistory');
+        await this.getTodayDrinkHistoryFromDB(today, 'drinkHistory');
+        this.getTodayTodalDrink('water');
+        this.getTodayTodalDrink('drink');
         return;
       }
-      const result = useGetFromArrayLocalStorage('history');
-      if (result) {
-        console.log(result);
-        this.history.today = result.today;
-        this.history.all = result.others;
-      }
-
-      if (!this.history.today) {
-        this.history.today = [];
-        return;
-      }
-      this.getTodayTodalDrink();
+      this.getTodayDrinkHistoryFromLocally('water');
+      this.getTodayDrinkHistoryFromLocally('drink');
     },
-    async getTodayDrinkHistoryFromDB(today) {
-      const q = query(collection(db, useAuth().user.uid, 'history', today));
+    getTodayDrinkHistoryFromLocally(mode) {
+      const historyPath = mode + 'History';
+      console.log(historyPath);
+      const result = useGetFromArrayLocalStorage(historyPath);
+      console.log(result);
+      if (result) {
+        this[historyPath].today = result.today;
+        this[historyPath].all = result.others;
+      }
+      if (!this[historyPath].today) {
+        this[historyPath].today = [];
+        return;
+      }
+      this.getTodayTodalDrink(mode);
+    },
+    async getTodayDrinkHistoryFromDB(today, historyPath) {
+      const q = query(collection(db, useAuth().user.uid, historyPath, today));
       const docSnap = await getDocs(q);
       if (!docSnap.empty) {
         docSnap.forEach((doc) => {
-          this.history.today.unshift(doc.data());
+          this[historyPath].today.unshift(doc.data());
         });
       }
     },
-    getTodayTodalDrink() {
-      this.history.today.forEach((drink) => {
-        this.drink.total += drink.capacity;
+    getTodayTodalDrink(mode) {
+      this[mode + 'History'].today.forEach((drink) => {
+        this[mode].total += drink.capacity;
       });
     },
-    addDrinkToHistory(drink) {
+    addDrinkToHistory(drink, mode = 'water') {
       const timestamp = Date.now();
       const date = new Date(timestamp);
       const today = date.toLocaleDateString('pl-PL');
@@ -93,21 +109,27 @@ export const useDrink = defineStore('drink', {
         date: timestamp,
         ...drink,
       };
-      this.history.today.unshift(drinkWithDate);
+      const historyPath = mode + 'History';
+      this[historyPath].today.unshift(drinkWithDate);
       if (useAuth().isFirebaseDB) {
-        this.addTodayDrinkHistoryInDB(timestamp, today, drinkWithDate);
+        this.addTodayDrinkHistoryInDB(
+          timestamp,
+          today,
+          drinkWithDate,
+          historyPath
+        );
         return;
       }
-      useSaveInLocalStorage('history', [
-        ...this.history.all,
-        { [today]: this.history.today },
+      useSaveInLocalStorage(historyPath, [
+        ...this[historyPath].all,
+        { [today]: this[historyPath].today },
       ]);
     },
-    async addTodayDrinkHistoryInDB(timestamp, today, drink) {
+    async addTodayDrinkHistoryInDB(timestamp, today, drink, historyPath) {
       const docRef = doc(
         db,
         useAuth().user.uid,
-        'history/' + today + '/' + timestamp
+        historyPath + '/' + today + '/' + timestamp
       );
       await setDoc(docRef, { ...drink });
     },

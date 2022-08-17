@@ -20,7 +20,7 @@ export const useSettings = defineStore('userSettings', {
       if (useAuth().isFirebaseDB) {
         this.settings = await this.getSettingsDataFromDB();
         this.goalHistory.today = this.settings
-          ? this.settings.drink.goal
+          ? this.settings.water.goal
           : null;
         this.getYesterdayGoalHistoryFromDB();
         return;
@@ -67,11 +67,11 @@ export const useSettings = defineStore('userSettings', {
     async updateSettingsInDB() {
       const docRef = doc(db, useAuth().user.uid, 'settings');
       await updateDoc(docRef, this.settings);
-      if (this.goalHistory.today === this.settings.drink.goal) {
+      if (this.goalHistory.today === this.settings.water.goal) {
         return;
       }
       await this.setChangeInGoalHistoryDB();
-      this.goalHistory.today = this.settings.drink.goal;
+      this.goalHistory.today = this.settings.water.goal;
     },
     setChangeInGoalHistoryLocally() {
       const date = new Date();
@@ -81,8 +81,8 @@ export const useSettings = defineStore('userSettings', {
         ...this.goalHistory.all,
         {
           [today]: {
-            total: useDrink().drink.total,
-            goal: this.settings.drink.goal,
+            total: useDrink().water.total,
+            goal: this.settings.water.goal,
           },
         },
       ]);
@@ -92,8 +92,8 @@ export const useSettings = defineStore('userSettings', {
       const today = date.toLocaleDateString('pl-PL');
       const docRef = doc(db, useAuth().user.uid, 'goalHistory/all/' + today);
       await setDoc(docRef, {
-        total: useDrink().drink.total,
-        goal: drinkGoal ? drinkGoal : this.settings.drink.goal,
+        total: useDrink().water.total,
+        goal: drinkGoal ? drinkGoal : this.settings.water.goal,
       });
     },
   },

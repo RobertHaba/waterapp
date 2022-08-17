@@ -1,5 +1,7 @@
 <template>
-  <main class="fixed w-full min-h-screen p-4 py-10 pb-28 top-0 left-0 bg-light z-20">
+  <main
+    class="fixed w-full min-h-screen p-4 py-10 pb-28 top-0 left-0 bg-light z-20"
+  >
     <div class="relative h-full max-w-sm flex flex-col gap-8 mx-auto">
       <dynamic-heading class="text-2xl"><slot></slot></dynamic-heading>
       <form @submit.prevent="">
@@ -19,7 +21,14 @@
               <input
                 type="number"
                 id="capacity"
-                class="w-full text-center text-2xl font-bold border-b border-dark leading-none pl-5"
+                class="
+                  w-full
+                  text-center text-2xl
+                  font-bold
+                  border-b border-dark
+                  leading-none
+                  pl-5
+                "
                 v-model="props.drink.capacity"
                 min="10"
                 max="10000"
@@ -33,7 +42,10 @@
               Wprowadź pojemność z zakresu 10 - 10000
             </p>
           </li>
-          <li class="flex flex-col gap-2 justify-between">
+          <li
+            class="flex flex-col gap-2 justify-between"
+            v-if="props.mode === 'all'"
+          >
             <text-and-icon>
               <template #icon
                 ><trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon
@@ -68,28 +80,32 @@
   </main>
 </template>
 <script setup>
-import TextAndIcon from '@/components/texts/TextAndIcon.vue';
-import PopupNavbar from '@/components/popups/PopupNavbar.vue';
-import TrophyIcon from '@/components/icons/TrophyIcon.vue';
-import { useSettings } from '@/stores/settings.js';
-import { ref } from '@vue/reactivity';
-import { onMounted } from '@vue/runtime-core';
+import TextAndIcon from "@/components/texts/TextAndIcon.vue";
+import PopupNavbar from "@/components/popups/PopupNavbar.vue";
+import TrophyIcon from "@/components/icons/TrophyIcon.vue";
+import { useSettings } from "@/stores/settings.js";
+import { ref } from "@vue/reactivity";
+import { onMounted } from "@vue/runtime-core";
 const drinksList = useSettings().settings.drinks;
 const capacityInput = ref(null);
 const props = defineProps({
   drink: Object,
+  mode: {
+    type: String,
+    default: "all",
+  },
 });
 const isValid = ref(true);
-const emit = defineEmits(['closePopup', 'saveData']);
+const emit = defineEmits(["closePopup", "saveData"]);
 const saveData = () => {
   if (props.drink.capacity >= 10 && props.drink.capacity <= 10000) {
-    emit('saveData');
+    emit("saveData");
   } else {
     isValid.value = false;
   }
 };
 const closePopup = () => {
-  emit('closePopup');
+  emit("closePopup");
 };
 onMounted(() => {
   capacityInput.value.focus();

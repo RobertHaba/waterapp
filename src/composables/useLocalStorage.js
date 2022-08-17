@@ -14,12 +14,13 @@ export function useGetFromArrayLocalStorage(key) {
   const date = new Date();
   const today = date.toLocaleDateString('pl-PL');
   const data = useGetFromLocalStorage(key);
-  const result = { today: {}, others: [] };
+  const result = { today: [], others: [] };
   if (data) {
     const dataLength = data.length;
     const lastId = dataLength - 1;
-    result.today = data[lastId][today];
-    console.log(dataLength);
+    if (lastId >= 0) {
+      result.today = data[lastId][today];
+    }
     if (dataLength > 1 && result.today) {
       data.pop();
       result.others = data;

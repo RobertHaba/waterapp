@@ -17,7 +17,7 @@ export const useUserFirstConfig = defineStore('userFirstConfig', {
       },
     },
     settings: {
-      drink: {
+      water: {
         goal: 2800,
         autoCalc: true,
         list: {
@@ -41,7 +41,31 @@ export const useUserFirstConfig = defineStore('userFirstConfig', {
           ],
         },
       },
-      drinks: [{ name: 'woda', kcal: '0' }],
+      drink: {
+        goal: 2800,
+        autoCalc: true,
+        list: {
+          dynamic: {
+            capacity: 500,
+            name: 'pepsi',
+          },
+          statics: [
+            {
+              capacity: 150,
+              name: 'pepsi',
+            },
+            {
+              capacity: 250,
+              name: 'pepsi',
+            },
+            {
+              capacity: 350,
+              name: 'pepsi',
+            },
+          ],
+        },
+      },
+      drinks: [{ name: 'pepsi', kcal: '250' }],
     },
   }),
   actions: {

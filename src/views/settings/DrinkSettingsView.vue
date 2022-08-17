@@ -21,8 +21,8 @@
               border-b border-dark
               leading-none
             "
-            v-model="drinkSettings.goal"
-            :placeholder="drinkSettings.goal"
+            v-model="waterSettings.goal"
+            :placeholder="waterSettings.goal"
             min="1"
             max="99999"
             @keyup="checkInputChange"
@@ -45,7 +45,7 @@
         </div>
         <SmallButton
           class="text-sm !px-4"
-          :class="{ active: drinkSettings.autoCalc === true }"
+          :class="{ active: waterSettings.autoCalc === true }"
           @click="calcDailyDrinkGoal"
           >{{ textAutoCalcButton }}</SmallButton
         >
@@ -57,7 +57,31 @@
           <template #icon
             ><trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon
           ></template>
-          <template #text>Przypięte pojemności</template>
+          <template #text>Przypięte pojemności - woda</template>
+        </text-and-icon>
+        <div class="flex flex-wrap justify-around gap-3">
+          <SmallButton
+            class="!gap-4 !bg-light"
+            v-for="(drink, index) in drinkList"
+            :key="drink"
+            @click="openPopup(index)"
+          >
+            <div class="flex items-center gap-2">
+              <trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon>
+              <span>{{ drink.capacity }}ml</span>
+            </div>
+            <edit-icon class="fill-dark w-4 h-4 -mt-0.5"></edit-icon>
+          </SmallButton>
+        </div>
+      </li>
+    </shadow-list>
+    <shadow-list>
+      <li class="flex flex-col gap-6">
+        <text-and-icon>
+          <template #icon
+            ><trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon
+          ></template>
+          <template #text>Przypięte pojemności - napoje</template>
         </text-and-icon>
         <div class="flex flex-wrap justify-around gap-3">
           <SmallButton
@@ -94,18 +118,18 @@ import SmallButton from "../../components/buttons/SmallButton.vue";
 import { useSettings } from "@/stores/settings";
 import { useCalcGoal } from "@/composables/useCalcDrinkGoal.js";
 const hasChanges = ref(false);
-const drinkSettings = ref({ ...useSettings().settings.drink });
-const drinkList = drinkSettings.value.list.statics;
+const waterSettings = ref({ ...useSettings().settings.water });
+const drinkList = waterSettings.value.list.statics;
 const textAutoCalcButton = computed(() => {
-  return drinkSettings.value.autoCalc ? "tak" : "nie";
+  return waterSettings.value.autoCalc ? "tak" : "nie";
 });
 const checkInputChange = () => {
-  console.log(useSettings().settings.drink.goal);
-  if (drinkSettings.value.goal !== useSettings().settings.drink.goal) {
-    drinkSettings.value.autoCalc = false;
+  console.log(useSettings().settings.water.goal);
+  if (waterSettings.value.goal !== useSettings().settings.water.goal) {
+    waterSettings.value.autoCalc = false;
     hasChanges.value = true;
   } else {
-    drinkSettings.value.autoCalc = useSettings().settings.drink.autoCalc;
+    waterSettings.value.autoCalc = useSettings().settings.water.autoCalc;
     hasChanges.value = false;
   }
 };
@@ -113,18 +137,18 @@ const calcDailyDrinkGoal = () => {
   if (!hasChanges.value) {
     return;
   }
-  drinkSettings.value.goal = useCalcGoal();
-  drinkSettings.value.autoCalc = true;
+  waterSettings.value.goal = useCalcGoal();
+  waterSettings.value.autoCalc = true;
   hasChanges.value = true;
 };
 const saveData = () => {
   hasChanges.value = false;
-  useSettings().updateSettingsData("drink", drinkSettings.value);
+  useSettings().updateSettingsData("water", waterSettings.value);
 
   resetRefs();
 };
 const resetRefs = () => {
-  drinkSettings.value = { ...useSettings().settings.drink };
+  waterSettings.value = { ...useSettings().settings.water };
   hasChanges.value = false;
 };
 /* Popup */
@@ -141,9 +165,9 @@ const openPopup = (index) => {
 };
 const changeStaticDrink = () => {
   popupData.value.isOpen = false;
-  useSettings().settings.drink.list.statics[popupData.value.drinkIndex] =
+  useSettings().settings.water.list.statics[popupData.value.drinkIndex] =
     popupData.value.drink;
-  useSettings().updateSettingsData("drink", useSettings().settings.drink);
+  useSettings().updateSettingsData("drink", useSettings().settings.water);
 };
 const closePopup = () => {
   popupData.value.isOpen = false;
