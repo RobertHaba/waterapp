@@ -42,6 +42,7 @@
       v-if="popupData.isOpen"
       :drink="popupData.drink"
       :mode="props.mode"
+      :auto-add="popupData.autoAdd"
       @close-popup="closePopup"
       @save-data="changeDrink"
       >{{ popupDrinkText }}</edit-drink-popup
@@ -91,12 +92,16 @@ const openPopup = (drinkItem = null) => {
   }
   popupData.value.isOpen = true;
 };
-const changeDrink = () => {
+const changeDrink = (drink) => {
+  console.log(drink);
   if (popupData.value.autoAdd) {
-    addDrink(popupData.value.drink);
+    addDrink(drink);
   } else {
-    useSettings().settings.drink.list.dynamic = popupData.value.drink;
-    useSettings().updateSettingsData("drink", useSettings().settings.drink);
+    useSettings().settings[props.mode].list.dynamic = drink;
+    useSettings().updateSettingsData(
+      props.mode,
+      useSettings().settings[props.mode]
+    );
     popupData.value.drink = null;
   }
   closePopup();

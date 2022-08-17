@@ -29,10 +29,13 @@
                   leading-none
                   pl-5
                 "
-                v-model="props.drink.capacity"
+                v-model="drink.capacity"
                 min="10"
                 max="10000"
                 ref="capacityInput"
+                @input="
+                  watchForValueChange(1, drink.capacity, props.drink.capacity)
+                "
               />
               <span for="goal" class="border-b border-dark pl-2 right-0"
                 >ml</span
@@ -44,7 +47,7 @@
           </li>
           <li
             class="flex flex-col gap-2 justify-between"
-            v-if="props.mode === 'all'"
+            v-if="props.mode === 'drink'"
           >
             <text-and-icon>
               <template #icon
@@ -56,13 +59,13 @@
               <select
                 name="drinkName"
                 class="w-full text-center border-b border-dark text-xl bg-light"
-                v-model="props.drink.name"
+                v-model="drink.name"
               >
                 <option
                   :value="drink.name"
                   v-for="drink in drinksList"
                   :key="drink.name"
-                  :selected="drink.name === props.drink.name"
+                  :selected="drink.name === drink.name"
                 >
                   {{ drink.name }} ({{ drink.kcal }} kcal)
                 </option>
@@ -74,6 +77,7 @@
         <popup-navbar
           @save-data="saveData"
           @close-popup="closePopup"
+          :has-changes="hasChanges"
         ></popup-navbar>
       </form>
     </div>
@@ -86,20 +90,32 @@ import TrophyIcon from "@/components/icons/TrophyIcon.vue";
 import { useSettings } from "@/stores/settings.js";
 import { ref } from "@vue/reactivity";
 import { onMounted } from "@vue/runtime-core";
+import {
+  useCheckForLogChanges,
+  useAddChangeLog,
+} from "../../composables/useWatchForValueChange";
 const drinksList = useSettings().settings.drinks;
 const capacityInput = ref(null);
 const props = defineProps({
   drink: Object,
+  autoAdd: Boolean,
   mode: {
     type: String,
-    default: "all",
+    default: "water",
   },
 });
-const isValid = ref(true);
 const emit = defineEmits(["closePopup", "saveData"]);
+const hasChanges = ref(props.autoAdd);
+const changesLog = ref([]);
+const isValid = ref(true);
+const drink = ref({ ...props.drink });
+const watchForValueChange = (elID, newVal, oldVal) => {
+  changesLog.value = useAddChangeLog(changesLog.value, elID, newVal, oldVal);
+  hasChanges.value = useCheckForLogChanges(changesLog.value);
+};
 const saveData = () => {
-  if (props.drink.capacity >= 10 && props.drink.capacity <= 10000) {
-    emit("saveData");
+  if (drink.value.capacity >= 10 && drink.value.capacity <= 10000) {
+    emit("saveData", drink.value);
   } else {
     isValid.value = false;
   }

@@ -3,7 +3,10 @@
     <dynamic-heading :level="3" class="text-xl"
       >Wczorajszy dzień</dynamic-heading
     >
-    <div class="px-4" v-if="Object.keys(yesterdayGoal).length !== 0">
+    <div
+      class="px-4"
+      v-if="yesterdayGoal && Object.keys(yesterdayGoal).length !== 0"
+    >
       <text-and-icon>
         <template #icon>
           <trophy-icon class="fill-dark h-4 w-4"></trophy-icon>

@@ -10,6 +10,7 @@ import {
   deleteDoc,
 } from 'firebase/firestore';
 import { useAuth } from './auth';
+import { useSettings } from './settings';
 import { db } from '../firestore/index';
 import {
   useGetFromLocalStorage,
@@ -30,8 +31,8 @@ export const useDrink = defineStore('drink', {
   }),
   actions: {
     addDrink(drink, mode) {
-      this.addDrinkToHistory(drink, mode);
       this[mode].total += drink.capacity;
+      this.addDrinkToHistory(drink, mode);
     },
     removeDrink(drinkToRemove, mode) {
       const date = new Date(drinkToRemove.date);
@@ -124,6 +125,7 @@ export const useDrink = defineStore('drink', {
         ...this[historyPath].all,
         { [today]: this[historyPath].today },
       ]);
+      useSettings().setChangeInGoalHistoryLocally();
     },
     async addTodayDrinkHistoryInDB(timestamp, today, drink, historyPath) {
       const docRef = doc(
@@ -132,6 +134,8 @@ export const useDrink = defineStore('drink', {
         historyPath + '/' + today + '/' + timestamp
       );
       await setDoc(docRef, { ...drink });
+
+      useSettings().setChangeInGoalHistoryDB();
     },
   },
 });

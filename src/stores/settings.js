@@ -8,7 +8,9 @@ import {
   useSaveInLocalStorage,
   useGetFromArrayLocalStorage,
 } from '@/composables/useLocalStorage';
+
 import { useGetDataFromDB } from '@/composables/useFirebase.js';
+import { useYesterdayWithDate } from '../composables/useDate';
 
 export const useSettings = defineStore('userSettings', {
   state: () => ({
@@ -33,16 +35,21 @@ export const useSettings = defineStore('userSettings', {
       return useGetDataFromDB(docRef);
     },
     getGoalHistoryFromLocally() {
+      const { yesterday } = useYesterdayWithDate();
       const result = useGetFromArrayLocalStorage('goalHistory');
-      if (result) {
-        this.goalHistory.yesterday = result.today;
+      if (result && result.others.length) {
+        const yesterdayArray =
+          Object.keys(result.others[result.others.length - 1])[0] === yesterday
+            ? result.others[result.others.length - 1][yesterday]
+            : null;
+        this.goalHistory.yesterday = yesterdayArray;
         this.goalHistory.all = result.others;
+      } else if (result) {
+        this.goalHistory.today = result.today;
       }
     },
     async getYesterdayGoalHistoryFromDB() {
-      const date = new Date();
-      const yesterdayFull = date.setDate(date.getDate() - 1);
-      const yesterday = new Date(yesterdayFull).toLocaleDateString('pl-PL');
+      const { yesterday } = useYesterdayWithDate();
       const docRef = doc(
         db,
         useAuth().user.uid,
@@ -74,6 +81,7 @@ export const useSettings = defineStore('userSettings', {
       this.goalHistory.today = this.settings.water.goal;
     },
     setChangeInGoalHistoryLocally() {
+      console.log('Add');
       const date = new Date();
       const today = date.toLocaleDateString('pl-PL');
       this.getGoalHistoryFromLocally();

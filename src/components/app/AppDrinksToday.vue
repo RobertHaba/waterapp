@@ -15,9 +15,12 @@
       >
         <div class="flex gap-4 items-center">
           <full-glass-icon class="fill-dark w-6 h-6"></full-glass-icon>
-          <div class="flex gap-2 items-center">
-            <span class="font-bold text-lg leading-5"
+          <div class="flex flex-col">
+            <span class="font-bold text-lg leading-none"
               >{{ drink.capacity }}ml</span
+            >
+            <span class="text-xs leading-none" v-if="props.mode === 'drink'"
+              >{{ drink.name }} - {{ calcKcal(drink) }} kcal</span
             >
           </div>
         </div>
@@ -48,6 +51,7 @@ import FullGlassIcon from "@/components/icons/FullGlassIcon.vue";
 import CloseIcon from "@/components/icons/CloseIcon.vue";
 /* Props and emitts */
 const props = defineProps({
+  mode: String,
   drinkHistory: Array,
 });
 const emit = defineEmits(["removeDrink"]);
@@ -59,6 +63,9 @@ const getDateFromDrink = (drinkDate) => {
     minute: "2-digit",
   });
   return time;
+};
+const calcKcal = (drink) => {
+  return (drink.capacity / 100) * drink.kcal;
 };
 const removeDrink = (drink) => {
   emit("removeDrink", drink);

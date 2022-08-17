@@ -23,19 +23,23 @@ export const useUserFirstConfig = defineStore('userFirstConfig', {
         list: {
           dynamic: {
             capacity: 500,
+            kcal: 0,
             name: 'woda',
           },
           statics: [
             {
               capacity: 150,
+              kcal: 0,
               name: 'woda',
             },
             {
               capacity: 250,
+              kcal: 0,
               name: 'woda',
             },
             {
               capacity: 350,
+              kcal: 0,
               name: 'woda',
             },
           ],
@@ -47,19 +51,23 @@ export const useUserFirstConfig = defineStore('userFirstConfig', {
         list: {
           dynamic: {
             capacity: 500,
+            kcal: 250,
             name: 'pepsi',
           },
           statics: [
             {
               capacity: 150,
+              kcal: 250,
               name: 'pepsi',
             },
             {
               capacity: 250,
+              kcal: 250,
               name: 'pepsi',
             },
             {
               capacity: 350,
+              kcal: 250,
               name: 'pepsi',
             },
           ],

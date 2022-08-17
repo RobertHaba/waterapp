@@ -12,7 +12,10 @@
     <app-drinks-refill @add-drink="addDrink" :mode="'drink'"
       >Wprowadź napój!</app-drinks-refill
     >
-    <app-drinks-today :drinkHistory="drink.history" @remove-drink="removeDrink"
+    <app-drinks-today
+      :drinkHistory="drink.history"
+      @remove-drink="removeDrink"
+      :mode="'drink'"
       >Dzisiejsze napoje</app-drinks-today
     >
     <app-yesterday-goal></app-yesterday-goal>
@@ -60,30 +63,7 @@ const removeDrink = (drinkToRemove) => {
   drink.value.total -= drinkToRemove.capacity;
   useDrink().removeDrink(drinkToRemove, "drink");
 };
-/* Notifications */
 
-let intervalDrinkFromNotifications, intervalDayProgress;
-onMounted(() => {
-  intervalDayProgress = setInterval(() => {
-    date.value = new Date();
-  }, 60000);
-  // Get data from localforage (indexeddb) when user CTA in Notification
-  intervalDrinkFromNotifications = setInterval(() => {
-    localforage.keys().then((keys) => {
-      keys.forEach(async (key) => {
-        const drinkItem = await localforage.getItem(key, (err, val) => {
-          return val;
-        });
-        addDrink(drinkItem);
-        localforage.removeItem(key);
-      });
-    });
-  }, 2000);
-});
-onUnmounted(() => {
-  clearInterval(intervalDayProgress);
-  clearInterval(intervalDrinkFromNotifications);
-});
 /*WAVE */
 const wave = useWavePosition();
 const translateY = computed(() => {
