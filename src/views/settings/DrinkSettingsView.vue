@@ -62,9 +62,9 @@
         <div class="flex flex-wrap justify-around gap-3">
           <SmallButton
             class="!gap-4 !bg-light"
-            v-for="(drink, index) in drinkList"
+            v-for="(drink, index) in waterList"
             :key="drink"
-            @click="openPopup(index)"
+            @click="openPopup(index, 'water')"
           >
             <div class="flex items-center gap-2">
               <trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon>
@@ -88,7 +88,7 @@
             class="!gap-4 !bg-light"
             v-for="(drink, index) in drinkList"
             :key="drink"
-            @click="openPopup(index)"
+            @click="openPopup(index, 'drink')"
           >
             <div class="flex items-center gap-2">
               <trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon>
@@ -104,6 +104,7 @@
       :drink="popupData.drink"
       @close-popup="closePopup"
       @save-data="changeStaticDrink"
+      :mode="mode"
       >Edytuj napój</edit-drink-popup
     >
   </settings-layout>
@@ -119,7 +120,10 @@ import { useSettings } from "@/stores/settings";
 import { useCalcGoal } from "@/composables/useCalcDrinkGoal.js";
 const hasChanges = ref(false);
 const waterSettings = ref({ ...useSettings().settings.water });
-const drinkList = waterSettings.value.list.statics;
+const drinkSettings = ref({ ...useSettings().settings.drink });
+const waterList = waterSettings.value.list.statics;
+const drinkList = drinkSettings.value.list.statics;
+const mode = ref("drink");
 const textAutoCalcButton = computed(() => {
   return waterSettings.value.autoCalc ? "tak" : "nie";
 });
@@ -149,6 +153,7 @@ const saveData = () => {
 };
 const resetRefs = () => {
   waterSettings.value = { ...useSettings().settings.water };
+  drinkSettings.value = { ...useSettings().settings.drink };
   hasChanges.value = false;
 };
 /* Popup */
@@ -158,16 +163,24 @@ const popupData = ref({
   drink: null,
   drinkIndex: null,
 });
-const openPopup = (index) => {
+const openPopup = (index, itemMode) => {
+  mode.value = itemMode;
   popupData.value.drinkIndex = index;
-  popupData.value.drink = { ...drinkList[index] };
+  popupData.value.drink =
+    mode.value === "water" ? { ...waterList[index] } : { ...drinkList[index] };
   popupData.value.isOpen = true;
 };
-const changeStaticDrink = () => {
-  popupData.value.isOpen = false;
-  useSettings().settings.water.list.statics[popupData.value.drinkIndex] =
-    popupData.value.drink;
-  useSettings().updateSettingsData("drink", useSettings().settings.water);
+const changeStaticDrink = (drink, silentUpdate = false) => {
+  console.log(drink);
+  if (!silentUpdate) {
+    popupData.value.isOpen = false;
+  }
+  useSettings().settings[mode.value].list.statics[popupData.value.drinkIndex] =
+    drink;
+  useSettings().updateSettingsData(
+    mode.value,
+    useSettings().settings[mode.value]
+  );
 };
 const closePopup = () => {
   popupData.value.isOpen = false;

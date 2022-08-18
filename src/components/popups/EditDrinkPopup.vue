@@ -59,15 +59,16 @@
               <select
                 name="drinkName"
                 class="w-full text-center border-b border-dark text-xl bg-light"
-                v-model="drink.name"
+                v-model="drink.drinkID"
+                @input="checkDrinkNameAndKcalChanges($event.target.value)"
               >
                 <option
-                  :value="drink.name"
-                  v-for="drink in drinksList"
-                  :key="drink.name"
-                  :selected="drink.name === drink.name"
+                  v-for="drinkItem in drinksList"
+                  :value="drinkItem.drinkID"
+                  :selected="drink.drinkID === drinkItem.drinkID"
+                  :key="drinkItem.name"
                 >
-                  {{ drink.name }} ({{ drink.kcal }} kcal)
+                  {{ drinkItem.name }} ({{ drinkItem.kcal }} kcal)
                 </option>
               </select>
             </div>
@@ -113,9 +114,29 @@ const watchForValueChange = (elID, newVal, oldVal) => {
   changesLog.value = useAddChangeLog(changesLog.value, elID, newVal, oldVal);
   hasChanges.value = useCheckForLogChanges(changesLog.value);
 };
-const saveData = () => {
+const checkDrinkNameAndKcalChanges = (newID) => {
+  if (
+    drink.value.drinkID === newID &&
+    (drink.value.kcal !== drinksList[newID].kcal ||
+      drink.value.name !== drinksList[newID].name)
+  ) {
+    drink.value = { ...drink.value, ...drinksList[newID] };
+
+    if (props.autoAdd) {
+      return;
+    }
+    hasChanges.value = false;
+    saveData(true);
+  } else if (props.drink.drinkID !== newID) {
+    drink.value = { ...drink.value, ...drinksList[newID] };
+    hasChanges.value = true;
+  } else {
+    hasChanges.value = false;
+  }
+};
+const saveData = (silentUpdate = false) => {
   if (drink.value.capacity >= 10 && drink.value.capacity <= 10000) {
-    emit("saveData", drink.value);
+    emit("saveData", drink.value, silentUpdate);
   } else {
     isValid.value = false;
   }
@@ -125,5 +146,8 @@ const closePopup = () => {
 };
 onMounted(() => {
   capacityInput.value.focus();
+  if (props.mode === "drink") {
+    checkDrinkNameAndKcalChanges(drink.value.drinkID);
+  }
 });
 </script>

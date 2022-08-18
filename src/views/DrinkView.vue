@@ -18,7 +18,6 @@
       :mode="'drink'"
       >Dzisiejsze napoje</app-drinks-today
     >
-    <app-yesterday-goal></app-yesterday-goal>
     <main-navbar></main-navbar>
   </base-layout>
   <wave-icon
@@ -39,12 +38,10 @@ import AppHeader from "@/components/app/AppHeader.vue";
 import AppProgressBar from "@/components/app/AppProgressBar.vue";
 import AppDrinksRefill from "@/components/app/AppDrinksRefill.vue";
 import AppDrinksToday from "@/components/app/AppDrinksToday.vue";
-import AppYesterdayGoal from "@/components/app/AppYesterdayGoal.vue";
 import MainNavbar from "@/components/TheNavbar.vue";
 /* Composables */
 import { useCalcPercentages } from "@/composables/useCalcPercentages";
 /* Refs */
-const date = ref(new Date());
 const drink = ref({
   total: useDrink().drink.total,
   goal: useSettings().settings.drink.goal,

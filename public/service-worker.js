@@ -1,3 +1,4 @@
+self.addEventListener('fetch', () => console.log('fetch'));
 self.importScripts('localforage.min.js');
 self.addEventListener('notificationclick', function (event) {
   if (!event.action) {

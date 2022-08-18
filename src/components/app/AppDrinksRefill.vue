@@ -85,6 +85,7 @@ const openPopup = (drinkItem = null) => {
     popupData.value.drink = { ...drinkItem };
   } else {
     popupData.value.drink = {
+      drinkID: 0,
       capacity: 10,
       name: "woda",
     };

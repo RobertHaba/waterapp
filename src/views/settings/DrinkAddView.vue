@@ -125,11 +125,12 @@ const validationStatus = ref({
 });
 const changesLog = ref([]);
 const hasChanges = ref(false);
+const settingsDrinks = ref(useSettings().settings.drinks);
 const drink = ref({
+  drinkID: settingsDrinks.value.length,
   name: "",
   kcal: 0,
 });
-const settingsDrinks = ref(useSettings().settings.drinks);
 const router = useRouter();
 /* Methods */
 const saveData = () => {
@@ -153,7 +154,6 @@ const watchForValueChange = (elID, newVal, oldVal) => {
   changesLog.value = useAddChangeLog(changesLog.value, elID, newVal, oldVal);
   hasChanges.value = useCheckForLogChanges(changesLog.value);
 };
-const closeView = () => {};
 /* Mounted */
 onMounted(() => {
   inputNameEl.value.focus();
