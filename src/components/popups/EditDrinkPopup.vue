@@ -12,7 +12,9 @@
             <label for="capacity"
               ><text-and-icon>
                 <template #icon
-                  ><trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon
+                  ><empty-glass-icon
+                    class="fill-dark w-4 h-4 -mt-0.5"
+                  ></empty-glass-icon
                 ></template>
                 <template #text>Pojemność</template>
               </text-and-icon></label
@@ -51,7 +53,9 @@
           >
             <text-and-icon>
               <template #icon
-                ><trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon
+                ><drink-icon
+                  class="fill-dark w-4 h-4 -mt-0.5"
+                ></drink-icon
               ></template>
               <template #text>Typ</template>
             </text-and-icon>
@@ -87,7 +91,8 @@
 <script setup>
 import TextAndIcon from "@/components/texts/TextAndIcon.vue";
 import PopupNavbar from "@/components/popups/PopupNavbar.vue";
-import TrophyIcon from "@/components/icons/TrophyIcon.vue";
+import EmptyGlassIcon from "@/components/icons/EmptyGlassIcon.vue";
+import DrinkIcon from "@/components/icons/DrinkIcon.vue";
 import { useSettings } from "@/stores/settings.js";
 import { ref } from "@vue/reactivity";
 import { onMounted } from "@vue/runtime-core";

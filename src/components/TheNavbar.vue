@@ -17,7 +17,7 @@
       <navbar-list-item
         :class="activeRouterName === 'stats' ? 'shadow-inset-light' : ''"
         label="Przejdź do statystyk"
-        path="/"
+        path="/stats"
       >
         <chart-icon class="w-6 h-6 fill-dark"></chart-icon>
       </navbar-list-item>

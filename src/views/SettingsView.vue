@@ -1,7 +1,7 @@
 <template>
   <main class="relative w-full min-h-screen p-4 py-10 pb-28">
     <div class="relative h-full max-w-sm flex flex-col gap-8 mx-auto">
-      <dynamic-heading class="text-3xl"></dynamic-heading>
+      <dynamic-heading class="text-3xl">Ustawienia</dynamic-heading>
       <div class="relative w-full flex flex-col items-center gap-4 mt-24 mb-8">
         <user-avatar class="w-24 h-24"></user-avatar>
         <p v-if="profile" class="text-2xl font-bold">{{ profile.user.name }}</p>
