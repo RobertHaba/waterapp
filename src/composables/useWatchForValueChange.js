@@ -14,6 +14,5 @@ export function useAddChangeLog(changesLog, elID, newVal, oldVal) {
   } else {
     changesLog[index].status = useWatchForValueChange(newVal, oldVal);
   }
-  console.log(changesLog);
   return changesLog;
 }

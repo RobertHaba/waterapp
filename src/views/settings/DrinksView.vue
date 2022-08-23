@@ -12,9 +12,13 @@
             <p class="font-bold text-xl leading-none">{{ drink.name }}</p>
             <span class="text-sm">{{ drink.kcal }} kcal/100ml</span>
           </div>
-          <small-button class="shadow-none bg-transparent"
-            ><edit-icon class="fill-dark w-6 h-6"></edit-icon
-          ></small-button>
+          <router-link
+            :to="{ name: 'drinkItemAdd', params: drink }"
+            aria-label="Kliknij, aby edytować napój"
+            title="Kliknij, aby edytować napój"
+            ><small-button class="shadow-none bg-transparent"
+              ><edit-icon class="fill-dark w-6 h-6"></edit-icon></small-button
+          ></router-link>
         </li></div
     ></shadow-list>
     <shadow-list class="bg-blue text-white shadow-inset-blue">

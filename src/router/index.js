@@ -80,6 +80,7 @@ const router = createRouter({
           next({ name: 'gender' });
         } else next({ name: 'signin' });
       },
+      props: true,
     },
     {
       path: '/settings/account',

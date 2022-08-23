@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="w-16 h-10 bg-blue" @click="saveData">save</button>
+    <a class="w-16 h-10 bg-blue" @click="saveData">Zapisz dane</a>
   </div>
 </template>
 
@@ -13,6 +13,11 @@ import { useUserFirstConfig } from "@/stores/userFirstConfig";
 import { useCalcGoal } from "@/composables/useCalcDrinkGoal.js";
 import { useSaveInLocalStorage } from "@/composables/useLocalStorage.js";
 import { useToday } from "@/composables/useDate.js";
+import { useRouter } from "vue-router";
+import { onMounted } from "@vue/runtime-core";
+// Variable
+const router = useRouter();
+// Methods
 const saveData = () => {
   const calculatedGoal = useCalcGoal(useUserFirstConfig().user);
   useUserFirstConfig().settings.water.goal = calculatedGoal;
@@ -35,6 +40,7 @@ const saveToDB = async () => {
   await useSettings().setChangeInGoalHistoryDB(
     useUserFirstConfig().settings.drink.goal
   );
+  await router.push({ name: "home" });
 };
 const saveInLocalStorage = () => {
   useSaveInLocalStorage("user", { name: useUserFirstConfig().user.name });
@@ -48,5 +54,9 @@ const saveInLocalStorage = () => {
       },
     },
   ]);
+  router.push({ name: "home" });
 };
+onMounted(() => {
+  saveData();
+});
 </script>

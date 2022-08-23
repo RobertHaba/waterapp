@@ -94,7 +94,6 @@ const openPopup = (drinkItem = null) => {
   popupData.value.isOpen = true;
 };
 const changeDrink = (drink) => {
-  console.log(drink);
   if (popupData.value.autoAdd) {
     addDrink(drink);
   } else {

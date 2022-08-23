@@ -171,7 +171,6 @@ const openPopup = (index, itemMode) => {
   popupData.value.isOpen = true;
 };
 const changeStaticDrink = (drink, silentUpdate = false) => {
-  console.log(drink);
   if (!silentUpdate) {
     popupData.value.isOpen = false;
   }

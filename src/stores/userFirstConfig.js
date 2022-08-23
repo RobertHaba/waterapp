@@ -88,7 +88,6 @@ export const useUserFirstConfig = defineStore('userFirstConfig', {
   }),
   actions: {
     updateUserData(data) {
-      console.log(data);
       this.user = data;
     },
   },
