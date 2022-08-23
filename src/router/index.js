@@ -128,6 +128,21 @@ const router = createRouter({
       },
     },
     {
+      path: '/settings/informations',
+      name: 'informationsSettings',
+      component: () => import('../views/settings/InformationsView.vue'),
+      beforeEnter: async (to, from, next) => {
+        if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
+          next();
+        } else if (
+          (await userIsAuth()) &&
+          (await checkIfDateExistsInDB()) === false
+        ) {
+          next({ name: 'gender' });
+        } else next({ name: 'signin' });
+      },
+    },
+    {
       path: '/welcome',
       name: 'welcome',
       component: () => import('../views/WelcomeView.vue'),
@@ -255,16 +270,17 @@ const router = createRouter({
       path: '/finish',
       name: 'finish',
       component: () => import('../views/firstRun/FirstFinishView.vue'),
-      // beforeEnter: (to, from, next) => {
-      //   if (from.name === 'notifications' || from.name === 'activityHours') {
-      //     next();
-      //   } else next({ name: 'gender' });
-      // },
+      beforeEnter: (to, from, next) => {
+        if (from.name === 'notifications' || from.name === 'activityHours') {
+          next();
+        } else next({ name: 'gender' });
+      },
     },
     {
       path: '/:pathMatch(.*)',
-      name: 'notFound',
-      component: () => import('../views/NotFoundView.vue'),
+      beforeEnter: (to, from, next) => {
+        next({ name: 'home' });
+      },
     },
   ],
 });

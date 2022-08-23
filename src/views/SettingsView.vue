@@ -72,7 +72,7 @@ const routersList = shallowRef([
   {
     icon: InfoIcon,
     name: "Informacje",
-    path: "/",
+    path: "/settings/informations",
   },
 ]);
 onMounted(() => {
