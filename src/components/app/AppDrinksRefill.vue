@@ -4,36 +4,52 @@
     <div class="flex flex-col gap-6">
       <div class="flex justify-between">
         <div
-          class="shadow-inset-light bg-blue-500 w-fit flex rounded-full pr-2"
+          class="
+            shadow-inset-light
+            bg-blue-500
+            w-fit
+            flex
+            rounded-full
+            flex-col
+            items-center
+          "
         >
-          <base-button
-            class-colors="pr-2 rounded-none"
-            @click="addDrink(drinkList.dynamic)"
-            ><empty-glass-icon class="w-6 h-6 fill-dark"></empty-glass-icon
-            ><span class="text-2xl font-normal"
-              >{{ drinkList.dynamic.capacity }}ml</span
-            ></base-button
-          >
+          <div class="w-fit flex pr-2">
+            <base-button
+              class-colors="pr-2 rounded-none pb-0"
+              @click="addDrink(drinkList.dynamic)"
+              ><empty-glass-icon class="w-6 h-6 fill-dark"></empty-glass-icon
+              ><span class="text-2xl font-normal"
+                >{{ drinkList.dynamic.capacity }}ml</span
+              ></base-button
+            >
 
-          <button
-            class="p-4"
-            aria-label="Przycisk do zmiany parametrów napoju"
-            @click="openPopup(drinkList.dynamic)"
-          >
-            <edit-icon class="w-4 h-4 fill-dark"></edit-icon>
-          </button>
+            <button
+              class="p-4 pb-0"
+              aria-label="Przycisk do zmiany parametrów napoju"
+              @click="openPopup(drinkList.dynamic)"
+            >
+              <edit-icon class="w-4 h-4 fill-dark"></edit-icon>
+            </button>
+          </div>
+          <p class="text-center text-xs truncate w-30 pb-3">
+            <span v-if="mode === 'drink'">{{ drinkList.dynamic.name }}</span>
+          </p>
         </div>
         <base-button @click="openPopup()"
           ><add-icon class="fill-light w-6 h-6"></add-icon
         ></base-button>
       </div>
       <ul class="flex justify-between">
-        <li v-for="drink in drinkList.statics" :key="drink">
-          <SmallButton @click="addDrink(drink)"
-            ><empty-glass-icon class="w-4 h-4 fill-dark"></empty-glass-icon
-            ><span class="font-normal"
-              >{{ drink.capacity }}ml</span
-            ></SmallButton
+        <li v-for="drink in drinkList.statics" :key="drink" :title="drink.name">
+          <SmallButton @click="addDrink(drink)" class="flex flex-col gap-0"
+            ><div class="flex gap-2 items-center">
+              <empty-glass-icon class="w-4 h-4 fill-dark"></empty-glass-icon
+              ><span class="font-normal">{{ drink.capacity }}ml</span>
+            </div>
+            <p class="text-xs truncate max-w-20" v-if="mode === 'drink'">
+              {{ drink.name }}
+            </p></SmallButton
           >
         </li>
       </ul>

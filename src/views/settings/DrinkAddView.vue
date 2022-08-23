@@ -1,5 +1,5 @@
 <template>
-  <base-layout>
+  <base-layout v-if="drink">
     <header class="flex items-center justify-between">
       <dynamic-heading class="text-2xl">Dodaj napój</dynamic-heading>
       <trash-icon class="w-6 h-6 fill-dark"></trash-icon>
@@ -86,7 +86,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 /* Components */
 import TextAndIcon from "../../components/texts/TextAndIcon.vue";
@@ -111,6 +111,7 @@ import CaloriesIcon from "../../components/icons/CaloriesIcon.vue";
 const props = defineProps({
   drink: {
     default: {
+      drinkID: null,
       name: "",
       kcal: 0,
     },
@@ -126,18 +127,19 @@ const validationStatus = ref({
 const changesLog = ref([]);
 const hasChanges = ref(false);
 const settingsDrinks = ref(useSettings().settings.drinks);
-const drink = ref({
-  drinkID: settingsDrinks.value.length,
-  name: "",
-  kcal: 0,
-});
+const drink = ref({});
+const isNew = ref(false);
 const router = useRouter();
 /* Methods */
 const saveData = () => {
   validationStatus.value.launched = true;
 
   if (validationStatus.value.name && validationStatus.value.kcal) {
-    settingsDrinks.value.push(drink.value);
+    if (isNew.value) {
+      settingsDrinks.value.push(drink.value);
+    } else {
+      settingsDrinks.value[drink.value.drinkID] = drink.value;
+    }
     useSettings().updateSettingsData("drinks", settingsDrinks.value);
     router.back();
     return;
@@ -154,8 +156,35 @@ const watchForValueChange = (elID, newVal, oldVal) => {
   changesLog.value = useAddChangeLog(changesLog.value, elID, newVal, oldVal);
   hasChanges.value = useCheckForLogChanges(changesLog.value);
 };
+//Watch
+watch(drink, () => {
+  inputNameEl.value.focus();
+});
 /* Mounted */
 onMounted(() => {
-  inputNameEl.value.focus();
+  let propsDrink =
+    typeof props.drink === "object" ? props.drink : JSON.parse(props.drink);
+
+  propsDrink =
+    propsDrink === null
+      ? {
+          drinkID: null,
+          name: "",
+          kcal: 0,
+        }
+      : propsDrink;
+
+  if (propsDrink.drinkID === null) {
+    isNew.value = true;
+    propsDrink.drinkID = settingsDrinks.value.length;
+  }
+  drink.value = propsDrink;
+});
+router.beforeEach(() => {
+  drink.value = {
+    drinkID: null,
+    name: "",
+    kcal: 0,
+  };
 });
 </script>

@@ -15,6 +15,9 @@ module.exports = {
         light: '#FDFFFF',
         red: '#FF6663',
       },
+      maxWidth: {
+        20: '5rem',
+      },
       boxShadow: {
         'inset-light': 'inset 0px 2px 12px rgba(75, 104, 206, 0.2)',
         'inset-blue': 'inset 0px 0px 12px rgba(42, 47, 180, 0.3)',

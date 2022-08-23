@@ -64,7 +64,7 @@ const drinkProgressPercentage = computed(() => {
   return useCalcPercentages(drink.value.total, drink.value.goal);
 });
 const totalCalories = computed(() => {
-  let total = null;
+  let total = 0;
   drink.value.history.forEach((drinkItem) => {
     total += (drinkItem.capacity / 100) * drinkItem.kcal; //must be divided by 100 because the amount of calories is expressed per 100 ml
   });

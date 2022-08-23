@@ -35,7 +35,9 @@
         <div class="flex flex-col gap-4">
           <text-and-icon>
             <template #icon
-              ><calculator-icon class="fill-dark w-4 h-4 -mt-0.5"></calculator-icon
+              ><calculator-icon
+                class="fill-dark w-4 h-4 -mt-0.5"
+              ></calculator-icon
             ></template>
             <template #text>Wylicz dzienny cel</template>
           </text-and-icon>
@@ -87,19 +89,22 @@
           ></template>
           <template #text>Przypięte pojemności - napoje</template>
         </text-and-icon>
-        <div class="flex flex-wrap justify-around gap-3">
+        <div class="flex flex-col justify-around gap-3">
           <SmallButton
-            class="!gap-4 !bg-light"
+            class="flex !w-full !justify-between !bg-light"
             v-for="(drink, index) in drinkList"
             :key="drink"
             @click="openPopup(index, 'drink')"
-          >
-            <div class="flex items-center gap-2">
-              <drink-icon class="fill-dark w-4 h-4 -mt-0.5"></drink-icon>
-              <span>{{ drink.capacity }}ml</span>
+            ><div class="flex gap-2 items-center">
+              <drink-icon class="w-4 h-4 fill-dark"></drink-icon
+              ><span class="font-normal">{{ drink.capacity }}ml</span>
+              <p class="text-xs truncate">
+                {{ drink.name }}
+              </p>
             </div>
-            <edit-icon class="fill-dark w-4 h-4 -mt-0.5"></edit-icon>
-          </SmallButton>
+
+            <edit-icon class="fill-dark w-4 h-4 -mt-0.5"></edit-icon
+          ></SmallButton>
         </div>
       </li>
     </shadow-list>
@@ -153,7 +158,7 @@ const checkInputChange = () => {
   }
 };
 const calcDailyDrinkGoal = () => {
-  if (!hasChanges.value) {
+  if (!hasChanges.value && waterSettings.value.autoCalc === true) {
     return;
   }
   waterSettings.value.goal = useCalcGoal();
