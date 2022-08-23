@@ -110,6 +110,14 @@
       @save-data="saveData"
       :notification-settings="notificationSettings"
     ></time-popup>
+    <base-popup @close-popup="toggleBasePopup" v-if="isBasePopupOpen">
+      <template #title>Powiadomienia w przeglądarce wyłączone</template>
+      <template #illustration
+        ><notifications-illustration></notifications-illustration
+      ></template>
+      Wygląda na to, że Twoje powiadomienia są wyłączone w przeglądarce. Przejdź
+      do ustawień przeglądarki, aby to zmienić.
+    </base-popup>
   </settings-layout>
 </template>
 
@@ -119,11 +127,13 @@ import SettingsLayout from "@/components/SettingsLayout.vue";
 import TextAndIcon from "@/components/texts/TextAndIcon.vue";
 import SmallButton from "@/components/buttons/SmallButton.vue";
 import TimePopup from "@/components/popups/TimePopup.vue";
+import BasePopup from "@/components/popups/BasePopup.vue";
 // ICONS
 import BellIcon from "@/components/icons/BellIcon.vue";
 import SoundIcon from "../../components/icons/SoundIcon.vue";
 import BellRingIcon from "@/components/icons/BellRingIcon.vue";
 import ClockIcon from "@/components/icons/ClockIcon.vue";
+import NotificationsIllustration from "@/components/illustrations/NotificationsIllustration.vue";
 // Composables import
 import {
   useCheckForLogChanges,
@@ -139,24 +149,27 @@ const notificationSettings = ref({ ...notificationStore });
 const hasChanges = ref(false);
 const changesLog = ref([]);
 const isTimePopupOpen = ref(false);
+const isBasePopupOpen = ref(false);
 // Methods
 const buttonText = (status) => {
   return status ? "Włączone" : "Wyłączone";
 };
 const toggleStatus = async (name, elID, value) => {
-  console.log();
   if (
     Notification.permission === "granted" &&
     notificationSettings.value.active
   ) {
-    console.log("Normal toggle");
     notificationSettings.value[name] = !value;
   } else if (Notification.permission === "granted" && name === "active") {
     notificationSettings.value.active = !value;
   } else if (Notification.permission !== "granted" && name === "active") {
     notificationSettings.value.active =
       await useRequestForNotificationPermission();
-    saveData();
+    if (notificationSettings.value.active) {
+      saveData();
+      return;
+    }
+    toggleBasePopup();
   } else {
     return;
   }
@@ -167,9 +180,7 @@ const toggleStatus = async (name, elID, value) => {
   );
 };
 const saveData = (updatedTime = null) => {
-  console.log("Save asd");
   if (updatedTime === null) {
-    console.log("Save");
     useProfile().user.notifications = notificationSettings;
     useProfile().updateUserData(useProfile().user);
     resetRefs();
@@ -184,13 +195,14 @@ const resetRefs = () => {
   hasChanges.value = false;
 };
 const watchForValueChange = (elID, newVal, oldVal) => {
-  console.log(newVal);
-  console.log(oldVal);
   changesLog.value = useAddChangeLog(changesLog.value, elID, newVal, oldVal);
   hasChanges.value = useCheckForLogChanges(changesLog.value);
 };
 const toggleTimePopup = () => {
   isTimePopupOpen.value = !isTimePopupOpen.value;
+};
+const toggleBasePopup = () => {
+  isBasePopupOpen.value = !isBasePopupOpen.value;
 };
 </script>
 <style scoped>
