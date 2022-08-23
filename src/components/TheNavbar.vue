@@ -10,8 +10,8 @@
       flex
       items-center
       justify-center
-      bg-blue-100
     "
+    :class="activeRouterName === 'drinkApp' ? 'bg-orange-100' : 'bg-blue-100'"
   >
     <ul class="flex w-full max-w-sm gap-10 justify-center">
       <navbar-list-item
@@ -26,7 +26,7 @@
         label="Przejdź do strony głównej"
         path="/"
       >
-        <water-drop-icon class="w-6 h-6 fill-dark"></water-drop-icon>
+        <home-icon class="w-6 h-6 fill-dark"></home-icon>
       </navbar-list-item>
       <navbar-list-item
         :class="activeRouterName === 'drinkApp' ? 'shadow-inset-light' : ''"
@@ -53,7 +53,7 @@ import { useRouter } from "vue-router";
 import NavbarListItem from "./NavbarListItem.vue";
 /* Icons */
 
-import WaterDropIcon from "./icons/WaterDropIcon.vue";
+import HomeIcon from "./icons/HomeIcon.vue";
 import ChartIcon from "./icons/ChartIcon.vue";
 import SettingsIcon from "./icons/SettingsIcon.vue";
 import BottleIcon from "./icons/BottleIcon.vue";

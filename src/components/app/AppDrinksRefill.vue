@@ -6,19 +6,22 @@
         <div
           class="
             shadow-inset-light
-            bg-blue-500
             w-fit
             flex
             rounded-full
             flex-col
             items-center
           "
+          :class="buttonColor"
         >
           <div class="w-fit flex pr-2">
             <base-button
               class-colors="pr-2 rounded-none pb-0"
               @click="addDrink(drinkList.dynamic)"
-              ><empty-glass-icon class="w-6 h-6 fill-dark"></empty-glass-icon
+              ><component
+                :is="drinkIconName"
+                class="w-6 h-6 fill-dark"
+              ></component
               ><span class="text-2xl font-normal"
                 >{{ drinkList.dynamic.capacity }}ml</span
               ></base-button
@@ -36,15 +39,23 @@
             <span v-if="mode === 'drink'">{{ drinkList.dynamic.name }}</span>
           </p>
         </div>
-        <base-button @click="openPopup()"
+        <base-button
+          @click="openPopup()"
+          :class="[mode === 'drink' ? 'bg-orange' : ' ']"
           ><add-icon class="fill-light w-6 h-6"></add-icon
         ></base-button>
       </div>
       <ul class="flex justify-between">
         <li v-for="drink in drinkList.statics" :key="drink" :title="drink.name">
-          <SmallButton @click="addDrink(drink)" class="flex flex-col gap-0"
+          <SmallButton
+            @click="addDrink(drink)"
+            class="flex flex-col gap-0"
+            :class="buttonColor"
             ><div class="flex gap-2 items-center">
-              <empty-glass-icon class="w-4 h-4 fill-dark"></empty-glass-icon
+              <component
+                :is="drinkIconName"
+                class="w-4 h-4 fill-dark"
+              ></component
               ><span class="font-normal">{{ drink.capacity }}ml</span>
             </div>
             <p class="text-xs truncate max-w-20" v-if="mode === 'drink'">
@@ -72,6 +83,7 @@ import { computed, ref } from "vue";
 import EmptyGlassIcon from "@/components/icons/EmptyGlassIcon.vue";
 import EditIcon from "@/components/icons/EditIcon.vue";
 import AddIcon from "@/components/icons/AddIcon.vue";
+import DrinkIcon from "../icons/DrinkIcon.vue";
 /* Components */
 import SmallButton from "@/components/buttons/SmallButton.vue";
 import EditDrinkPopup from "@/components/popups/EditDrinkPopup.vue";
@@ -91,6 +103,7 @@ const popupData = ref({
   drink: null,
   autoAdd: false,
   title: "Edytuj napój",
+  mode: "drink",
 });
 /* Methods */
 const addDrink = (drinkItem) => {
@@ -132,5 +145,11 @@ const popupDrinkText = computed(() => {
   return popupData.value.autoAdd
     ? "Dodaj " + modeText.value
     : "Edytuj " + modeText.value;
+});
+const buttonColor = computed(() => {
+  return props.mode === "drink" ? "bg-orange-500" : "bg-blue-500";
+});
+const drinkIconName = computed(() => {
+  return props.mode === "drink" ? DrinkIcon : EmptyGlassIcon;
 });
 </script>

@@ -1,14 +1,14 @@
 <template>
   <first-config-layout
     :stepNumber="1"
-    header-title="Potrzebujemy płeć"
-    header-text="asd"
+    header-title="Płeć"
+    header-text="Wprowadzenie prawidłowej płci pomoże nam w dokładniejszym obliczeniu dziennego zapotrzebowania wody."
   >
     <template v-slot:illustration>
-      <hello-illustration></hello-illustration>
+      <gender-illustration></gender-illustration>
     </template>
     <template v-slot:form>
-      <dynamic-heading :level="2" class="text-xl">Wybierz płeć</dynamic-heading>
+      <dynamic-heading :level="2" class="text-xl text-center">Wybierz płeć</dynamic-heading>
       <form class="flex flex-col gap-8" @submit.prevent="pushDataToStorage">
         <div class="flex gap-4 items-center">
           <input-radio
@@ -34,20 +34,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import FirstConfigLayout from '@/components/FirstConfigLayout.vue';
-import HelloIllustration from '@/components/illustrations/Hello.vue';
-import InputRadio from '@/components/inputs/InputRadio.vue';
-import { useUserFirstConfig } from '@/stores/userFirstConfig';
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import FirstConfigLayout from "@/components/FirstConfigLayout.vue";
+import GenderIllustration from "@/components/illustrations/GenderIllustration.vue";
+import InputRadio from "@/components/inputs/InputRadio.vue";
+import { useUserFirstConfig } from "@/stores/userFirstConfig";
 const router = useRouter();
 const user = ref(useUserFirstConfig().user);
-const activeItem = ref('man');
+const activeItem = ref("man");
 
 const pushDataToStorage = () => {
   user.value.gender = activeItem.value;
   useUserFirstConfig().updateUserData(user.value);
-  router.push({ name: 'weight' });
+  router.push({ name: "weight" });
 };
 onMounted(() => {
   if (user.value.gender) {

@@ -1,14 +1,16 @@
 <template>
   <first-config-layout
     :stepNumber="6"
-    header-title=" powiadomienia"
-    header-text="asd"
+    header-title="Powiadomienia"
+    header-text="Ustawienia odnośnie powiadomień możesz zmienić z poziomu menu użytkownika w każdej chwili."
   >
     <template v-slot:illustration>
-      <hello-illustration></hello-illustration>
+      <notifications-illustration></notifications-illustration>
     </template>
     <template v-slot:form>
-      <dynamic-heading :level="2" class="text-xl">Wybierz płeć</dynamic-heading>
+      <dynamic-heading :level="2" class="text-xl text-center"
+        >Powiadomienia</dynamic-heading
+      >
       <form class="flex flex-col gap-8" @submit.prevent="pushDataToStorage">
         <div class="flex gap-4 items-center">
           <input-radio
@@ -40,7 +42,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import FirstConfigLayout from "@/components/FirstConfigLayout.vue";
-import HelloIllustration from "@/components/illustrations/Hello.vue";
+import NotificationsIllustration from "@/components/illustrations/NotificationsIllustration.vue";
 import InputRadio from "@/components/inputs/InputRadio.vue";
 import { useUserFirstConfig } from "@/stores/userFirstConfig";
 

@@ -19,7 +19,7 @@
     <main-navbar></main-navbar>
   </base-layout>
   <wave-icon
-    class="fixed h-screen w-screen top-full transition-all"
+    class="fixed h-screen w-screen top-full transition-all fill-blue-100"
     :style="wave.transfromStyle"
   ></wave-icon>
 </template>

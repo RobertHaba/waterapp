@@ -5,18 +5,21 @@
         <div class="absolute top-2 w-full flex justify-between px-12">
           <full-glass-icon
             class="w-6 h-6 fill-blue opacity-20"
+            :class="fillIconColor"
           ></full-glass-icon>
           <empty-glass-icon
             class="icon w-6 h-6 fill-blue opacity-20"
+            :class="fillIconColor"
           ></empty-glass-icon>
         </div>
         <svg class="circle-box -rotate-45">
-          <circle cx="100" cy="100" r="100"></circle>
+          <circle cx="100" cy="100" r="100" :stroke="theme.main"></circle>
           <circle
             cx="100"
             cy="100"
             r="100"
             filter="url(#filter0_i_79_1533)"
+            :stroke="theme.main"
           ></circle>
           <defs>
             <filter
@@ -60,16 +63,23 @@
       </div>
       <div class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
         <div class="absolute top-2 w-full flex justify-between px-9">
-          <moon-icon class="icon w-4 h-4 fill-blue opacity-20"></moon-icon>
-          <sun-icon class="icon w-4 h-4 fill-blue opacity-20"></sun-icon>
+          <moon-icon
+            class="icon w-4 h-4 fill-blue opacity-20"
+            :class="fillIconColor"
+          ></moon-icon>
+          <sun-icon
+            class="icon w-4 h-4 fill-blue opacity-20"
+            :class="fillIconColor"
+          ></sun-icon>
         </div>
         <svg class="circle-box circle-box--medium -rotate-45">
-          <circle cx="75" cy="75" r="75"></circle>
+          <circle cx="75" cy="75" r="75" :stroke="theme.main"></circle>
           <circle
             cx="75"
             cy="75"
             r="75"
             filter="url(#filter0_i_79_1533)"
+            :stroke="theme.second"
           ></circle>
           <defs>
             <filter
@@ -127,6 +137,7 @@
           h-28
           rounded-full
         "
+        :class="mode === 'drink' ? 'bg-orange/5' : 'bg-blue/5'"
       >
         <span class="text-2xl font-bold pt-2">{{ props.drink.total }}ml</span>
         <span class="text-sm">{{ props.drink.goal }}ml</span>
@@ -141,11 +152,12 @@ import MoonIcon from "@/components/icons/MoonIcon.vue";
 import SunIcon from "@/components/icons/SunIcon.vue";
 import FullGlassIcon from "@/components/icons/FullGlassIcon.vue";
 import EmptyGlassIcon from "@/components/icons/EmptyGlassIcon.vue";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useCalcPercentages } from "@/composables/useCalcPercentages";
 /* Props */
 const props = defineProps({
   drink: Object,
+  mode: String,
 });
 /* Refs */
 
@@ -154,9 +166,15 @@ const day = ref({
   hour: date.value.getHours(),
   minutes: date.value.getMinutes(),
 });
+const theme = ref({
+  main: "#5C9AFF",
+  second: "#D4E4FF",
+});
 
 /* Computed */
-
+const fillIconColor = computed(() => {
+  return props.mode === "drink" ? "fill-orange" : "fill-blue";
+});
 const drinkProgressPercentage = computed(() => {
   return useCalcPercentages(props.drink.total, props.drink.goal);
 });
@@ -167,6 +185,12 @@ const dayProgressPercentage = computed(() => {
 watch(date, () => {
   day.value.minutes = date.value.getMinutes();
   day.value.hour = date.value.getHours();
+});
+// Mounted
+onMounted(() => {
+  console.log(props.mode);
+  theme.value.main = props.mode === "drink" ? "#FF781E" : "#5C9AFF";
+  theme.value.second = props.mode === "drink" ? "#FFC39B" : "#D4E4FF";
 });
 </script>
 <style scoped>
@@ -187,7 +211,6 @@ watch(date, () => {
   stroke-linecap: round;
   stroke-dasharray: 626;
   stroke-dashoffset: 626;
-  stroke: black;
   transition: 350ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -202,7 +225,6 @@ watch(date, () => {
 
 circle:nth-child(1) {
   stroke-dashoffset: calc(626px - (626px * 0.75));
-  stroke: theme("colors.blue");
   opacity: 10%;
 }
 
@@ -210,11 +232,9 @@ circle:nth-child(2) {
   stroke-dashoffset: calc(
     626px - (626px * v-bind(drinkProgressPercentage) * 0.75) / 100
   );
-  stroke: theme("colors.blue");
 }
 .circle-box--medium circle:nth-child(1) {
   stroke-dashoffset: calc(470px - (470px * 0.75));
-  stroke: theme("colors.blue");
   opacity: 10%;
 }
 
@@ -222,6 +242,5 @@ circle:nth-child(2) {
   stroke-dashoffset: calc(
     470px - (470px * v-bind(dayProgressPercentage) * 0.75) / 100
   );
-  stroke: theme("colors.blue-500");
 }
 </style>

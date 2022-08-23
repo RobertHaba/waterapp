@@ -14,21 +14,21 @@
         <template v-slot:title> {{ props.headerTitle }} </template>
         <template v-slot:text> {{ props.headerText }} </template>
       </title-and-description>
-      <div>
-        <slot name="illustration"> </slot>
+      <div class="flex w-48 h-48">
+        <slot name="illustration" class="flex w-48 h-48"> </slot>
       </div>
       <div class="flex flex-col gap-3"><slot name="form"></slot></div>
     </div>
     <wave-icon
-      class="fixed left-0 right-0 top-full transition-all"
+      class="fixed left-0 h-screen w-screen top-full fill-blue-500"
       :style="wave.transfromStyle"
     ></wave-icon>
   </main>
 </template>
 <script setup>
-import { onMounted, ref, computed } from 'vue';
-import FirstConfigProgress from '@/components/FirstConfigProgress.vue';
-import { useWavePosition } from '@/stores/wavePosition';
+import { onMounted, ref, computed } from "vue";
+import FirstConfigProgress from "@/components/FirstConfigProgress.vue";
+import { useWavePosition } from "@/stores/wavePosition";
 const props = defineProps({
   stepNumber: Number,
   headerTitle: String,

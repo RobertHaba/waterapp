@@ -1,20 +1,20 @@
 <template>
   <first-config-layout
     :stepNumber="4"
-    header-title="Rok jest potrzebna"
-    header-text="asd"
+    header-title="Rok"
+    header-text="Dbamy o twoją prywatność, dlatego nie wymagamy Twojej dokładnej daty urodzenia."
   >
     <template v-slot:illustration>
-      <hello-illustration></hello-illustration>
+      <birthday-illustration></birthday-illustration>
     </template>
     <template v-slot:form>
       <dynamic-heading :level="2" class="text-xl"
-        >Wprowadź swoją rok urodzenia</dynamic-heading
+        >Wprowadź swój rok urodzenia</dynamic-heading
       >
       <form class="flex flex-col gap-8" @submit.prevent="pushDataToStorage">
         <div class="relative flex gap-4 items-center justify-center max-w-xs">
           <label for="weight" class="sr-only"
-            >Wprowadź swoją rok urodzenia</label
+            >Wprowadź swój rok urodzenia</label
           >
           <div class="relative">
             <input
@@ -53,7 +53,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import FirstConfigLayout from '@/components/FirstConfigLayout.vue';
-import HelloIllustration from '../../components/illustrations/Hello.vue';
+import BirthdayIllustration from '../../components/illustrations/BirthdayIllustration.vue';
 import { useUserFirstConfig } from '@/stores/userFirstConfig';
 const router = useRouter();
 const inputValue = ref(null);

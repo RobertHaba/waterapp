@@ -29,7 +29,7 @@
     <main-navbar></main-navbar>
   </main>
   <wave-icon
-    class="fixed h-screen w-screen top-full transition-all"
+    class="fixed h-screen w-screen top-full transition-all fill-blue-100"
     :style="wave.transfromStyle"
   ></wave-icon>
 </template>
@@ -45,6 +45,7 @@ import UserAvatar from "../components/TheAvatar.vue";
 import MainNavbar from "../components/TheNavbar.vue";
 import { useProfile } from "../stores/profile.js";
 import { useWavePosition } from "@/stores/wavePosition";
+import SettingsWaterIcon from "../components/icons/SettingsWaterIcon.vue";
 const wave = useWavePosition();
 const profile = ref(useProfile());
 const routersList = shallowRef([
@@ -54,7 +55,7 @@ const routersList = shallowRef([
     path: "/settings/account",
   },
   {
-    icon: UserStrokeIcon,
+    icon: SettingsWaterIcon,
     name: "Ustawienia napojów",
     path: "/settings/drink",
   },

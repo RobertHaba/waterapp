@@ -111,7 +111,7 @@ const saveData = () => {
   }
   user.value.name = newUserName.value;
   useProfile().updateUserData(user.value);
-  if (settingsStore.settings.drink.autoCalc) {
+  if (settingsStore.settings.water.autoCalc) {
     updateGoal();
     resetRefs();
     return;
@@ -122,7 +122,7 @@ const saveData = () => {
   resetRefs();
   if (
     isImportantValueChanged &&
-    useSettings().settings.drink.goal !== useCalcGoal()
+    useSettings().settings.water.goal !== useCalcGoal()
   ) {
     isPopupOpen.value = true;
   }
@@ -156,10 +156,10 @@ const watchForValueChange = (elID, newVal, oldVal) => {
 };
 
 const updateGoal = () => {
-  settingsStore.updateSettingsData("drink", {
+  settingsStore.updateSettingsData("water", {
     autoCalc: true,
     goal: useCalcGoal(),
-    list: settingsStore.settings.drink.list,
+    list: settingsStore.settings.water.list,
   });
   closePopup();
 };
