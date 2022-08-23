@@ -12,6 +12,13 @@
     <app-drinks-refill @add-drink="addDrink" :mode="'drink'"
       >Wprowadź napój!</app-drinks-refill
     >
+    <div class="flex flex-col gap-6">
+      <dynamic-heading class="text-xl">Łączna ilość kalorii</dynamic-heading>
+      <text-and-icon class="px-4">
+        <template #icon><calories-icon></calories-icon></template>
+        <template #text>{{ totalCalories }} kcal</template>
+      </text-and-icon>
+    </div>
     <app-drinks-today
       :drinkHistory="drink.history"
       @remove-drink="removeDrink"
@@ -27,8 +34,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-import localforage from "localforage";
+import { computed, onMounted, ref, watch } from "vue";
 /* Stores */
 import { useSettings } from "@/stores/settings";
 import { useDrink } from "@/stores/drink";
@@ -41,6 +47,12 @@ import AppDrinksToday from "@/components/app/AppDrinksToday.vue";
 import MainNavbar from "@/components/TheNavbar.vue";
 /* Composables */
 import { useCalcPercentages } from "@/composables/useCalcPercentages";
+import DynamicHeading from "../components/DynamicHeading.vue";
+import TextAndIcon from "../components/texts/TextAndIcon.vue";
+
+// ICONS
+import CaloriesIcon from "../components/icons/CaloriesIcon.vue";
+
 /* Refs */
 const drink = ref({
   total: useDrink().drink.total,
@@ -50,6 +62,13 @@ const drink = ref({
 /* Computed */
 const drinkProgressPercentage = computed(() => {
   return useCalcPercentages(drink.value.total, drink.value.goal);
+});
+const totalCalories = computed(() => {
+  let total = null;
+  drink.value.history.forEach((drinkItem) => {
+    total += (drinkItem.capacity / 100) * drinkItem.kcal; //must be divided by 100 because the amount of calories is expressed per 100 ml
+  });
+  return total;
 });
 /* Methods */
 const addDrink = (drinkItem) => {
