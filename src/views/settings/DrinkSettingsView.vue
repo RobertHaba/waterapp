@@ -35,7 +35,7 @@
         <div class="flex flex-col gap-4">
           <text-and-icon>
             <template #icon
-              ><trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon
+              ><calculator-icon class="fill-dark w-4 h-4 -mt-0.5"></calculator-icon
             ></template>
             <template #text>Wylicz dzienny cel</template>
           </text-and-icon>
@@ -55,7 +55,9 @@
       <li class="flex flex-col gap-6">
         <text-and-icon>
           <template #icon
-            ><trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon
+            ><water-drop-icon
+              class="fill-dark w-4 h-4 -mt-0.5"
+            ></water-drop-icon
           ></template>
           <template #text>Przypięte pojemności - woda</template>
         </text-and-icon>
@@ -67,7 +69,9 @@
             @click="openPopup(index, 'water')"
           >
             <div class="flex items-center gap-2">
-              <trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon>
+              <full-glass-icon
+                class="fill-dark w-4 h-4 -mt-0.5"
+              ></full-glass-icon>
               <span>{{ drink.capacity }}ml</span>
             </div>
             <edit-icon class="fill-dark w-4 h-4 -mt-0.5"></edit-icon>
@@ -79,7 +83,7 @@
       <li class="flex flex-col gap-6">
         <text-and-icon>
           <template #icon
-            ><trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon
+            ><bottle-icon class="fill-dark w-4 h-4 -mt-0.5"></bottle-icon
           ></template>
           <template #text>Przypięte pojemności - napoje</template>
         </text-and-icon>
@@ -91,7 +95,7 @@
             @click="openPopup(index, 'drink')"
           >
             <div class="flex items-center gap-2">
-              <trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon>
+              <drink-icon class="fill-dark w-4 h-4 -mt-0.5"></drink-icon>
               <span>{{ drink.capacity }}ml</span>
             </div>
             <edit-icon class="fill-dark w-4 h-4 -mt-0.5"></edit-icon>
@@ -118,6 +122,17 @@ import EditDrinkPopup from "@/components/popups/EditDrinkPopup.vue";
 import SmallButton from "../../components/buttons/SmallButton.vue";
 import { useSettings } from "@/stores/settings";
 import { useCalcGoal } from "@/composables/useCalcDrinkGoal.js";
+
+/* ICONS */
+import TrophyIcon from "@/components/icons/TrophyIcon.vue";
+import BottleIcon from "../../components/icons/BottleIcon.vue";
+import FullGlassIcon from "../../components/icons/FullGlassIcon.vue";
+import WaterDropIcon from "../../components/icons/WaterDropIcon.vue";
+import DrinkIcon from "../../components/icons/DrinkIcon.vue";
+import TextAndIcon from "@/components/texts/TextAndIcon.vue";
+import EditIcon from "../../components/icons/EditIcon.vue";
+import CalculatorIcon from "../../components/icons/CalculatorIcon.vue";
+// REFS
 const hasChanges = ref(false);
 const waterSettings = ref({ ...useSettings().settings.water });
 const drinkSettings = ref({ ...useSettings().settings.drink });
@@ -184,9 +199,4 @@ const changeStaticDrink = (drink, silentUpdate = false) => {
 const closePopup = () => {
   popupData.value.isOpen = false;
 };
-/* ICONS */
-
-import TrophyIcon from "@/components/icons/TrophyIcon.vue";
-import TextAndIcon from "@/components/texts/TextAndIcon.vue";
-import EditIcon from "../../components/icons/EditIcon.vue";
 </script>
