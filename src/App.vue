@@ -19,16 +19,24 @@ const userSettings = ref(useProfile().user);
 
 const getAvailableHours = () => {
   Array.range = (start, end, suffix) => {
-    return Array.from(
-      { length: end - start },
-      (v, k) => k + start + ":" + suffix
-    );
+    return Array.from({ length: arrayLength }, (v, k) => {
+      if (k + start >= 24) {
+        k = k - 24;
+      }
+      return k + start + ":" + suffix;
+    });
   };
+  const wakeUp = userSettings.value.notifications.wakeUp.split(":");
+  const bedtime = userSettings.value.notifications.bedtime.split(":");
   let range = {
-    start: parseInt(userSettings.value.notifications.wakeUp.slice(0, 2)),
-    end: parseInt(userSettings.value.notifications.bedtime.slice(0, 2)),
-    suffix: userSettings.value.notifications.wakeUp.slice(3, 5),
+    start: parseInt(wakeUp[0]),
+    end: parseInt(bedtime[0]),
+    suffix: wakeUp[1],
   };
+  const arrayLength =
+    range.end - range.start > 0
+      ? range.end - range.start
+      : 24 - (range.start - range.end);
   return Array.range(range.start, range.end, range.suffix);
 };
 
@@ -43,8 +51,11 @@ const intervalToSendNotification = () => {
         hour: "numeric",
         minute: "2-digit",
       });
-      if (availableHours.find((avHour) => avHour === hourNow))
+      console.log(hourNow);
+      if (availableHours.find((avHour) => avHour === hourNow)) {
         sendNotification();
+        console.log("Wysłano powiadomienie");
+      }
     }, 59000);
   }
 };

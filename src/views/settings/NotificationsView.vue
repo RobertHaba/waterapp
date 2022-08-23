@@ -56,6 +56,7 @@
       <li class="">
         <button
           class="flex gap-3 justify-between flex-col"
+          :disabled="!notificationSettings.active"
           @click="toggleTimePopup"
           type="button"
         >
@@ -145,7 +146,7 @@ import { useProfile } from "@/stores/profile.js";
 import { ref } from "vue";
 // REFS
 const notificationStore = useProfile().user.notifications;
-const notificationSettings = ref({ ...notificationStore });
+const notificationSettings = ref({ ...useProfile().user.notifications });
 const hasChanges = ref(false);
 const changesLog = ref([]);
 const isTimePopupOpen = ref(false);
@@ -181,7 +182,7 @@ const toggleStatus = async (name, elID, value) => {
 };
 const saveData = (updatedTime = null) => {
   if (updatedTime === null) {
-    useProfile().user.notifications = notificationSettings;
+    useProfile().user.notifications = notificationSettings.value;
     useProfile().updateUserData(useProfile().user);
     resetRefs();
   } else {
