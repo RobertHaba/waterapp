@@ -63,13 +63,11 @@ const removeDrink = (drinkToRemove) => {
 
 /*WAVE */
 const wave = useWavePosition();
-const translateY = computed(() => {
-  return `transform: translateY(-${drinkProgressPercentage.value}%)`;
-});
-wave.updateTransformStyle(translateY.value);
-
 watch(drinkProgressPercentage, () => {
-  wave.updateTransformStyle(translateY.value);
+  useWavePosition().updateTransformStyleBy("drink");
+});
+onMounted(() => {
+  useWavePosition().updateTransformStyleBy("drink");
 });
 </script>
 

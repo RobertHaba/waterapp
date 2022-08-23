@@ -86,13 +86,11 @@ onUnmounted(() => {
 });
 /*WAVE */
 const wave = useWavePosition();
-const translateY = computed(() => {
-  return `transform: translateY(-${drinkProgressPercentage.value}%)`;
-});
-wave.updateTransformStyle(translateY.value);
-
 watch(drinkProgressPercentage, () => {
-  wave.updateTransformStyle(translateY.value);
+  useWavePosition().updateTransformStyleBy("water");
+});
+onMounted(() => {
+  useWavePosition().updateTransformStyleBy("water");
 });
 </script>
 

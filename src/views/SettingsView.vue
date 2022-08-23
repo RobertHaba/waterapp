@@ -35,43 +35,46 @@
 </template>
 
 <script setup>
-import BellIcon from '../components/icons/BellIcon.vue';
-import ListIcon from '../components/icons/ListIcon.vue';
-import InfoIcon from '../components/icons/InfoIcon.vue';
-import UserStrokeIcon from '../components/icons/UserStrokeIcon.vue';
-import ArrowRightIcon from '../components/icons/ArrowRightIcon.vue';
-import { ref, shallowRef } from 'vue';
-import UserAvatar from '../components/TheAvatar.vue';
-import MainNavbar from '../components/TheNavbar.vue';
-import { useProfile } from '../stores/profile.js';
-import { useWavePosition } from '@/stores/wavePosition';
+import BellIcon from "../components/icons/BellIcon.vue";
+import ListIcon from "../components/icons/ListIcon.vue";
+import InfoIcon from "../components/icons/InfoIcon.vue";
+import UserStrokeIcon from "../components/icons/UserStrokeIcon.vue";
+import ArrowRightIcon from "../components/icons/ArrowRightIcon.vue";
+import { onMounted, ref, shallowRef } from "vue";
+import UserAvatar from "../components/TheAvatar.vue";
+import MainNavbar from "../components/TheNavbar.vue";
+import { useProfile } from "../stores/profile.js";
+import { useWavePosition } from "@/stores/wavePosition";
 const wave = useWavePosition();
 const profile = ref(useProfile());
 const routersList = shallowRef([
   {
     icon: UserStrokeIcon,
-    name: 'Konto',
-    path: '/settings/account',
+    name: "Konto",
+    path: "/settings/account",
   },
   {
     icon: UserStrokeIcon,
-    name: 'Ustawienia napojów',
-    path: '/settings/drink',
+    name: "Ustawienia napojów",
+    path: "/settings/drink",
   },
   {
     icon: ListIcon,
-    name: 'Lista napojów',
-    path: '/settings/drinks',
+    name: "Lista napojów",
+    path: "/settings/drinks",
   },
   {
     icon: BellIcon,
-    name: 'Powiadomienia',
-    path: '/settings/notifications',
+    name: "Powiadomienia",
+    path: "/settings/notifications",
   },
   {
     icon: InfoIcon,
-    name: 'Informacje',
-    path: '/',
+    name: "Informacje",
+    path: "/",
   },
 ]);
+onMounted(() => {
+  useWavePosition().updateTransformStyleBy("water");
+});
 </script>
