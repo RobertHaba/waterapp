@@ -52,26 +52,26 @@ export const useUserFirstConfig = defineStore('userFirstConfig', {
           dynamic: {
             drinkID: 0,
             capacity: 500,
-            kcal: 250,
+            kcal: 42,
             name: 'pepsi',
           },
           statics: [
             {
               drinkID: 0,
               capacity: 150,
-              kcal: 250,
+              kcal: 42,
               name: 'pepsi',
             },
             {
               drinkID: 0,
               capacity: 250,
-              kcal: 250,
+              kcal: 42,
               name: 'pepsi',
             },
             {
               drinkID: 0,
               capacity: 350,
-              kcal: 250,
+              kcal: 42,
               name: 'pepsi',
             },
           ],
@@ -80,8 +80,8 @@ export const useUserFirstConfig = defineStore('userFirstConfig', {
       drinks: [
         {
           drinkID: 0,
-          name: 'pepsi',
-          kcal: '250',
+          name: 'Coca Cola',
+          kcal: '42',
         },
       ],
     },

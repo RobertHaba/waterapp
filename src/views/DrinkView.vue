@@ -56,7 +56,7 @@ import CaloriesIcon from "../components/icons/CaloriesIcon.vue";
 /* Refs */
 const drink = ref({
   total: useDrink().drink.total,
-  goal: useSettings().settings.drink.goal,
+  goal: useSettings().settings.water.goal,
   history: useDrink().drinkHistory.today,
 });
 /* Computed */
@@ -68,7 +68,7 @@ const totalCalories = computed(() => {
   drink.value.history.forEach((drinkItem) => {
     total += (drinkItem.capacity / 100) * drinkItem.kcal; //must be divided by 100 because the amount of calories is expressed per 100 ml
   });
-  return total;
+  return total.toFixed();
 });
 /* Methods */
 const addDrink = (drinkItem) => {

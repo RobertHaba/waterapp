@@ -2,11 +2,8 @@
   <base-layout>
     <app-header></app-header>
     <title-and-description>
-      <template #title>Świetnie Ci idzie!</template>
-      <template #text
-        >Utrzymuj takie tempo, a Twoje nawodnienie będzie na idealnym
-        poziomie.</template
-      >
+      <template #title>{{ progressText.title }}</template>
+      <template #text>{{ progressText.text }}</template>
     </title-and-description>
     <app-progress-bar :drink="water"> </app-progress-bar>
     <app-drinks-refill @add-drink="addDrink" :mode="'water'"
@@ -31,6 +28,7 @@ import localforage from "localforage";
 import { useSettings } from "@/stores/settings";
 import { useDrink } from "@/stores/drink";
 import { useWavePosition } from "@/stores/wavePosition";
+import { useProgressText } from "@/stores/progressText";
 /* Components */
 import AppHeader from "@/components/app/AppHeader.vue";
 import AppProgressBar from "@/components/app/AppProgressBar.vue";
@@ -47,6 +45,10 @@ const water = ref({
   goal: useSettings().settings.water.goal,
   history: useDrink().waterHistory.today,
 });
+const progressText = computed(() => {
+  return useProgressText().activeData.water;
+});
+
 /* Computed */
 const drinkProgressPercentage = computed(() => {
   return useCalcPercentages(water.value.total, water.value.goal);
@@ -55,10 +57,47 @@ const drinkProgressPercentage = computed(() => {
 const addDrink = (drinkItem) => {
   water.value.total += drinkItem.capacity;
   useDrink().addDrink(drinkItem, "water");
+  tryToSetNewProgressText();
 };
 const removeDrink = (drinkToRemove) => {
   water.value.total -= drinkToRemove.capacity;
   useDrink().removeDrink(drinkToRemove, "water");
+  tryToSetNewProgressText();
+};
+const tryToSetNewProgressText = () => {
+  let id = 0;
+  let percentage = drinkProgressPercentage.value;
+  switch (true) {
+    case percentage == 0:
+      useProgressText().setActiveData("water", 0);
+      break;
+    case percentage > 0 && percentage < 20:
+      useProgressText().setActiveData("water", 1);
+      break;
+    case percentage >= 20 && percentage < 40:
+      useProgressText().setActiveData("water", 2);
+      break;
+    case percentage >= 40 && percentage < 50:
+      useProgressText().setActiveData("water", 3);
+      break;
+    case percentage >= 50 && percentage < 70:
+      useProgressText().setActiveData("water", 4);
+      break;
+    case percentage >= 70 && percentage < 90:
+      useProgressText().setActiveData("water", 5);
+      break;
+    case percentage >= 90 && percentage < 100:
+      useProgressText().setActiveData("water", 6);
+      break;
+    case percentage === 100:
+      useProgressText().setActiveData("water", 7);
+      break;
+  }
+  console.log(id);
+
+  // if (drinkProgressPercentage.value >= 50) {
+  //   useProgressText().setActiveData("water", 1);
+  // }
 };
 /* Notifications */
 
@@ -90,6 +129,7 @@ watch(drinkProgressPercentage, () => {
   useWavePosition().updateTransformStyleBy("water");
 });
 onMounted(() => {
+  tryToSetNewProgressText();
   useWavePosition().updateTransformStyleBy("water");
 });
 </script>

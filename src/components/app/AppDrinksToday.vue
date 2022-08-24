@@ -65,7 +65,7 @@ const getDateFromDrink = (drinkDate) => {
   return time;
 };
 const calcKcal = (drink) => {
-  return (drink.capacity / 100) * drink.kcal;
+  return ((drink.capacity / 100) * drink.kcal).toFixed();
 };
 const removeDrink = (drink) => {
   emit("removeDrink", drink);

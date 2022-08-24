@@ -35,7 +35,10 @@
               <edit-icon class="w-4 h-4 fill-dark"></edit-icon>
             </button>
           </div>
-          <p class="text-center text-xs truncate w-30 pb-3">
+          <p
+            class="text-center text-xs truncate w-30 pb-3 cursor-pointer"
+            @click="addDrink(drinkList.dynamic)"
+          >
             <span v-if="mode === 'drink'">{{ drinkList.dynamic.name }}</span>
           </p>
         </div>
