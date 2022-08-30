@@ -57,7 +57,7 @@
             ><div class="flex gap-2 items-center">
               <component
                 :is="drinkIconName"
-                class="w-4 h-4 fill-dark"
+                class="w-4 h-4 fill-dark drink-refill"
               ></component
               ><span class="font-normal">{{ drink.capacity }}ml</span>
             </div>
@@ -156,3 +156,10 @@ const drinkIconName = computed(() => {
   return props.mode === "drink" ? DrinkIcon : EmptyGlassIcon;
 });
 </script>
+<style scoped>
+@media screen and (max-width: 380px) {
+  .drink-refill {
+    display: none !important;
+  }
+}
+</style>
