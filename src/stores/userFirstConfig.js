@@ -17,36 +17,77 @@ export const useUserFirstConfig = defineStore('userFirstConfig', {
       },
     },
     settings: {
-      drink: {
+      water: {
         goal: 2800,
         autoCalc: true,
         list: {
           dynamic: {
             capacity: 500,
+            kcal: 0,
             name: 'woda',
           },
           statics: [
             {
               capacity: 150,
+              kcal: 0,
               name: 'woda',
             },
             {
               capacity: 250,
+              kcal: 0,
               name: 'woda',
             },
             {
               capacity: 350,
+              kcal: 0,
               name: 'woda',
             },
           ],
         },
       },
-      drinks: [{ name: 'woda', kcal: '0' }],
+      drink: {
+        goal: 2800,
+        autoCalc: true,
+        list: {
+          dynamic: {
+            drinkID: 0,
+            capacity: 500,
+            kcal: 42,
+            name: 'pepsi',
+          },
+          statics: [
+            {
+              drinkID: 0,
+              capacity: 150,
+              kcal: 42,
+              name: 'pepsi',
+            },
+            {
+              drinkID: 0,
+              capacity: 250,
+              kcal: 42,
+              name: 'pepsi',
+            },
+            {
+              drinkID: 0,
+              capacity: 350,
+              kcal: 42,
+              name: 'pepsi',
+            },
+          ],
+        },
+      },
+      drinks: [
+        {
+          drinkID: 0,
+          name: 'Coca Cola',
+          kcal: '42',
+        },
+      ],
     },
   }),
   actions: {
     updateUserData(data) {
-      console.log(data);
       this.user = data;
     },
   },

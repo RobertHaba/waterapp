@@ -5,10 +5,18 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 const router = useRouter();
-
+const props = defineProps({
+  link: {
+    default: "",
+  },
+});
 const routerGoBack = () => {
-  router.back();
+  if (props.link === "") {
+    router.back();
+  } else {
+    router.go(props.link);
+  }
 };
 </script>

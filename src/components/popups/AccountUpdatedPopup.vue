@@ -18,7 +18,7 @@
             <p>
               Ustawione zapotrzebowanie:
               <span class="font-bold"
-                >{{ useSettings().settings.drink.goal }}ml</span
+                >{{ useSettings().settings.water.goal }}ml</span
               >
             </p>
           </li>
@@ -34,6 +34,7 @@
         class="relative px-0"
         @close-popup="closePopup"
         @save-data="saveData"
+        :has-changes="true"
       >
         <template #close>Nie</template>
         <template #save>Tak</template>

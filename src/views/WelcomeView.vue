@@ -1,8 +1,16 @@
-<script setup></script>
 
 <template>
   <main
-    class="relative w-full h-screen max-h-screen overflow-hidden p-4 py-10 pb-32"
+    class="
+      relative
+      w-full
+      h-screen
+      max-h-screen
+      overflow-hidden
+      p-4
+      py-10
+      pb-32
+    "
   >
     <div class="h-full max-w-sm flex flex-col justify-between mx-auto">
       <header class="w-full">
@@ -31,12 +39,19 @@
       </footer>
     </div>
     <wave-icon
-      class="absolute -z-10 left-0 w-full h-auto top-[calc(100%-5rem)]"
+      class="fixed left-0 h-screen w-screen top-full fill-blue-500"
+      :style="wave.transfromStyle"
     ></wave-icon>
   </main>
 </template>
+<script setup>
+import { useWavePosition } from "../stores/wavePosition";
+const wave = useWavePosition();
+useWavePosition().updateTransformStyle("transform: translateY(-10%)");
+</script>
+
 <style>
 .icon--hello {
-  background-image: url('../assets/illustrations/hello.svg');
+  background-image: url("../assets/illustrations/hello.svg");
 }
 </style>

@@ -14,6 +14,12 @@ module.exports = {
         'blue-500': '#D4E4FF',
         light: '#FDFFFF',
         red: '#FF6663',
+        orange: '#FF781E',
+        'orange-100': '#FFEEE3',
+        'orange-500': '#FFE4D1',
+      },
+      maxWidth: {
+        20: '5rem',
       },
       boxShadow: {
         'inset-light': 'inset 0px 2px 12px rgba(75, 104, 206, 0.2)',

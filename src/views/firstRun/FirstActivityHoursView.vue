@@ -2,10 +2,10 @@
   <first-config-layout
     :stepNumber="7"
     header-title="Godziny aktywności"
-    header-text="asd"
+    header-text="Podaj nam, w jakim przedziale czasowym chciałbyś otrzymywać cogodzinne przypomnienia o nawodnieniu."
   >
     <template v-slot:illustration>
-      <hello-illustration></hello-illustration>
+      <time-illustration></time-illustration>
     </template>
     <template v-slot:form>
       <form
@@ -52,7 +52,7 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import FirstConfigLayout from '@/components/FirstConfigLayout.vue';
-import HelloIllustration from '@/components/illustrations/Hello.vue';
+import TimeIllustration from '@/components/illustrations/TimeIllustration.vue';
 import InputRadio from '@/components/inputs/InputRadio.vue';
 import { useUserFirstConfig } from '@/stores/userFirstConfig';
 const router = useRouter();

@@ -21,8 +21,8 @@
               border-b border-dark
               leading-none
             "
-            v-model="drinkSettings.goal"
-            :placeholder="drinkSettings.goal"
+            v-model="waterSettings.goal"
+            :placeholder="waterSettings.goal"
             min="1"
             max="99999"
             @keyup="checkInputChange"
@@ -35,7 +35,9 @@
         <div class="flex flex-col gap-4">
           <text-and-icon>
             <template #icon
-              ><trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon
+              ><calculator-icon
+                class="fill-dark w-4 h-4 -mt-0.5"
+              ></calculator-icon
             ></template>
             <template #text>Wylicz dzienny cel</template>
           </text-and-icon>
@@ -45,7 +47,7 @@
         </div>
         <SmallButton
           class="text-sm !px-4"
-          :class="{ active: drinkSettings.autoCalc === true }"
+          :class="{ active: waterSettings.autoCalc === true }"
           @click="calcDailyDrinkGoal"
           >{{ textAutoCalcButton }}</SmallButton
         >
@@ -55,23 +57,54 @@
       <li class="flex flex-col gap-6">
         <text-and-icon>
           <template #icon
-            ><trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon
+            ><water-drop-icon
+              class="fill-dark w-4 h-4 -mt-0.5"
+            ></water-drop-icon
           ></template>
-          <template #text>Przypięte pojemności</template>
+          <template #text>Przypięte pojemności - woda</template>
         </text-and-icon>
         <div class="flex flex-wrap justify-around gap-3">
           <SmallButton
             class="!gap-4 !bg-light"
-            v-for="(drink, index) in drinkList"
+            v-for="(drink, index) in waterList"
             :key="drink"
-            @click="openPopup(index)"
+            @click="openPopup(index, 'water')"
           >
             <div class="flex items-center gap-2">
-              <trophy-icon class="fill-dark w-4 h-4 -mt-0.5"></trophy-icon>
+              <full-glass-icon
+                class="fill-dark w-4 h-4 -mt-0.5"
+              ></full-glass-icon>
               <span>{{ drink.capacity }}ml</span>
             </div>
             <edit-icon class="fill-dark w-4 h-4 -mt-0.5"></edit-icon>
           </SmallButton>
+        </div>
+      </li>
+    </shadow-list>
+    <shadow-list>
+      <li class="flex flex-col gap-6">
+        <text-and-icon>
+          <template #icon
+            ><bottle-icon class="fill-dark w-4 h-4 -mt-0.5"></bottle-icon
+          ></template>
+          <template #text>Przypięte pojemności - napoje</template>
+        </text-and-icon>
+        <div class="flex flex-col justify-around gap-3">
+          <SmallButton
+            class="flex !w-full !justify-between !bg-light"
+            v-for="(drink, index) in drinkList"
+            :key="drink"
+            @click="openPopup(index, 'drink')"
+            ><div class="flex gap-2 items-center">
+              <drink-icon class="w-4 h-4 fill-dark"></drink-icon
+              ><span class="font-normal">{{ drink.capacity }}ml</span>
+              <p class="text-xs truncate">
+                {{ drink.name }}
+              </p>
+            </div>
+
+            <edit-icon class="fill-dark w-4 h-4 -mt-0.5"></edit-icon
+          ></SmallButton>
         </div>
       </li>
     </shadow-list>
@@ -80,6 +113,7 @@
       :drink="popupData.drink"
       @close-popup="closePopup"
       @save-data="changeStaticDrink"
+      :mode="mode"
       >Edytuj napój</edit-drink-popup
     >
   </settings-layout>
@@ -93,37 +127,51 @@ import EditDrinkPopup from "@/components/popups/EditDrinkPopup.vue";
 import SmallButton from "../../components/buttons/SmallButton.vue";
 import { useSettings } from "@/stores/settings";
 import { useCalcGoal } from "@/composables/useCalcDrinkGoal.js";
+
+/* ICONS */
+import TrophyIcon from "@/components/icons/TrophyIcon.vue";
+import BottleIcon from "../../components/icons/BottleIcon.vue";
+import FullGlassIcon from "../../components/icons/FullGlassIcon.vue";
+import WaterDropIcon from "../../components/icons/WaterDropIcon.vue";
+import DrinkIcon from "../../components/icons/DrinkIcon.vue";
+import TextAndIcon from "@/components/texts/TextAndIcon.vue";
+import EditIcon from "../../components/icons/EditIcon.vue";
+import CalculatorIcon from "../../components/icons/CalculatorIcon.vue";
+// REFS
 const hasChanges = ref(false);
+const waterSettings = ref({ ...useSettings().settings.water });
 const drinkSettings = ref({ ...useSettings().settings.drink });
+const waterList = waterSettings.value.list.statics;
 const drinkList = drinkSettings.value.list.statics;
+const mode = ref("drink");
 const textAutoCalcButton = computed(() => {
-  return drinkSettings.value.autoCalc ? "tak" : "nie";
+  return waterSettings.value.autoCalc ? "tak" : "nie";
 });
 const checkInputChange = () => {
-  console.log(useSettings().settings.drink.goal);
-  if (drinkSettings.value.goal !== useSettings().settings.drink.goal) {
-    drinkSettings.value.autoCalc = false;
+  if (waterSettings.value.goal !== useSettings().settings.water.goal) {
+    waterSettings.value.autoCalc = false;
     hasChanges.value = true;
   } else {
-    drinkSettings.value.autoCalc = useSettings().settings.drink.autoCalc;
+    waterSettings.value.autoCalc = useSettings().settings.water.autoCalc;
     hasChanges.value = false;
   }
 };
 const calcDailyDrinkGoal = () => {
-  if (!hasChanges.value) {
+  if (!hasChanges.value && waterSettings.value.autoCalc === true) {
     return;
   }
-  drinkSettings.value.goal = useCalcGoal();
-  drinkSettings.value.autoCalc = true;
+  waterSettings.value.goal = useCalcGoal();
+  waterSettings.value.autoCalc = true;
   hasChanges.value = true;
 };
 const saveData = () => {
   hasChanges.value = false;
-  useSettings().updateSettingsData("drink", drinkSettings.value);
+  useSettings().updateSettingsData("water", waterSettings.value);
 
   resetRefs();
 };
 const resetRefs = () => {
+  waterSettings.value = { ...useSettings().settings.water };
   drinkSettings.value = { ...useSettings().settings.drink };
   hasChanges.value = false;
 };
@@ -134,23 +182,25 @@ const popupData = ref({
   drink: null,
   drinkIndex: null,
 });
-const openPopup = (index) => {
+const openPopup = (index, itemMode) => {
+  mode.value = itemMode;
   popupData.value.drinkIndex = index;
-  popupData.value.drink = { ...drinkList[index] };
+  popupData.value.drink =
+    mode.value === "water" ? { ...waterList[index] } : { ...drinkList[index] };
   popupData.value.isOpen = true;
 };
-const changeStaticDrink = () => {
-  popupData.value.isOpen = false;
-  useSettings().settings.drink.list.statics[popupData.value.drinkIndex] =
-    popupData.value.drink;
-  useSettings().updateSettingsData("drink", useSettings().settings.drink);
+const changeStaticDrink = (drink, silentUpdate = false) => {
+  if (!silentUpdate) {
+    popupData.value.isOpen = false;
+  }
+  useSettings().settings[mode.value].list.statics[popupData.value.drinkIndex] =
+    drink;
+  useSettings().updateSettingsData(
+    mode.value,
+    useSettings().settings[mode.value]
+  );
 };
 const closePopup = () => {
   popupData.value.isOpen = false;
 };
-/* ICONS */
-
-import TrophyIcon from "@/components/icons/TrophyIcon.vue";
-import TextAndIcon from "@/components/texts/TextAndIcon.vue";
-import EditIcon from "../../components/icons/EditIcon.vue";
 </script>

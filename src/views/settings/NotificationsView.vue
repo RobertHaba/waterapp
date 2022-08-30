@@ -23,7 +23,7 @@
       <li class="flex gap-6 justify-between flex-wrap">
         <text-and-icon>
           <template #icon
-            ><bell-icon class="fill-dark w-4 h-4 -mt-0.5"></bell-icon
+            ><sound-icon class="fill-dark w-4 h-4 -mt-0.5"></sound-icon
           ></template>
           <template #text>Dźwięki</template>
         </text-and-icon>
@@ -38,7 +38,7 @@
       <li class="flex gap-6 justify-between flex-wrap">
         <text-and-icon>
           <template #icon
-            ><bell-icon class="fill-dark w-4 h-4 -mt-0.5"></bell-icon
+            ><bell-ring-icon class="fill-dark w-4 h-4 -mt-0.5"></bell-ring-icon
           ></template>
           <template #text>Wibracje</template>
         </text-and-icon>
@@ -53,29 +53,36 @@
         >
       </li>
 
-      <li class="flex gap-3 justify-between flex-wrap">
-        <text-and-icon>
-          <template #icon
-            ><bell-icon class="fill-dark w-4 h-4 -mt-0.5"></bell-icon
-          ></template>
-          <template #text>Godziny aktywności</template>
-        </text-and-icon>
-        <p class="text-sm leading-4">
-          Ustaw godziny, w których chcesz otrzymywać powiadomienia. <br />
-          Aktualne godziny:
-          <span
-            v-if="
-              notificationSettings.wakeUp !== null &&
-              notificationSettings.bedtime !== null
-            "
-          >
-            {{ notificationSettings.wakeUp }} -
-            {{ notificationSettings.bedtime }}</span
-          >
-          <span v-else>7:00-23:00</span>
-        </p>
+      <li class="">
+        <button
+          class="flex gap-3 justify-between flex-col"
+          :disabled="!notificationSettings.active"
+          @click="toggleTimePopup"
+          type="button"
+        >
+          <text-and-icon>
+            <template #icon
+              ><clock-icon class="fill-dark w-4 h-4 -mt-0.5"></clock-icon
+            ></template>
+            <template #text>Godziny aktywności</template>
+          </text-and-icon>
+          <p class="text-sm text-left leading-4">
+            Ustaw godziny, w których chcesz otrzymywać powiadomienia. <br />
+            Aktualne godziny:
+            <span
+              v-if="
+                notificationSettings.wakeUp !== null &&
+                notificationSettings.bedtime !== null
+              "
+            >
+              {{ notificationStore.wakeUp }} -
+              {{ notificationStore.bedtime }}</span
+            >
+            <span v-else>7:00-23:00</span>
+          </p>
+        </button>
       </li>
-      <li class="flex gap-3 justify-between flex-wrap">
+      <li class="flex gap-3 justify-between flex-wrap" v-if="false">
         <text-and-icon>
           <template #icon
             ><bell-icon class="fill-dark w-4 h-4 -mt-0.5"></bell-icon
@@ -98,14 +105,37 @@
         </p>
       </li>
     </shadow-list>
+    <time-popup
+      v-if="isTimePopupOpen"
+      @close-popup="toggleTimePopup"
+      @save-data="saveData"
+      :notification-settings="notificationSettings"
+    ></time-popup>
+    <base-popup @close-popup="toggleBasePopup" v-if="isBasePopupOpen">
+      <template #title>Powiadomienia w przeglądarce wyłączone</template>
+      <template #illustration
+        ><notifications-illustration></notifications-illustration
+      ></template>
+      Wygląda na to, że Twoje powiadomienia są wyłączone w przeglądarce. Przejdź
+      do ustawień przeglądarki, aby to zmienić.
+    </base-popup>
   </settings-layout>
 </template>
 
 <script setup>
+// Components import
 import SettingsLayout from "@/components/SettingsLayout.vue";
-import BellIcon from "@/components/icons/BellIcon.vue";
 import TextAndIcon from "@/components/texts/TextAndIcon.vue";
 import SmallButton from "@/components/buttons/SmallButton.vue";
+import TimePopup from "@/components/popups/TimePopup.vue";
+import BasePopup from "@/components/popups/BasePopup.vue";
+// ICONS
+import BellIcon from "@/components/icons/BellIcon.vue";
+import SoundIcon from "../../components/icons/SoundIcon.vue";
+import BellRingIcon from "@/components/icons/BellRingIcon.vue";
+import ClockIcon from "@/components/icons/ClockIcon.vue";
+import NotificationsIllustration from "@/components/illustrations/NotificationsIllustration.vue";
+// Composables import
 import {
   useCheckForLogChanges,
   useAddChangeLog,
@@ -114,26 +144,33 @@ import { useRequestForNotificationPermission } from "@/composables/usePushNotifi
 
 import { useProfile } from "@/stores/profile.js";
 import { ref } from "vue";
+// REFS
+const notificationStore = useProfile().user.notifications;
 const notificationSettings = ref({ ...useProfile().user.notifications });
 const hasChanges = ref(false);
 const changesLog = ref([]);
+const isTimePopupOpen = ref(false);
+const isBasePopupOpen = ref(false);
+// Methods
 const buttonText = (status) => {
   return status ? "Włączone" : "Wyłączone";
 };
 const toggleStatus = async (name, elID, value) => {
-  console.log();
   if (
     Notification.permission === "granted" &&
     notificationSettings.value.active
   ) {
-    console.log("Normal toggle");
     notificationSettings.value[name] = !value;
   } else if (Notification.permission === "granted" && name === "active") {
     notificationSettings.value.active = !value;
   } else if (Notification.permission !== "granted" && name === "active") {
     notificationSettings.value.active =
       await useRequestForNotificationPermission();
-    saveData();
+    if (notificationSettings.value.active) {
+      saveData();
+      return;
+    }
+    toggleBasePopup();
   } else {
     return;
   }
@@ -143,10 +180,15 @@ const toggleStatus = async (name, elID, value) => {
     useProfile().user.notifications[name]
   );
 };
-const saveData = () => {
-  useProfile().user.notifications = notificationSettings;
-  useProfile().updateUserData(useProfile().user);
-  resetRefs();
+const saveData = (updatedTime = null) => {
+  if (updatedTime === null) {
+    useProfile().user.notifications = notificationSettings.value;
+    useProfile().updateUserData(useProfile().user);
+    resetRefs();
+  } else {
+    notificationSettings.value.bedtime = updatedTime.bedtime;
+    notificationSettings.value.wakeUp = updatedTime.wakeUp;
+  }
 };
 const resetRefs = () => {
   changesLog.value = [];
@@ -156,6 +198,12 @@ const resetRefs = () => {
 const watchForValueChange = (elID, newVal, oldVal) => {
   changesLog.value = useAddChangeLog(changesLog.value, elID, newVal, oldVal);
   hasChanges.value = useCheckForLogChanges(changesLog.value);
+};
+const toggleTimePopup = () => {
+  isTimePopupOpen.value = !isTimePopupOpen.value;
+};
+const toggleBasePopup = () => {
+  isBasePopupOpen.value = !isBasePopupOpen.value;
 };
 </script>
 <style scoped>

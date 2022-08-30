@@ -2,18 +2,18 @@
     "short_name": "Water drink",
     "name": "Water drink. Kontroluj poziom płynów!",
     "icons": [{
-            "src": "/public/icons-vector.svg",
+            "src": "/icons-vector.svg",
             "type": "image/svg+xml",
             "sizes": "512x512"
         },
         {
-            "src": "/public/icons-192.png",
+            "src": "/icons-192.png",
             "type": "image/png",
             "sizes": "192x192",
             "purpose": "maskable"
         },
         {
-            "src": "/public/icons-512.png",
+            "src": "/icons-512.png",
             "type": "image/png",
             "sizes": "512x512"
         }

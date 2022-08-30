@@ -14,7 +14,6 @@ export const useAuth = defineStore({
   actions: {
     bindUserFromLocalStorage() {
       const userFromLocalStorage = useGetFromLocalStorage('user');
-      console.log(userFromLocalStorage);
       if (userFromLocalStorage !== null) {
         this.user = userFromLocalStorage;
       }
@@ -22,7 +21,6 @@ export const useAuth = defineStore({
     bindUserFromFirebase(res) {
       return new Promise((resolve, reject) => {
         onAuthStateChanged(getAuth(), async (user) => {
-          console.log('1');
           this.user = user;
           if (user) {
             this.isFirebaseDB = true;
