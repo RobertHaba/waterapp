@@ -3,11 +3,9 @@ self.importScripts('localforage.min.js');
 self.addEventListener('notificationclick', function (event) {
   if (!event.action) {
     // Was a normal notification click
-    console.log('Notification Click.');
     return;
   }
   const timestamp = new Date().getTime();
-  console.log(event.notification.timestamp);
   let drink = {
     capacity: 0,
     date: timestamp,

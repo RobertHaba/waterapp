@@ -39,7 +39,6 @@ const stepNumber = ref(props.stepNumber - 1);
 const wave = useWavePosition();
 
 const translateValue = computed(() => {
-  console.log((100 / steps.value - 3) * stepNumber.value);
   return (100 / steps.value - 3) * stepNumber.value;
 });
 const translateY = computed(() => {

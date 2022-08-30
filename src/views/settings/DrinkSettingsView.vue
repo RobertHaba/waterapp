@@ -148,7 +148,6 @@ const textAutoCalcButton = computed(() => {
   return waterSettings.value.autoCalc ? "tak" : "nie";
 });
 const checkInputChange = () => {
-  console.log(useSettings().settings.water.goal);
   if (waterSettings.value.goal !== useSettings().settings.water.goal) {
     waterSettings.value.autoCalc = false;
     hasChanges.value = true;

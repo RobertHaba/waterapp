@@ -75,9 +75,7 @@ export const useDrink = defineStore('drink', {
     },
     getTodayDrinkHistoryFromLocally(mode) {
       const historyPath = mode + 'History';
-      console.log(historyPath);
       const result = useGetFromArrayLocalStorage(historyPath);
-      console.log(result);
       if (result) {
         this[historyPath].today = result.today;
         this[historyPath].all = result.others;

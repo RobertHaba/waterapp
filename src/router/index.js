@@ -17,7 +17,7 @@ const router = createRouter({
           (await userIsAuth()) &&
           (await checkIfDateExistsInDB()) === false
         ) {
-          next({ name: 'gender' });
+          next({ name: 'selectMode' });
         } else next({ name: 'signin' });
       },
     },
@@ -32,7 +32,7 @@ const router = createRouter({
           (await userIsAuth()) &&
           (await checkIfDateExistsInDB()) === false
         ) {
-          next({ name: 'gender' });
+          next({ name: 'selectMode' });
         } else next({ name: 'signin' });
       },
     },
@@ -47,7 +47,7 @@ const router = createRouter({
           (await userIsAuth()) &&
           (await checkIfDateExistsInDB()) === false
         ) {
-          next({ name: 'gender' });
+          next({ name: 'selectMode' });
         } else next({ name: 'signin' });
       },
     },
@@ -62,7 +62,7 @@ const router = createRouter({
           (await userIsAuth()) &&
           (await checkIfDateExistsInDB()) === false
         ) {
-          next({ name: 'gender' });
+          next({ name: 'selectMode' });
         } else next({ name: 'signin' });
       },
     },
@@ -77,7 +77,7 @@ const router = createRouter({
           (await userIsAuth()) &&
           (await checkIfDateExistsInDB()) === false
         ) {
-          next({ name: 'gender' });
+          next({ name: 'selectMode' });
         } else next({ name: 'signin' });
       },
     },
@@ -92,7 +92,7 @@ const router = createRouter({
           (await userIsAuth()) &&
           (await checkIfDateExistsInDB()) === false
         ) {
-          next({ name: 'gender' });
+          next({ name: 'selectMode' });
         } else next({ name: 'signin' });
       },
       props: true,
@@ -108,7 +108,7 @@ const router = createRouter({
           (await userIsAuth()) &&
           (await checkIfDateExistsInDB()) === false
         ) {
-          next({ name: 'gender' });
+          next({ name: 'selectMode' });
         } else next({ name: 'signin' });
       },
     },
@@ -123,7 +123,7 @@ const router = createRouter({
           (await userIsAuth()) &&
           (await checkIfDateExistsInDB()) === false
         ) {
-          next({ name: 'gender' });
+          next({ name: 'selectMode' });
         } else next({ name: 'signin' });
       },
     },
@@ -138,7 +138,7 @@ const router = createRouter({
           (await userIsAuth()) &&
           (await checkIfDateExistsInDB()) === false
         ) {
-          next({ name: 'gender' });
+          next({ name: 'selectMode' });
         } else next({ name: 'signin' });
       },
     },
@@ -153,7 +153,7 @@ const router = createRouter({
           (await userIsAuth()) &&
           (await checkIfDateExistsInDB()) === false
         ) {
-          next({ name: 'gender' });
+          next({ name: 'selectMode' });
         } else next({ name: 'signin' });
       },
     },
@@ -168,7 +168,7 @@ const router = createRouter({
           (await userIsAuth()) &&
           (await checkIfDateExistsInDB()) === false
         ) {
-          next({ name: 'gender' });
+          next({ name: 'selectMode' });
         } else next();
       },
     },
@@ -183,7 +183,7 @@ const router = createRouter({
           (await userIsAuth()) &&
           (await checkIfDateExistsInDB()) === false
         ) {
-          next({ name: 'gender' });
+          next({ name: 'selectMode' });
         } else next();
       },
     },
@@ -198,8 +198,23 @@ const router = createRouter({
           (await userIsAuth()) &&
           (await checkIfDateExistsInDB()) === false
         ) {
-          next({ name: 'gender' });
+          next({ name: 'selectMode' });
         } else next();
+      },
+    },
+    {
+      path: '/select-mode',
+      name: 'selectMode',
+      component: () => import('../views/firstRun/FirstSelectModeView.vue'),
+      beforeEnter: async (to, from, next) => {
+        if ((await userIsAuth()) && (await checkIfDateExistsInDB())) {
+          next({ name: 'home' });
+        } else if (
+          (await userIsAuth()) &&
+          (await checkIfDateExistsInDB()) === false
+        ) {
+          next();
+        } else next({ name: 'signin' });
       },
     },
     {
@@ -224,7 +239,7 @@ const router = createRouter({
       beforeEnter: (to, from, next) => {
         if (from.name === 'gender' || from.name === 'activity') {
           next();
-        } else next({ name: 'gender' });
+        } else next({ name: 'selectMode' });
       },
     },
     {
@@ -234,7 +249,7 @@ const router = createRouter({
       beforeEnter: (to, from, next) => {
         if (from.name === 'weight' || from.name === 'year') {
           next();
-        } else next({ name: 'gender' });
+        } else next({ name: 'selectMode' });
       },
     },
     {
@@ -244,7 +259,7 @@ const router = createRouter({
       beforeEnter: (to, from, next) => {
         if (from.name === 'activity' || from.name === 'name') {
           next();
-        } else next({ name: 'gender' });
+        } else next({ name: 'selectMode' });
       },
     },
     {
@@ -254,7 +269,7 @@ const router = createRouter({
       beforeEnter: (to, from, next) => {
         if (from.name === 'year' || from.name === 'notifications') {
           next();
-        } else next({ name: 'gender' });
+        } else next({ name: 'selectMode' });
       },
     },
     {
@@ -268,7 +283,7 @@ const router = createRouter({
           from.name === 'finish'
         ) {
           next();
-        } else next({ name: 'gender' });
+        } else next({ name: 'selectMode' });
       },
     },
     {
@@ -278,7 +293,7 @@ const router = createRouter({
       beforeEnter: (to, from, next) => {
         if (from.name === 'notifications' || from.name === 'finish') {
           next();
-        } else next({ name: 'gender' });
+        } else next({ name: 'selectMode' });
       },
     },
     {
@@ -286,9 +301,17 @@ const router = createRouter({
       name: 'finish',
       component: () => import('../views/firstRun/FirstFinishView.vue'),
       beforeEnter: (to, from, next) => {
-        if (from.name === 'notifications' || from.name === 'activityHours') {
+        if (
+          from.name === 'selectMode' ||
+          from.name === 'notifications' ||
+          from.name === 'activityHours'
+        ) {
           next();
-        } else next({ name: 'gender' });
+        } else if (from.name !== 'selectMode') {
+          next({ name: 'selectMode' });
+        } else {
+          next();
+        }
       },
     },
     {

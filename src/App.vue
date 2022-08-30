@@ -51,10 +51,8 @@ const intervalToSendNotification = () => {
         hour: "numeric",
         minute: "2-digit",
       });
-      console.log(hourNow);
       if (availableHours.find((avHour) => avHour === hourNow)) {
         sendNotification();
-        console.log("Wysłano powiadomienie");
       }
     }, 59000);
   }

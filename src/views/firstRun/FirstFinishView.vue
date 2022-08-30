@@ -19,9 +19,11 @@ import { onMounted } from "@vue/runtime-core";
 const router = useRouter();
 // Methods
 const saveData = () => {
-  const calculatedGoal = useCalcGoal(useUserFirstConfig().user);
-  useUserFirstConfig().settings.water.goal = calculatedGoal;
-  useUserFirstConfig().settings.drink.goal = calculatedGoal;
+  if (useUserFirstConfig().user.weight) {
+    const calculatedGoal = useCalcGoal(useUserFirstConfig().user);
+    useUserFirstConfig().settings.water.goal = calculatedGoal;
+    useUserFirstConfig().settings.drink.goal = calculatedGoal;
+  }
   if (useAuth().token !== null) {
     saveToDB();
     return;

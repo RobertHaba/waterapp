@@ -81,7 +81,6 @@ export const useSettings = defineStore('userSettings', {
       this.goalHistory.today = this.settings.water.goal;
     },
     setChangeInGoalHistoryLocally() {
-      console.log('Add');
       const date = new Date();
       const today = date.toLocaleDateString('pl-PL');
       this.getGoalHistoryFromLocally();

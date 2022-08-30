@@ -93,7 +93,6 @@ const tryToSetNewProgressText = () => {
       useProgressText().setActiveData("water", 7);
       break;
   }
-  console.log(id);
 
   // if (drinkProgressPercentage.value >= 50) {
   //   useProgressText().setActiveData("water", 1);

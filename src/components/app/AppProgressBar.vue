@@ -188,7 +188,6 @@ watch(date, () => {
 });
 // Mounted
 onMounted(() => {
-  console.log(props.mode);
   theme.value.main = props.mode === "drink" ? "#FF781E" : "#5C9AFF";
   theme.value.second = props.mode === "drink" ? "#FFC39B" : "#D4E4FF";
 });
