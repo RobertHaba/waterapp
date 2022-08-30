@@ -312,5 +312,12 @@ const userIsAuth = async () => {
   const auth = useAuth();
   return auth.user === null ? false : auth.user;
 };
-
+router.beforeEach((to, from, next) => {
+  if (localStorage.getItem('firstVisit') === null) {
+    localStorage.setItem('firstVisit', true);
+    next({ name: 'welcome' });
+  } else {
+    next();
+  }
+});
 export default router;
